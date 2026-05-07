@@ -503,10 +503,51 @@
               lore: "La hermana mayor de las Pléyades. Sagrada y conocida en el mito como 'la madre nutricia'. Su manto estelar arropa y cuida a todos los que la contemplan desde la Tierra." }
         ];
 
-        let checkoutPrice = 0;
+      let checkoutPrice = 0;
         let checkoutPackage = "";
         let starNamePending = "";
-        let paypalInstance = null;
+        let paypalButtonsRendered = false; // Variable de seguridad
+
+        function openPayment(price, packageName) {
+            starNamePending = document.getElementById('inputStarName').value.trim();
+            if(starNamePending === "") { 
+                alert("Para continuar, introduzca el Nombre Oficial de la estrella."); 
+                document.getElementById('inputStarName').focus(); return; 
+            }
+            checkoutPackage = packageName;
+
+            // MODO ADMIN: Compra gratis
+            if(isAdminActive) { executeRealStarAssignment("Administrador (Regalo de Madre)"); return; }
+
+            checkoutPrice = price; 
+            document.getElementById('checkoutDesc').innerText = packageName;
+            document.getElementById('checkoutAmount').innerText = price.toFixed(2) + " €";
+            document.getElementById('paymentModal').style.display = 'flex';
+
+            // SOLUCIÓN PAYPAL: Renderizamos los botones UNA SOLA VEZ
+            if (!paypalButtonsRendered) {
+                paypal.Buttons({
+                    style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
+                    createOrder: function(data, actions) { 
+                        return actions.order.create({ 
+                            purchase_units: [{ amount: { value: checkoutPrice.toFixed(2) } }] 
+                        }); 
+                    },
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(details) {
+                            closePaymentModal(); 
+                            executeRealStarAssignment(details.payer.name.given_name);
+                        });
+                    },
+                    onError: function(err) { 
+                        console.error("Error de PayPal detectado:", err); 
+                        alert("PayPal no ha podido iniciarse. Puede deberse a un bloqueador de anuncios o un error en la cuenta."); 
+                    }
+                }).render('#paypal-button-container');
+                
+                paypalButtonsRendered = true; // Marcamos que ya se ha dibujado
+            }
+        }
 
         function openPayment(price, packageName) {
             starNamePending = document.getElementById('inputStarName').value.trim();
