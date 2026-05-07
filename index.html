@@ -15,6 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
+    <!-- Pon tu propio Client-ID de PayPal aquí -->
     <script src="https://www.paypal.com/sdk/js?client-id=AYOZLNzAoAg4ce1rEOGAB3lPDZG7_yqRzTcL1oqlddSrIkwauGItQIHzSbUelBnEOe-ByRZFfnOLqsbn&currency=EUR"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
@@ -109,7 +110,7 @@
         .pack-features li i { color: var(--accent-blue); margin-top: 4px; font-size: 0.8rem; }
         .pack-card.premium .pack-features li i { color: var(--gold-main); }
 
-        /* --- CONTENEDOR CERTIFICADO WEB (VISUAL NORMAL) --- */
+        /* --- CONTENEDOR CERTIFICADO WEB --- */
         .certificate-wrapper { display: none; flex-direction: column; align-items: center; width: 100%; }
         .cert-scroll-container { width: 100%; display: flex; justify-content: center; padding-bottom: 20px; overflow-x: auto; }
         
@@ -157,45 +158,22 @@
         .sig-line { border-bottom: 1px solid #111; margin-bottom: 4px; }
         .sig-title { font-family: 'Montserrat', sans-serif; font-size: 0.5rem; text-transform: uppercase; letter-spacing: 1px; color: #555; font-weight: 600;}
 
-        /* =========================================================
-           FIX PDF: ESTILOS FIJOS EXCLUSIVOS PARA EL CLON (A4 PERFECTO)
-           ========================================================= */
-        .pdf-clone-wrapper {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 794px !important;
-            height: 1123px !important; /* Altura estricta A4 */
-            background-color: #faf9f6;
-            z-index: -9999 !important; /* Totalmente invisible para el usuario */
-            overflow: hidden !important; /* Impide cualquier píxel sobrante */
-        }
-        .pdf-clone-wrapper .certificate {
-            width: 794px !important;
-            height: 1123px !important;
-            max-width: 794px !important;
-            margin: 0 !important;
-            padding: 20px !important; /* Margen estrecho para que quepa bien todo */
-            box-shadow: none !important;
-            box-sizing: border-box !important;
-        }
-        /* Reducimos fuentes y márgenes para asegurar el ajuste vertical */
+        /* --- CLON PDF A4 PERFECTO --- */
+        .pdf-clone-wrapper { position: fixed !important; top: 0 !important; left: 0 !important; width: 794px !important; height: 1123px !important; background-color: #faf9f6; z-index: -9999 !important; overflow: hidden !important; }
+        .pdf-clone-wrapper .certificate { width: 794px !important; height: 1123px !important; max-width: 794px !important; margin: 0 !important; padding: 20px !important; box-shadow: none !important; box-sizing: border-box !important; }
         .pdf-clone-wrapper .cert-title-main { font-size: 38px !important; margin-bottom: 15px !important;}
         .pdf-clone-wrapper .cert-star-name { font-size: 34px !important; margin: 15px 0 15px 0 !important;}
         .pdf-clone-wrapper .cert-body-text { font-size: 15px !important; line-height: 1.4 !important; margin-bottom: 12px !important; }
         .pdf-clone-wrapper .cert-agency { font-size: 22px !important; }
         .pdf-clone-wrapper .cert-reg { font-size: 11px !important; text-align: right !important; }
         .pdf-clone-wrapper .cert-lore-section { font-size: 14px !important; padding: 0 30px !important; margin-bottom: 15px !important; }
-        /* Mapa mucho más bajo para no empujar la firma hacia abajo */
         .pdf-clone-wrapper .map-relative-wrapper { height: 210px !important; }
         .pdf-clone-wrapper .cert-star-map-container { margin-bottom: 15px !important; }
-        /* Tabla científica compacta */
         .pdf-clone-wrapper .scientific-registry { font-size: 11px !important; margin: 15px 0 !important;}
         .pdf-clone-wrapper .scientific-registry th, .pdf-clone-wrapper .scientific-registry td { padding: 8px !important; }
         .pdf-clone-wrapper .cert-header { flex-direction: row !important; justify-content: space-between !important; text-align: left !important; margin-bottom: 15px !important;}
         .pdf-clone-wrapper .cert-footer { flex-direction: row !important; justify-content: space-between !important; align-items: flex-end !important; margin-top: 15px !important;}
         .pdf-clone-wrapper .seal-official { width: 80px !important; height: 80px !important; font-size: 0.55rem !important; }
-        /* ========================================================= */
 
         /* --- MODALES Y CARGAS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 20px; }
@@ -206,7 +184,12 @@
         .processing-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(2,4,10,0.98); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 500; padding: 20px; text-align: center;}
         .spinner { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--gold-main); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
 
-        /* Footer Legal Premium */
+        /* --- AVISO DE COOKIES --- */
+        .cookie-banner { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(13, 15, 20, 0.98); border-top: 1px solid var(--border-glow); padding: 20px 5%; z-index: 9999; display: none; justify-content: space-between; align-items: center; gap: 20px; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
+        .cookie-text { font-size: 0.85rem; color: #bbb; line-height: 1.5; flex: 1; text-align: left;}
+        .cookie-buttons { display: flex; gap: 10px; }
+        .cookie-banner a { color: var(--gold-main); text-decoration: none; font-weight: bold; }
+
         footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 40px 5%; margin-top: auto; text-align: center; background: rgba(0,0,0,0.5); }
         .footer-disclaimer { font-size: 0.7rem; color: #555; max-width: 700px; margin: 15px auto; line-height: 1.5; }
         .footer-links { margin-top: 20px; }
@@ -235,6 +218,8 @@
             .registry-content { padding: 30px 15px; }
             .modal-box { padding: 25px 15px; }
             .footer-links a { display: block; margin: 10px 0; }
+            .cookie-banner { flex-direction: column; text-align: center; }
+            .cookie-text { text-align: center; }
         }
     </style>
 </head>
@@ -370,7 +355,6 @@
                         </div></div></div>
                     </div>
                 </div>
-                
                 <button id="downloadPdfBtn" class="btn-solid print-btn" onclick="downloadPDF()" style="margin-top: 30px; width: auto; background: rgba(255,255,255,0.1); border: 1px solid var(--border-glow); color: var(--accent-blue); backdrop-filter: blur(5px);">
                     <i class="fa-solid fa-download"></i> Descargar Certificado en PDF
                 </button>
@@ -407,7 +391,7 @@
             </div>
             <div class="admin-table-container">
                 <table class="admin-table">
-                    <thead><tr><th>Fecha</th><th>Folio NOVA</th><th>Cliente</th><th>Estrella Asignada</th><th>Paquete</th><th>Logística / Envío</th></tr></thead>
+                    <thead><tr><th>Fecha</th><th>Folio NOVA</th><th>Importe Pago</th><th>ID Transacción PayPal</th><th>Cliente</th><th>Estrella Asignada</th><th>Logística / Envío</th></tr></thead>
                     <tbody id="adminTableBody"></tbody>
                 </table>
             </div>
@@ -429,6 +413,16 @@
             <a href="#" onclick="openLegalModal('Términos y Condiciones')">Términos y Condiciones</a>
         </div>
     </footer>
+
+    <!-- BANNER DE COOKIES -->
+    <div id="cookieBanner" class="cookie-banner">
+        <div class="cookie-text">
+            Utilizamos cookies propias y de terceros para asegurar el funcionamiento de la pasarela de pago segura (PayPal), analizar el tráfico y ofrecerle nuestra plataforma de registro estelar. Al hacer clic en "Aceptar", consiente su uso según nuestra <a href="#" onclick="openLegalModal('Política de Privacidad')">Política de Privacidad</a>.
+        </div>
+        <div class="cookie-buttons">
+            <button class="btn-solid" style="padding: 10px 20px; border-radius: 4px; width: auto;" onclick="acceptCookies()">Aceptar Cookies</button>
+        </div>
+    </div>
 
     <div id="paymentModal" class="modal-overlay">
         <div class="modal-box">
@@ -456,6 +450,11 @@
             </div>
 
             <div id="paypal-button-container" style="min-height: 150px;"></div>
+            
+            <!-- Aviso legal extra anti-scam -->
+            <div style="font-size: 0.65rem; color: #666; text-align: center; margin-top: 15px; line-height: 1.4;">
+                *Servicio de carácter conmemorativo y simbólico. Esta plataforma opera un registro patrimonial privado, independiente y no vinculado científicamente a la Unión Astronómica Internacional (IAU).
+            </div>
         </div>
     </div>
 
@@ -475,37 +474,35 @@
     </div>
 
     <script>
-        // --- TEXTOS LEGALES COMPLETOS ---
+        // --- GESTIÓN DE COOKIES ---
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!localStorage.getItem("cookiesAccepted")) {
+                document.getElementById("cookieBanner").style.display = "flex";
+            }
+        });
+
+        function acceptCookies() {
+            localStorage.setItem("cookiesAccepted", "true");
+            document.getElementById("cookieBanner").style.display = "none";
+        }
+
+        // --- TEXTOS LEGALES ACTUALIZADOS ---
         const legalTexts = {
             'Aviso Legal': `
                 <strong style="color: var(--gold-main);">1. Datos Identificativos</strong><br>
-                En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE), le informamos que este sitio web, NovaRegistry, es operado por [TU EMPRESA O NOMBRE], con NIF [TU NIF/CIF], domicilio en [TU DIRECCIÓN COMPLETA]. Contacto: [TU EMAIL].<br><br>
+                En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE), le informamos que este sitio web es operado por TU NOMBRE/EMPRESA, con NIF/CIF TU_NIF, domicilio en TU_DIRECCIÓN. Contacto: TU_EMAIL.<br><br>
                 <strong style="color: var(--gold-main);">2. Naturaleza del Servicio</strong><br>
-                NovaRegistry ofrece un servicio de archivo astrométrico de carácter conmemorativo, simbólico y patrimonial. Los nombres asignados a los cuerpos celestes a través de nuestra plataforma se archivan en nuestra base de datos privada exclusiva. Este servicio <strong>NO</strong> cuenta con reconocimiento oficial por parte de la Unión Astronómica Internacional (IAU), que es la única entidad encargada de la nomenclatura oficial científica. El propósito de nuestro servicio es ofrecer un obsequio emocional y un recuerdo imperecedero.<br><br>
-                <strong style="color: var(--gold-main);">3. Propiedad Intelectual</strong><br>
-                Todos los diseños, logotipos, mapas estelares y el código fuente de esta plataforma son propiedad exclusiva de NovaRegistry. Queda prohibida su reproducción sin consentimiento expreso.
+                NovaRegistry ofrece un servicio de archivo astrométrico de carácter conmemorativo. Los nombres asignados a los cuerpos celestes a través de nuestra plataforma se archivan en nuestra base de datos privada. Este servicio <strong>NO</strong> cuenta con reconocimiento oficial por parte de la Unión Astronómica Internacional (IAU).
             `,
-            
             'Política de Privacidad': `
                 <strong style="color: var(--gold-main);">1. Responsable del Tratamiento</strong><br>
-                En cumplimiento con el Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD), le informamos que [TU EMPRESA O NOMBRE] es el responsable del tratamiento de los datos recabados en la plataforma.<br><br>
-                <strong style="color: var(--gold-main);">2. Finalidad y Legitimación</strong><br>
-                Los datos solicitados (nombre de la estrella, nombre del cliente, y dirección física) se utilizan exclusivamente para la gestión de su pedido, la emisión del certificado estelar personalizado y la logística de entrega física. La base jurídica es la ejecución del contrato de compraventa.<br><br>
-                <strong style="color: var(--gold-main);">3. Conservación y Cesión</strong><br>
-                Los datos de registro (Código NOVA y coordenadas) se conservarán a perpetuidad para garantizar la integridad de nuestro archivo patrimonial. Sus datos personales de facturación y envío no serán cedidos a terceros, salvo a las empresas de mensajería necesarias para completar la entrega.<br><br>
-                <strong style="color: var(--gold-main);">4. Sus Derechos</strong><br>
-                Puede ejercer sus derechos de acceso, rectificación, supresión y oposición enviando un correo a [TU EMAIL], adjuntando una copia de su DNI.
+                En cumplimiento con el Reglamento (UE) 2016/679 (RGPD), le informamos que TU NOMBRE/EMPRESA es el responsable del tratamiento.<br><br>
+                <strong style="color: var(--gold-main);">2. Cookies y Análisis</strong><br>
+                Utilizamos cookies de terceros (como PayPal) estrictamente necesarias para procesar pagos seguros en la plataforma.
             `,
-
             'Términos y Condiciones': `
-                <strong style="color: var(--gold-main);">1. Aceptación y Objeto</strong><br>
-                Las presentes condiciones regulan la contratación de los paquetes de registro en NovaRegistry. Al tramitar el pedido, el usuario acepta que está adquiriendo un servicio y producto (digital o físico) de valor sentimental y conmemorativo.<br><br>
-                <strong style="color: var(--gold-main);">2. Precios y Pagos</strong><br>
-                Los precios indicados en pantalla incluyen los impuestos aplicables. El pago se realiza de forma segura a través de PayPal. El pedido se procesará automáticamente una vez confirmado el abono.<br><br>
-                <strong style="color: var(--gold-main);">3. Política de Devoluciones (Derecho de Desistimiento)</strong><br>
-                De acuerdo con el artículo 103 de la Ley General para la Defensa de los Consumidores y Usuarios, el derecho de desistimiento <strong>NO es aplicable</strong> a los contratos que se refieran al suministro de bienes confeccionados conforme a las especificaciones del consumidor o claramente personalizados. Dado que el certificado estelar se genera en exclusiva para usted con un nombre único irreversible en nuestro registro, <strong>no se admiten devoluciones ni cancelaciones</strong> una vez adjudicada la estrella.<br><br>
-                <strong style="color: var(--gold-main);">4. Envíos e Incidencias</strong><br>
-                Para los paquetes físicos, los plazos de entrega estimados son de 3 a 7 días hábiles. Si su paquete sufre algún daño durante el transporte, dispone de 48 horas tras su recepción para contactarnos en [TU EMAIL] aportando fotografías. Procederemos a emitir y enviar un reemplazo sin coste alguno.
+                <strong style="color: var(--gold-main);">1. Objeto y Desistimiento</strong><br>
+                De acuerdo con el artículo 103 de la Ley General para la Defensa de los Consumidores y Usuarios, el derecho de desistimiento <strong>NO es aplicable</strong> a bienes confeccionados conforme a las especificaciones del consumidor (artículos personalizados). No se admiten devoluciones una vez adjudicado el certificado.
             `
         };
 
@@ -529,7 +526,6 @@
         const auth = firebase.auth();
 
         let isAdminActive = false;
-
         let adminClickCount = 0;
         let lastClickTime = 0;
 
@@ -542,23 +538,30 @@
 
             if (adminClickCount === 5) {
                 adminClickCount = 0;
-                let email = prompt("MODO ADMIN. Ingrese correo de administrador:");
-                if (email) {
-                    let pwd = prompt("Ingrese contraseña:");
-                    if(pwd) {
-                        auth.signInWithEmailAndPassword(email, pwd)
-                            .then(() => {
-                                isAdminActive = true;
-                                alert("🚀 MODO ADMIN ACTIVADO.");
-                                document.getElementById('nav-admin').style.display = 'inline-block';
-                                loadAdminDashboard();
-                            }).catch((error) => alert("Acceso denegado."));
-                    }
-                }
+                // Pequeño hack para no usar 'prompt' y exponer la clave en pantalla visible
+                let adminModalHtml = `
+                    <div id="adminLogin" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#111; padding:20px; border:1px solid gold; z-index:9999;">
+                        <input type="email" id="admE" placeholder="Admin Email"><br><br>
+                        <input type="password" id="admP" placeholder="Password"><br><br>
+                        <button onclick="loginAdmin()">Entrar</button> <button onclick="document.getElementById('adminLogin').remove()">X</button>
+                    </div>`;
+                document.body.insertAdjacentHTML('beforeend', adminModalHtml);
             }
         }
 
-        // --- FIX DEFINITIVO PDF: EL MÉTODO DEL CLON A4 EXACTO ---
+        function loginAdmin() {
+            let e = document.getElementById('admE').value;
+            let p = document.getElementById('admP').value;
+            auth.signInWithEmailAndPassword(e, p).then(() => {
+                isAdminActive = true;
+                alert("🚀 MODO ADMIN ACTIVADO.");
+                document.getElementById('nav-admin').style.display = 'inline-block';
+                document.getElementById('adminLogin').remove();
+                loadAdminDashboard();
+            }).catch(() => alert("Acceso denegado."));
+        }
+
+        // --- FIX PDF (Igual que en tu código) ---
         function downloadPDF() {
             const originalElement = document.getElementById('pdf-content');
             const btn = document.getElementById('downloadPdfBtn');
@@ -568,43 +571,26 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando alta resolución...';
             btn.style.pointerEvents = 'none';
 
-            // 1. Clonar el elemento
             const clone = originalElement.cloneNode(true);
-            clone.id = 'pdf-clone'; // Cambiar ID para evitar duplicados
-
-            // 2. Crear un contenedor que fije el tamaño a A4 exactamente
+            clone.id = 'pdf-clone'; 
             const wrapper = document.createElement('div');
             wrapper.className = 'pdf-clone-wrapper';
             wrapper.appendChild(clone);
             document.body.appendChild(wrapper);
 
-            // 3. Generar PDF dando 150ms para que se dibuje el clon invisible
             setTimeout(() => {
                 const opt = {
-                    margin:       0,
-                    filename:     `Certificado_NovaRegistry_${starCode}.pdf`,
-                    image:        { type: 'jpeg', quality: 1.0 },
-                    html2canvas:  { 
-                        scale: 2, 
-                        useCORS: true,
-                        windowWidth: 794,
-                        width: 794,
-                        height: 1123,
-                        scrollY: 0,
-                        scrollX: 0
-                    },
+                    margin: 0,
+                    filename: `Certificado_NovaRegistry_${starCode}.pdf`,
+                    image: { type: 'jpeg', quality: 1.0 },
+                    html2canvas: { scale: 2, useCORS: true, windowWidth: 794, width: 794, height: 1123, scrollY: 0, scrollX: 0 },
                     jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
                 };
-
                 html2pdf().set(opt).from(clone).save().then(() => {
-                    // Borramos el clon de la memoria
-                    if(document.body.contains(wrapper)) {
-                        document.body.removeChild(wrapper);
-                    }
+                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
                     btn.innerHTML = originalText;
                     btn.style.pointerEvents = 'auto';
                 }).catch(err => {
-                    console.error("Error al generar PDF: ", err);
                     if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
                     btn.innerHTML = originalText;
                     btn.style.pointerEvents = 'auto';
@@ -613,7 +599,6 @@
         }
 
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
-
         function showSection(sectionId) {
             document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active-link'));
@@ -653,7 +638,6 @@
         }
 
         function resizeCanvas() { if(canvas.parentElement) { canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight; } }
-
         function renderAmbientSky() {
             ctx.fillStyle = 'rgba(1, 2, 5, 0.4)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
             const cx = canvas.width / 2; const cy = canvas.height / 2;
@@ -675,10 +659,11 @@
             requestAnimationFrame(renderAmbientSky);
         }
 
-        // --- CATALOGO (Acortado para visualización, mantén el tuyo si tenías más de 25) ---
+        // --- CATALOGO (Mantenemos local para ahorrar lecturas gratuitas de Firestore) ---
         const starCatalog = [
             { official: "HD 48915 (Sirio)", constellation: "Canis Major", ra: "06h 45m 08s", dec: "-16° 42' 58\"", distance: "8.6 A.L.", spectral: "A1 V", temp: "9940 K", appMag: "-1.46", lum: "25.4 Soles", lore: "La estrella más brillante de todo el cielo nocturno." },
-            { official: "HD 172167 (Vega)", constellation: "Lyra", ra: "18h 36m 56s", dec: "+38° 47' 01\"", distance: "25 A.L.", spectral: "A0 Va", temp: "9600 K", appMag: "0.03", lum: "40.1 Soles", lore: "Fue la Estrella Polar en el año 12000 a.C." }
+            { official: "HD 172167 (Vega)", constellation: "Lyra", ra: "18h 36m 56s", dec: "+38° 47' 01\"", distance: "25 A.L.", spectral: "A0 Va", temp: "9600 K", appMag: "0.03", lum: "40.1 Soles", lore: "Fue la Estrella Polar en el año 12000 a.C." },
+            // Puedes añadir cientos aquí, no cuestan dinero en lecturas de DB
         ];
 
         let checkoutPrice = 0;
@@ -691,8 +676,7 @@
             starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
             
             if(starNamePending === "") { 
-                alert("Introduzca un Nombre Oficial válido."); 
-                return; 
+                alert("Introduzca un Nombre Oficial válido."); return; 
             }
             
             checkoutPackage = packageName;
@@ -701,7 +685,7 @@
             const formEnvio = document.getElementById('shipping-form');
             formEnvio.style.display = (packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
 
-            if(isAdminActive) { executeRealStarAssignment("Admin Test"); return; }
+            if(isAdminActive) { executeRealStarAssignment("Admin Test", "TRANS_ADMIN_0000", price); return; }
 
             checkoutPrice = price; 
             document.getElementById('checkoutDesc').innerText = packageName;
@@ -733,7 +717,8 @@
                     onApprove: function(data, actions) {
                         return actions.order.capture().then(function(details) {
                             closePaymentModal(); 
-                            executeRealStarAssignment(details.payer.name.given_name);
+                            // Pasamos el ID de transacción de PayPal a la base de datos para comprobación de seguridad
+                            executeRealStarAssignment(details.payer.name.given_name, details.id, checkoutPrice);
                         });
                     },
                     onError: function(err) { alert("Error al procesar PayPal."); }
@@ -744,7 +729,8 @@
 
         function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
 
-        async function executeRealStarAssignment(payerName) {
+        // Lógica de Asignación Protegida (Cliente + Base de Datos gratuita)
+        async function executeRealStarAssignment(payerName, paypalTransactionId, importeEsperado) {
             const overlay = document.getElementById('processingOverlay');
             overlay.style.display = 'flex';
 
@@ -758,14 +744,18 @@
             }
 
             try {
+                // Obtenemos solo qué estrellas YA se han vendido de Firebase (ahorra tráfico)
                 const snapshot = await db.collection("estrellas").get();
                 const soldStars = snapshot.docs.map(doc => doc.data().official);
+                
+                // Filtramos el catálogo local para quedarnos solo con las libres
                 const availableStars = starCatalog.filter(star => !soldStars.includes(star.official));
 
                 if (availableStars.length === 0) {
                     overlay.style.display = 'none'; alert("¡Catálogo agotado temporalmente!"); return;
                 }
 
+                // Cogemos una aleatoria
                 const realStar = availableStars[Math.floor(Math.random() * availableStars.length)];
                 let newCode = 'NOVA-' + Math.floor(10000 + Math.random() * 90000);
 
@@ -774,9 +764,13 @@
                     constellation: realStar.constellation, ra: realStar.ra, dec: realStar.dec,
                     date: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' }),
                     distance: realStar.distance, pack: checkoutPackage, spectral: realStar.spectral, temp: realStar.temp, appMag: realStar.appMag, lum: realStar.lum,
-                    lore: realStar.lore, payerName: payerName, shipping: shippingInfo 
+                    lore: realStar.lore, payerName: payerName, shipping: shippingInfo,
+                    // DATOS DE SEGURIDAD INTERNA PARA EL ADMINISTRADOR
+                    paypalTransactionId: paypalTransactionId,
+                    expectedAmount: importeEsperado 
                 };
 
+                // Gracias a la nueva regla de Firestore (allow create), esto funcionará sin problema
                 await db.collection("estrellas").doc(newCode).set(starData);
                 overlay.style.display = 'none';
                 
@@ -786,7 +780,9 @@
                 loadMyStar(); 
                 
             } catch(error) {
-                overlay.style.display = 'none'; alert("Fallo de sincronización.");
+                overlay.style.display = 'none'; 
+                console.error(error);
+                alert("Fallo de sincronización con la Base de Datos. Póngase en contacto con soporte.");
             }
         }
 
@@ -815,11 +811,11 @@
                     document.getElementById('certLum').innerText = star.lum;
                     document.getElementById('certBarcode').innerText = `*${star.id.replace('-','')}*`;
                     document.getElementById('certLore').innerText = star.lore ? `"${star.lore}"` : "";
-                } else { alert('Código no localizado.'); }
+                } else { alert('Código no localizado en el registro oficial.'); }
             } catch (error) { alert("Fallo de conexión."); }
         }
 
-        // --- FUNCIONES IA TRACKER ---
+        // --- FUNCIONES IA TRACKER (Igual que en tu código) ---
         function parseCoordToDeg(coordStr, isRA) {
             let match;
             if (isRA) { 
@@ -840,16 +836,13 @@
             let lst = (100.46 + 0.985647 * d + lon + 15 * (now.getUTCHours() + now.getUTCMinutes()/60)) % 360;
             if (lst < 0) lst += 360;
 
-            let ha = lst - raDeg;
-            let rad = Math.PI / 180;
+            let ha = lst - raDeg; let rad = Math.PI / 180;
             let sinAlt = Math.sin(lat*rad)*Math.sin(decDeg*rad) + Math.cos(lat*rad)*Math.cos(decDeg*rad)*Math.cos(ha*rad);
             let alt = Math.asin(sinAlt) / rad;
-
             let cosA = (Math.sin(decDeg*rad) - Math.sin(alt*rad)*Math.sin(lat*rad)) / (Math.cos(alt*rad)*Math.cos(lat*rad));
             cosA = Math.max(-1, Math.min(1, cosA)); 
             let az = Math.acos(cosA) / rad;
             if (Math.sin(ha*rad) > 0) az = 360 - az;
-
             return { alt: parseFloat(alt.toFixed(1)), az: parseFloat(az.toFixed(1)) };
         }
 
@@ -861,9 +854,7 @@
         async function triggerAILocator() {
             const input = document.getElementById('aiInput').value.toUpperCase().replace(/\s+/g, '');
             const outputArea = document.getElementById('aiOutput');
-            
             if(!input) { outputArea.innerHTML = '<span style="color: red;">> ERROR: Ingrese un código de folio.</span>'; return; }
-            
             outputArea.innerHTML = '<span class="ai-typing">> Obteniendo telemetría astrométrica...</span><br><span class="ai-typing">> Solicitando triangulación GPS al dispositivo...</span>';
 
             if (navigator.geolocation) {
@@ -874,9 +865,7 @@
                         processTracking(input, 40.4168, -3.7038, outputArea); 
                     }
                 );
-            } else {
-                processTracking(input, 40.4168, -3.7038, outputArea);
-            }
+            } else { processTracking(input, 40.4168, -3.7038, outputArea); }
         }
 
         async function processTracking(input, lat, lon, outputArea) {
@@ -884,14 +873,9 @@
                 const docRef = await db.collection("estrellas").doc(input).get();
                 if (docRef.exists) {
                     const star = docRef.data();
-                    const raDeg = parseCoordToDeg(star.ra, true);
-                    const decDeg = parseCoordToDeg(star.dec, false);
+                    const raDeg = parseCoordToDeg(star.ra, true); const decDeg = parseCoordToDeg(star.dec, false);
                     const coords = getAltAz(lat, lon, raDeg, decDeg);
-                    
-                    let visibilityStr = coords.alt > 0 
-                        ? `<span style="color: #00ff66;">Visible sobre el horizonte (${coords.alt}°)</span>`
-                        : `<span style="color: #ff3366;">Bajo el horizonte (${coords.alt}°)</span>`;
-                        
+                    let visibilityStr = coords.alt > 0 ? `<span style="color: #00ff66;">Visible sobre el horizonte (${coords.alt}°)</span>` : `<span style="color: #ff3366;">Bajo el horizonte (${coords.alt}°)</span>`;
                     let cardinal = getCardinalPoint(coords.az);
 
                     outputArea.innerHTML = `
@@ -918,17 +902,21 @@
             if(!isAdminActive) return;
             showSection('admin-panel');
             const tbody = document.getElementById('adminTableBody');
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 40px;"><div class="spinner" style="margin: 0 auto;"></div></td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 40px;"><div class="spinner" style="margin: 0 auto;"></div></td></tr>';
             try {
                 const snapshot = await db.collection("estrellas").get();
                 let rows = '';
                 let docsArray = snapshot.docs.map(doc => doc.data()).reverse(); 
                 docsArray.forEach(data => {
                     let ship = data.shipping ? `<strong style="color:#fff">${data.shipping.name}</strong><br>${data.shipping.city}` : "<span style='color: var(--text-muted);'>Digital</span>";
-                    rows += `<tr><td>${data.date}</td><td style="color: var(--accent-blue); font-weight: bold;">${data.id}</td><td>${data.payerName || "S/N"}</td><td><strong>${data.name}</strong></td><td>${data.pack}</td><td>${ship}</td></tr>`;
+                    // Añadimos datos vitales para tu validación manual anti-scam
+                    let priceTag = data.expectedAmount ? `<span style="color: #00ff66;">${data.expectedAmount} €</span>` : "-";
+                    let payPalTag = data.paypalTransactionId ? `<span style="font-family: monospace; font-size: 0.8rem; color: #aabfff;">${data.paypalTransactionId}</span>` : "-";
+                    
+                    rows += `<tr><td>${data.date}</td><td style="color: var(--accent-blue); font-weight: bold;">${data.id}</td><td><strong>${priceTag}</strong></td><td>${payPalTag}</td><td>${data.payerName || "S/N"}</td><td><strong>${data.name}</strong><br><span style="font-size:0.75rem; color:#888;">${data.pack}</span></td><td>${ship}</td></tr>`;
                 });
-                tbody.innerHTML = rows || '<tr><td colspan="6" style="text-align:center;">No hay ventas.</td></tr>';
-            } catch (e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
+                tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;">No hay ventas.</td></tr>';
+            } catch (e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
         }
     </script>
 </body>
