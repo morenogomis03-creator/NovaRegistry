@@ -96,7 +96,7 @@
         .pack-features li i { color: var(--accent-blue); margin-top: 4px; font-size: 0.8rem; }
         .pack-card.premium .pack-features li i { color: var(--gold-main); }
 
-        /* --- CERTIFICADO FLUÍDO Y ESTRUCTURA A4 --- */
+        /* --- CERTIFICADO --- */
         .certificate-wrapper { display: none; flex-direction: column; align-items: center; width: 100%; }
         .cert-scroll-container { width: 100%; display: flex; justify-content: center; overflow: hidden; padding-bottom: 20px; }
         
@@ -105,7 +105,6 @@
         .cert-border-2 { border: 1px solid #222; padding: 2px; height: 100%; box-sizing: border-box;}
         .cert-border-3 { border: 4px double #444; padding: 20px 15px; position: relative; background: rgba(255,255,255,0.9); height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;}
         
-        /* Modificado: Códigos súper oficiales */
         .cert-header { display: flex; flex-direction: column; align-items: center; gap: 5px; border-bottom: 2px solid #222; padding-bottom: 10px; margin-bottom: 15px; text-align: center; }
         .cert-agency { font-family: 'Cinzel', serif; font-size: clamp(1rem, 4vw, 1.3rem); color: #222; font-weight: 700; letter-spacing: 2px; }
         .cert-reg { font-family: monospace; font-size: clamp(0.65rem, 2vw, 0.85rem); color: #333; text-align: center;}
@@ -116,25 +115,16 @@
         
         .cert-star-name { text-align: center; font-family: 'Cinzel', serif; font-size: clamp(1.4rem, 5vw, 2.5rem); font-weight: 700; color: var(--gold-dark); letter-spacing: 2px; margin: 5px 0 15px 0; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px 5px; background: rgba(212, 175, 55, 0.05); word-break: break-word; }
 
-        /* NUEVA SECCIÓN DE MITOLOGÍA / HISTORIA */
         .cert-lore-section { text-align: center; font-family: 'Cormorant Garamond', serif; font-style: italic; color: #444; font-size: clamp(0.85rem, 2.5vw, 1rem); margin-bottom: 15px; padding: 0 15px; }
 
-        /* MAPA ESTÁTICO DE ESTRELLAS PERFECTO PARA IMPRESIÓN */
         .cert-star-map-container { margin: 0 auto 15px auto; width: 100%; max-width: 500px; border: 2px solid #222; padding: 4px; background: #fff; }
         .cert-star-map-title { text-align: center; font-family: 'Cinzel', serif; font-size: 0.7rem; font-weight: bold; color: #222; margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
         
         .map-relative-wrapper { position: relative; width: 100%; height: 200px; overflow: hidden; background-color: #050510; }
-        /* Imagen estática de alta calidad de la bóveda celeste */
         .map-relative-wrapper img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.2) brightness(1.1); }
         
-        .crosshair-target {
-            position: absolute; top: 50%; left: 50%; width: 35px; height: 35px;
-            border: 2px solid rgba(220, 20, 60, 0.9); border-radius: 50%;
-            transform: translate(-50%, -50%); pointer-events: none; z-index: 50;
-        }
-        .crosshair-target::before, .crosshair-target::after {
-            content: ''; position: absolute; background: rgba(220, 20, 60, 0.9);
-        }
+        .crosshair-target { position: absolute; top: 50%; left: 50%; width: 35px; height: 35px; border: 2px solid rgba(220, 20, 60, 0.9); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 50; }
+        .crosshair-target::before, .crosshair-target::after { content: ''; position: absolute; background: rgba(220, 20, 60, 0.9); }
         .crosshair-target::before { top: 50%; left: -10px; right: -10px; height: 2px; transform: translateY(-50%); }
         .crosshair-target::after { left: 50%; top: -10px; bottom: -10px; width: 2px; transform: translateX(-50%); }
 
@@ -155,7 +145,6 @@
         .sig-line { border-bottom: 1px solid #111; margin-bottom: 4px; }
         .sig-title { font-family: 'Montserrat', sans-serif; font-size: 0.5rem; text-transform: uppercase; letter-spacing: 1px; color: #555; font-weight: 600;}
 
-        /* Ajustes Desktop */
         @media (min-width: 768px) {
             .certificate { padding: 20px; }
             .cert-border-3 { padding: 30px 40px; }
@@ -177,56 +166,27 @@
         .processing-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(2,4,10,0.98); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 500; padding: 20px; text-align: center;}
         .spinner { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--gold-main); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
 
-        /* --- RESPONSIVE MÓVIL (MENÚ) --- */
-        @media (max-width: 768px) {
-            .mobile-menu-btn { display: block; }
-            .nav-links { position: absolute; top: 100%; left: 0; width: 100%; background: rgba(2, 4, 10, 0.98); flex-direction: column; padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; border-bottom: 1px solid transparent; }
-            .nav-links.active { max-height: 300px; padding: 20px 0; border-bottom-color: var(--border-glow); }
-            .nav-links li { margin: 15px 0; }
-            main { padding: 30px 5%; }
-            .registry-layout { padding: 20px 10px; border: none; box-shadow: none; }
-            .registry-content { padding: 30px 15px; }
-            .modal-box { padding: 25px 15px; }
-        }
-        
-        /* --- 🖨️ MODO IMPRESIÓN 100% PERFECTO 1 HOJA A4 --- */
         @media print {
             @page { size: A4 portrait; margin: 0; }
             html, body { width: 210mm; height: 297mm; background: #fff; color: #000; margin: 0; padding: 0; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            
             nav, .section-header, .print-btn, #loginStar, #home, #firmamento, .modal-overlay, .search-box, .processing-overlay { display: none !important; }
-            
             main { padding: 0 !important; margin: 0 !important; max-width: 100%; display: block; }
             section#mystar { display: block !important; padding: 0; margin: 0; }
-            
             .certificate-wrapper { display: block; padding: 0; margin: 0; width: 100%; height: 100%; }
             .cert-scroll-container { display: block; padding: 0; margin: 0; overflow: hidden; width: 100%; height: 100%; }
-            
-            .certificate { 
-                width: 210mm; height: 297mm; margin: 0; padding: 12mm; box-shadow: none; 
-                page-break-after: avoid; page-break-before: avoid; page-break-inside: avoid;
-                box-sizing: border-box; border: none; background-color: #faf9f6 !important;
-            }
-            
+            .certificate { width: 210mm; height: 297mm; margin: 0; padding: 12mm; box-shadow: none; page-break-after: avoid; page-break-before: avoid; page-break-inside: avoid; box-sizing: border-box; border: none; background-color: #faf9f6 !important; }
             .cert-border-1, .cert-border-2 { padding: 2px; height: 100%; box-sizing: border-box; }
-            .cert-border-3 { 
-                padding: 8mm; height: 100%; box-sizing: border-box; display: flex; 
-                flex-direction: column; justify-content: space-between; border-color: #111;
-            }
-            
+            .cert-border-3 { padding: 8mm; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border-color: #111; }
             .cert-header { margin-bottom: 5px; padding-bottom: 5px; flex-direction: row; justify-content: space-between; text-align: left;}
             .cert-reg { text-align: right; }
             .cert-title-main { font-size: 2rem; margin-bottom: 5px; }
             .cert-body-text { font-size: 0.95rem; margin-bottom: 5px; line-height: 1.2; }
             .cert-star-name { font-size: 1.6rem; margin: 5px 0; padding: 5px 0; }
             .cert-lore-section { font-size: 0.8rem; margin-bottom: 5px; }
-            
             .cert-star-map-container { margin: 5px auto; max-width: 75%; padding: 2px; }
             .map-relative-wrapper { height: 140px !important; }
-            
             .scientific-registry { margin: 5px 0; font-size: 0.65rem; }
             .scientific-registry th, .scientific-registry td { padding: 4px; }
-            
             .cert-footer { margin-top: 5px; gap: 5px; flex-direction: row; justify-content: space-between; align-items: flex-end; }
         }
     </style>
@@ -244,7 +204,6 @@
     </nav>
 
     <main>
-        <!-- INICIO -->
         <section id="home" class="active">
             <div class="section-header" style="margin-top: 10vh;">
                 <h2 style="font-weight: 600;"><span style="color: var(--gold-main);">Inmortaliza</span> Tu Legado</h2>
@@ -255,7 +214,6 @@
             </div>
         </section>
 
-        <!-- SECCIÓN DE COMPRA -->
         <section id="firmamento">
             <div class="registry-layout">
                 <canvas id="skyCanvas"></canvas>
@@ -276,8 +234,8 @@
                             <div class="pack-price">39.00 €</div>
                             <ul class="pack-features">
                                 <li><i class="fa-solid fa-check"></i> Asignación en Base de Datos</li>
-                                <li><i class="fa-solid fa-check"></i> Título Oficial (PDF Alta Res.)</li>
-                                <li><i class="fa-solid fa-check"></i> Carta astrométrica de precisión</li>
+                                <li><i class="fa-solid fa-check"></i> Título Oficial (PDF)</li>
+                                <li><i class="fa-solid fa-check"></i> Carta astrométrica</li>
                             </ul>
                             <button class="btn-solid" style="background: transparent; border: 1px solid var(--text-muted); color: var(--text-main);" onclick="openPayment(39.00, 'Estrella Digital')">Seleccionar</button>
                         </div>
@@ -289,8 +247,7 @@
                             <div class="pack-price">89.00 €</div>
                             <ul class="pack-features">
                                 <li><i class="fa-solid fa-check"></i> <strong>Digital + Envío Físico</strong></li>
-                                <li><i class="fa-solid fa-check"></i> Carpeta de Presentación Lujo</li>
-                                <li><i class="fa-solid fa-check"></i> Certificado en Papel Pergamino</li>
+                                <li><i class="fa-solid fa-check"></i> Carpeta de Presentación</li>
                                 <li><i class="fa-solid fa-check"></i> Envío Express Integrado</li>
                             </ul>
                             <button class="btn-solid btn-gold" onclick="openPayment(89.00, 'Paquete Físico Premium')">Seleccionar</button>
@@ -304,7 +261,6 @@
                                 <li><i class="fa-solid fa-check"></i> <strong>Contenido Premium:</strong></li>
                                 <li><i class="fa-solid fa-check"></i> Enmarcado Artesanal</li>
                                 <li><i class="fa-solid fa-check"></i> Placa Acrílica Grabada</li>
-                                <li><i class="fa-solid fa-check"></i> Prioridad Soporte 24/7</li>
                             </ul>
                             <button class="btn-solid" style="background: transparent; border: 1px solid var(--text-muted); color: var(--text-main);" onclick="openPayment(149.00, 'Pack Supernova VIP')">Seleccionar</button>
                         </div>
@@ -313,12 +269,11 @@
             </div>
         </section>
 
-        <!-- VISOR DEL CERTIFICADO -->
         <section id="mystar">
             <div id="loginStar">
                 <div class="section-header">
                     <h2>Base de Datos Oficial</h2>
-                    <p>Introduzca su código de folio (NOVA-XXXXX) para recuperar la titularidad de su estrella y visualizar la carta astrométrica conectada al satélite.</p>
+                    <p>Introduzca su código de folio (NOVA-XXXXX) para recuperar la titularidad de su estrella.</p>
                 </div>
                 <div class="search-box">
                     <input type="text" id="myStarInput" placeholder="NOVA-XXXXX" style="max-width: 400px; margin: 0 auto 20px auto; display: block;">
@@ -331,7 +286,6 @@
                     <div class="certificate">
                         <div class="cert-border-1"><div class="cert-border-2"><div class="cert-border-3">
                             
-                            <!-- CABECERA PROFESIONALIZADA -->
                             <div class="cert-header">
                                 <div class="cert-agency">NovaRegistry<br><span style="font-size: clamp(0.5rem, 2vw, 0.6rem); color: #555; letter-spacing: 1px;">International Celestial Archives</span></div>
                                 <div class="cert-reg">
@@ -347,10 +301,8 @@
                             
                             <div class="cert-star-name" id="certName">--</div>
                             
-                            <!-- NUEVA SECCIÓN DE MITOLOGÍA E HISTORIA -->
                             <div class="cert-lore-section" id="certLore">--</div>
                             
-                            <!-- MAPA ESTÁTICO (PERFECTO PARA MÓVIL E IMPRESIÓN) -->
                             <div class="cert-star-map-container">
                                 <div class="cert-star-map-title">Ubicación en la Bóveda Celeste</div>
                                 <div class="map-relative-wrapper">
@@ -370,7 +322,6 @@
                                 <div><div class="barcode-box"></div><div class="barcode-text" id="certBarcode">--</div></div>
                                 <div class="seal-official"><div class="seal-inner"><span>OFFICIAL<br>REGISTRY<br>SEAL</span></div></div>
                                 <div class="signature">
-                                    <!-- FIRMA CORPORATIVA -->
                                     <div class="sig-font">Nova Registry</div>
                                     <div class="sig-line"></div>
                                     <div class="sig-title">Dirección General de Archivos Estelares</div>
@@ -380,7 +331,6 @@
                     </div>
                 </div>
                 
-                <!-- BOTÓN DE IMPRESIÓN MEJORADO PARA MÓVIL -->
                 <button class="btn-solid print-btn" onclick="triggerMobilePrint()" style="margin-top: 30px; width: auto; background: rgba(255,255,255,0.1); border: 1px solid var(--border-glow); color: var(--accent-blue); backdrop-filter: blur(5px);">
                     <i class="fa-solid fa-print"></i> Guardar como PDF / Imprimir
                 </button>
@@ -395,6 +345,7 @@
             <div class="modal-header"><h3 class="serif">Pasarela de Adjudicación</h3></div>
             <div class="payment-desc" id="checkoutDesc" style="color: #aaa; margin-bottom: 5px;">-</div>
             <div class="payment-amount" id="checkoutAmount" style="color: var(--text-main); font-size: 2rem; margin-bottom: 25px;">0.00 €</div>
+            <!-- CONTENEDOR PAYPAL -->
             <div id="paypal-button-container" style="min-height: 150px;"></div>
         </div>
     </div>
@@ -407,7 +358,35 @@
     </div>
 
     <script>
-        // --- SECRETO MODO ADMINISTRADOR ---
+        // --- INICIALIZACIÓN DE FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5F10FeOf1cAO_6j3v_OR8WHIxw-lQo6w",
+            authDomain: "novagetristy.firebaseapp.com",
+            projectId: "novagetristy",
+            storageBucket: "novagetristy.firebasestorage.app",
+            messagingSenderId: "428175556961",
+            appId: "1:428175556961:web:2f227bdd521a8994b34520"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // --- SISTEMA DE ESTRELLAS USADAS (PREVENIR DUPLICADOS) ---
+        let usedStars = [];
+        async function fetchUsedStars() {
+            try {
+                const snapshot = await db.collection("estrellas").get();
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if(data.official) usedStars.push(data.official);
+                });
+            } catch(e) {
+                console.error("Aviso: No se pudo cargar el historial de estrellas para filtrar.", e);
+            }
+        }
+        // Cargar las estrellas utilizadas al iniciar la app
+        window.onload = fetchUsedStars;
+
+        // --- SECRETO MODO ADMINISTRADOR (MADRES) ---
         let adminClickCount = 0;
         let lastClickTime = 0;
         let isAdminActive = false;
@@ -424,35 +403,17 @@
                 let pwd = prompt("Terminal Maestro. Ingrese clave secreta:");
                 if (pwd === "NOVA2026") {
                     isAdminActive = true;
-                    alert("🚀 MODO ADMIN ACTIVADO. Las compras ahora saltarán a PayPal y serán gratuitas.");
+                    alert("🚀 MODO ADMIN MATERNAL ACTIVADO.\nLas adjudicaciones usarán estrellas VIP para madres y serán 100% gratuitas.");
                 } else if (pwd !== null) {
                     alert("Acceso denegado.");
                 }
             }
         }
 
-        // --- BOTÓN DE IMPRESIÓN MÓVIL ARREGLADO ---
-        // Al quitar Aladin Lite, el navegador ya no se bloquea. Le ponemos un pequeño retraso
-        // para asegurar que todo el diseño está pintado antes de abrir la ventana de impresión.
         function triggerMobilePrint() {
-            setTimeout(function() {
-                window.print();
-            }, 300);
+            setTimeout(function() { window.print(); }, 300);
         }
-
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
-
-        // --- INICIALIZACIÓN DE FIREBASE ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyD5F10FeOf1cAO_6j3v_OR8WHIxw-lQo6w",
-            authDomain: "novagetristy.firebaseapp.com",
-            projectId: "novagetristy",
-            storageBucket: "novagetristy.firebasestorage.app",
-            messagingSenderId: "428175556961",
-            appId: "1:428175556961:web:2f227bdd521a8994b34520"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
 
         // --- CONTROL DE SECCIONES ---
         function showSection(sectionId) {
@@ -524,28 +485,28 @@
             requestAnimationFrame(renderAmbientSky);
         }
 
-        // --- ESTRELLAS CON MITOLOGÍA (LORE) ---
+        // --- CATÁLOGO DE ESTRELLAS NORMALES ---
         const valenciaVisibleStars = [
-            { official: "HD 129245 (Seginus)", ra: "14h 32m 04s", dec: "+38° 18' 28\"", distance: "85 A.L.", spectral: "A7 III (Blanca)", temp: "7650 K", appMag: "3.03", lum: "74 Soles", 
-              lore: "Conocida en la antigüedad como el hombro del Pastor de Boyeros. Las leyendas cuentan que el Pastor inventó el arado y fue elevado a los cielos por la diosa Deméter como agradecimiento." },
-            
-            { official: "HD 183912 (Albireo)", ra: "19h 30m 43s", dec: "+27° 57' 34\"", distance: "430 A.L.", spectral: "K3 II (Naranja)", temp: "4270 K", appMag: "3.05", lum: "1200 Soles",
-              lore: "El 'Pico del Cisne'. Una de las joyas del firmamento, venerada en la mitología griega como el ave celestial en la que se transformó el dios Zeus para surcar los cielos nocturnos." },
-            
-            { official: "HD 112846 (Cor Caroli)", ra: "12h 56m 01s", dec: "+38° 19' 06\"", distance: "114 A.L.", spectral: "A0 Vp (Magnética)", temp: "11600 K", appMag: "2.89", lum: "101 Soles",
-              lore: "El 'Corazón de Carlos'. Nombrada así en el siglo XVII. Las crónicas relatan que esta estrella brilló con una intensidad excepcional en la víspera del regreso del Rey Carlos a Londres." },
-            
-            { official: "HD 139006 (Alphecca)", ra: "15h 34m 41s", dec: "+26° 42' 52\"", distance: "75 A.L.", spectral: "A0 V (Principal)", temp: "9750 K", appMag: "2.22", lum: "60 Soles",
-              lore: "La 'Perla de la Corona'. Representa la joya central de la diadema luminosa de Ariadna, princesa de Creta, otorgada por el dios Dioniso como símbolo de amor eterno." },
-            
-            { official: "HD 173168 (Aladfar)", ra: "18h 42m 16s", dec: "+31° 46' 16\"", distance: "274 A.L.", spectral: "B9 V (Azul-Blanca)", temp: "10500 K", appMag: "4.36", lum: "135 Soles",
-              lore: "Su nombre proviene del árabe antiguo y significa 'Las Garras' del águila del desierto. Durante siglos, sirvió como estrella guía inquebrantable para los navegantes y astrónomos nómadas." }
+            { official: "HD 129245 (Seginus)", ra: "14h 32m 04s", dec: "+38° 18' 28\"", distance: "85 A.L.", spectral: "A7 III (Blanca)", temp: "7650 K", appMag: "3.03", lum: "74 Soles", lore: "El hombro del Pastor de Boyeros. Un símbolo de resiliencia y trabajo incansable elevado a los cielos." },
+            { official: "HD 183912 (Albireo)", ra: "19h 30m 43s", dec: "+27° 57' 34\"", distance: "430 A.L.", spectral: "K3 II (Naranja)", temp: "4270 K", appMag: "3.05", lum: "1200 Soles", lore: "El ave celestial del firmamento. Representa la libertad y la belleza infinita surcando el espacio." },
+            { official: "HD 112846 (Cor Caroli)", ra: "12h 56m 01s", dec: "+38° 19' 06\"", distance: "114 A.L.", spectral: "A0 Vp (Magnética)", temp: "11600 K", appMag: "2.89", lum: "101 Soles", lore: "El 'Corazón Noble'. Una estrella que, según las crónicas, brilló para anunciar un regreso triunfal y lleno de amor." },
+            { official: "HD 173168 (Aladfar)", ra: "18h 42m 16s", dec: "+31° 46' 16\"", distance: "274 A.L.", spectral: "B9 V (Azul-Blanca)", temp: "10500 K", appMag: "4.36", lum: "135 Soles", lore: "Una luz inquebrantable en la oscuridad, sirvió como guía a antiguos nómadas para siempre encontrar el camino a casa." }
+        ];
+
+        // --- CATÁLOGO MÍTICO EXCLUSIVO PARA MADRES (MODO ADMIN) ---
+        const motherStars = [
+            { official: "HD 116658 (Espiga)", ra: "13h 25m 11s", dec: "-11° 09' 40\"", distance: "250 A.L.", spectral: "B1 III-IV (Azul)", temp: "22400 K", appMag: "0.98", lum: "12100 Soles", 
+              lore: "La estrella más brillante de Virgo, representa a Deméter, la gran diosa madre. Un faro de amor maternal incondicional, nutrición y protección infinita que hace florecer el universo." },
+            { official: "HD 5015 (Cassiopeia)", ra: "00h 56m 42s", dec: "+60° 43' 00\"", distance: "54 A.L.", spectral: "F2 III (Blanca)", temp: "7000 K", appMag: "2.28", lum: "71 Soles", 
+              lore: "La reina madre del firmamento. Elevada a las estrellas por el orgullo y devoción inquebrantable hacia su linaje. Gobierna la noche como símbolo del sacrificio por sus hijos." },
+            { official: "HD 23408 (Maia)", ra: "03h 45m 49s", dec: "+24° 22' 04\"", distance: "360 A.L.", spectral: "B8 III (Azul)", temp: "12600 K", appMag: "3.87", lum: "660 Soles", 
+              lore: "La hermana mayor de las Pléyades. Sagrada y conocida en el mito como 'la madre nutricia'. Su manto estelar arropa y cuida a todos los que la contemplan desde la Tierra." }
         ];
 
         let checkoutPrice = 0;
         let checkoutPackage = "";
         let starNamePending = "";
-        let paypalButtonsRendered = false;
+        let paypalInstance = null;
 
         function openPayment(price, packageName) {
             starNamePending = document.getElementById('inputStarName').value.trim();
@@ -555,26 +516,34 @@
             }
             checkoutPackage = packageName;
 
-            if(isAdminActive) { executeRealStarAssignment("Administrador"); return; }
+            // MODO ADMIN: Compra gratis y automática con estrellas de Madre
+            if(isAdminActive) { executeRealStarAssignment("Administrador (Regalo de Madre)"); return; }
 
             checkoutPrice = price; 
             document.getElementById('checkoutDesc').innerText = packageName;
             document.getElementById('checkoutAmount').innerText = price.toFixed(2) + " €";
             document.getElementById('paymentModal').style.display = 'flex';
 
-            if (!paypalButtonsRendered) {
-                paypal.Buttons({
-                    style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
-                    createOrder: function(data, actions) { return actions.order.create({ purchase_units: [{ amount: { value: checkoutPrice.toString() } }] }); },
-                    onApprove: function(data, actions) {
-                        return actions.order.capture().then(function(details) {
-                            closePaymentModal(); executeRealStarAssignment(details.payer.name.given_name);
-                        });
-                    },
-                    onError: function(err) { console.error("Error PayPal:", err); alert("La pasarela detectó un problema de conexión. Inténtelo de nuevo."); }
-                }).render('#paypal-button-container');
-                paypalButtonsRendered = true;
-            }
+            // REPARACIÓN PAYPAL: Limpiamos y volvemos a instanciar el botón para evitar bugs de DOM/precios.
+            const container = document.getElementById('paypal-button-container');
+            container.innerHTML = ''; 
+
+            paypal.Buttons({
+                style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
+                createOrder: function(data, actions) { 
+                    return actions.order.create({ purchase_units: [{ amount: { value: checkoutPrice.toString() } }] }); 
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        closePaymentModal(); 
+                        executeRealStarAssignment(details.payer.name.given_name);
+                    });
+                },
+                onError: function(err) { 
+                    console.error("Error PayPal:", err); 
+                    alert("La pasarela detectó un problema de conexión. Revise su conexión y su Client-ID."); 
+                }
+            }).render('#paypal-button-container');
         }
 
         function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
@@ -583,27 +552,46 @@
             const overlay = document.getElementById('processingOverlay');
             overlay.style.display = 'flex';
 
-            const realStar = valenciaVisibleStars[Math.floor(Math.random() * valenciaVisibleStars.length)];
+            // Seleccionamos el catálogo dependiendo del modo
+            const catalogToUse = isAdminActive ? motherStars : valenciaVisibleStars;
+            
+            // FILTRADO: Excluimos las que ya están en el array 'usedStars'
+            let availableStars = catalogToUse.filter(star => !usedStars.includes(star.official));
+
+            if(availableStars.length === 0) {
+                overlay.style.display = 'none';
+                alert("¡Lo sentimos! Todas las estrellas de este catálogo ya han sido compradas. Contacte a soporte.");
+                return;
+            }
+
+            // Seleccionamos una aleatoria de las DISPONIBLES
+            const realStar = availableStars[Math.floor(Math.random() * availableStars.length)];
             let newCode = 'NOVA-' + Math.floor(10000 + Math.random() * 90000);
 
             const starData = {
                 id: newCode, name: starNamePending.toUpperCase(), official: realStar.official, ra: realStar.ra, dec: realStar.dec,
                 date: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' }),
                 distance: realStar.distance, pack: checkoutPackage, spectral: realStar.spectral, temp: realStar.temp, appMag: realStar.appMag, lum: realStar.lum,
-                lore: realStar.lore // Guardamos la mitología en la base de datos
+                lore: realStar.lore
             };
 
             try {
+                // Guardamos en Firebase
                 await db.collection("estrellas").doc(newCode).set(starData);
+                
+                // Actualizamos la lista local para que ya no se pueda comprar en esta sesión
+                usedStars.push(realStar.official);
+
                 overlay.style.display = 'none';
                 document.getElementById('inputStarName').value = '';
                 alert(`¡COMPRA CONFIRMADA, ${payerName}!\n\nSe le ha adjudicado la estrella: ${starData.official}\nCódigo de Acceso: ${newCode}`);
                 showSection('mystar');
                 document.getElementById('myStarInput').value = newCode;
+                loadMyStar(); // Autocargar tras comprar
             } catch(error) {
                 console.error("Error Firebase:", error);
                 overlay.style.display = 'none';
-                alert("Aviso: Falló la sincronización con la base de datos.");
+                alert("Aviso: Falló la sincronización con la base de datos de Firebase. Revisa los permisos de lectura/escritura (Firestore Rules).");
             }
         }
 
@@ -621,9 +609,8 @@
                     document.getElementById('loginStar').style.display = 'none';
                     document.getElementById('certificatePanel').style.display = 'flex';
 
-                    // Llenar datos textuales
                     document.getElementById('certId').innerText = star.id;
-                    document.getElementById('certOfficialCodeTop').innerText = star.official; // Nombre científico arriba
+                    document.getElementById('certOfficialCodeTop').innerText = star.official;
                     document.getElementById('certDate').innerText = star.date;
                     document.getElementById('certName').innerText = star.name;
                     
@@ -637,19 +624,17 @@
                     document.getElementById('certLum').innerText = star.lum;
                     document.getElementById('certBarcode').innerText = `*${star.id.replace('-','')}*`;
 
-                    // Mostrar Mitología si existe en la base de datos
                     if (star.lore) {
                         document.getElementById('certLore').innerText = `"${star.lore}"`;
                     } else {
                         document.getElementById('certLore').innerText = "";
                     }
-
                 } else {
                     alert('Código no localizado en los Archivos Celestiales.');
                 }
             } catch (error) {
                 console.error("Error BD:", error);
-                alert("Fallo de conexión con el servidor satelital.");
+                alert("Fallo de conexión con el servidor satelital. Revisa la base de datos.");
             }
         }
     </script>
