@@ -13,9 +13,9 @@
     
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
     <script src="https://www.paypal.com/sdk/js?client-id=AYOZLNzAoAg4ce1rEOGAB3lPDZG7_yqRzTcL1oqlddSrIkwauGItQIHzSbUelBnEOe-ByRZFfnOLqsbn&currency=EUR"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
@@ -35,7 +35,6 @@
         body { background: var(--bg-deep); background-image: var(--bg-nebula); color: var(--text-main); font-family: 'Montserrat', sans-serif; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
         h1, h2, h3, h4, .serif { font-family: 'Cinzel', serif; }
 
-        /* --- NAVEGACIÓN Y MENÚ MÓVIL --- */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: rgba(2, 4, 10, 0.9); border-bottom: 1px solid var(--border-glow); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
         .logo { font-size: 1.4rem; font-weight: 600; color: var(--text-main); letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
         .logo i { color: var(--gold-main); font-size: 1.6rem; }
@@ -61,7 +60,6 @@
         .section-header h2 { font-size: clamp(2rem, 5vw, 3rem); color: var(--text-main); letter-spacing: 3px; font-weight: 400; margin-bottom: 15px; text-shadow: 0 0 20px rgba(255,255,255,0.1); }
         .section-header p { color: var(--text-muted); font-size: clamp(0.9rem, 2vw, 1.1rem); max-width: 800px; margin: 0 auto; line-height: 1.6; }
 
-        /* --- BOTONES Y FORMULARIOS --- */
         .btn-solid { background: linear-gradient(45deg, #0055ff, var(--accent-blue)); color: #fff; border: none; padding: 16px 30px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: 0.3s; border-radius: 6px; width: 100%; box-shadow: 0 5px 20px rgba(0, 229, 255, 0.2); }
         .btn-solid:active { transform: scale(0.98); }
         .btn-solid:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 229, 255, 0.4); }
@@ -73,24 +71,21 @@
 
         .search-box { max-width: 600px; margin: 0 auto; background: var(--panel-glass); padding: 40px 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center; border-radius: 12px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
 
-        /* --- ADMIN PANEL CSS --- */
         .admin-table-container { background: rgba(13, 15, 20, 0.9); border: 1px solid var(--border-glow); border-radius: 12px; padding: 20px; overflow-x: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         .admin-table { width: 100%; border-collapse: collapse; min-width: 900px; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; }
         .admin-table th { background: rgba(0, 229, 255, 0.1); color: var(--gold-main); padding: 15px; text-align: left; text-transform: uppercase; letter-spacing: 1px; }
         .admin-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .admin-table tr:hover { background: rgba(255,255,255,0.02); }
 
-        /* --- ESTILOS IA TRACKER MODULE --- */
         .ai-terminal { max-width: 800px; margin: 0 auto; background: #050a14; border: 1px solid var(--accent-blue); border-radius: 12px; overflow: hidden; box-shadow: 0 0 30px rgba(0, 229, 255, 0.15); }
         .ai-header { background: rgba(0, 229, 255, 0.1); padding: 15px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-glow); }
         .ai-header i { color: var(--accent-blue); font-size: 1.2rem; }
         .ai-header span { font-family: 'Space Mono', monospace; color: var(--accent-blue); font-weight: 600; letter-spacing: 1px; }
         .ai-body { padding: 30px; }
-        .ai-output-area { background: #02040a; border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 20px; font-family: 'Space Mono', monospace; font-size: 0.9rem; color: #a0aabf; min-height: 200px; text-align: left; margin-top: 20px; overflow-y: auto; }
+        .ai-output-area { background: #02040a; border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 20px; font-family: 'Space Mono', monospace; font-size: 0.9rem; color: #a0aabf; min-height: 200px; text-align: left; margin-top: 20px; overflow-y: auto; line-height: 1.6; }
         .ai-typing::after { content: '▋'; animation: blink 1s step-start infinite; color: var(--accent-blue); }
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* --- SECCIÓN DE COMPRA --- */
         .registry-layout { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-glow); box-shadow: 0 0 40px rgba(0, 229, 255, 0.1); min-height: 75vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
         #skyCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
         .registry-content { position: relative; z-index: 2; background: rgba(10, 12, 18, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 40px 30px; width: 100%; max-width: 1000px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
@@ -114,11 +109,49 @@
         .pack-features li i { color: var(--accent-blue); margin-top: 4px; font-size: 0.8rem; }
         .pack-card.premium .pack-features li i { color: var(--gold-main); }
 
-        /* --- CERTIFICADO FLUÍDO Y ESTRUCTURA A4 --- */
+        /* --- CERTIFICADO Y PDF FIX DEFINITIVO --- */
         .certificate-wrapper { display: none; flex-direction: column; align-items: center; width: 100%; }
-        .cert-scroll-container { width: 100%; display: flex; justify-content: center; padding-bottom: 20px; }
         
-        .certificate { background-color: #faf9f6; background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); color: #111; padding: 15px; width: 100%; max-width: 900px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); position: relative; margin: 0 auto; box-sizing: border-box; }
+        /* Container original del certificado */
+        .cert-scroll-container { 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            padding-bottom: 20px; 
+            overflow-x: auto; 
+        }
+        
+        .certificate { 
+            background-color: #faf9f6; 
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); 
+            color: #111; 
+            padding: 15px; 
+            width: 100%; 
+            max-width: 800px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8); 
+            position: relative; 
+            margin: 0 auto; 
+            box-sizing: border-box; 
+            transition: all 0.1s; /* Transición suave */
+        }
+        
+        /* FIX: EL MODO EXPORTACIÓN AHORA SOLO FUERZA DIMENSIONES EN EL MISMO SITIO */
+        .pdf-export-mode {
+            width: 794px !important; 
+            height: 1123px !important; 
+            min-width: 794px !important;
+            max-width: 794px !important;
+            padding: 30px !important;
+            box-sizing: border-box !important;
+            margin: 0 auto !important; /* Mantiene el centrado pero con el tamaño exacto */
+        }
+        .pdf-export-mode .cert-title-main { font-size: 45px !important; margin-bottom: 20px !important;}
+        .pdf-export-mode .cert-star-name { font-size: 40px !important; margin: 15px 0 25px 0 !important;}
+        .pdf-export-mode .cert-body-text { font-size: 17px !important; line-height: 1.5 !important; }
+        .pdf-export-mode .map-relative-wrapper { height: 260px !important; margin-bottom: 25px !important; }
+        .pdf-export-mode .scientific-registry { font-size: 11px !important; margin-bottom: 25px !important;}
+        .pdf-export-mode .scientific-registry th, .pdf-export-mode .scientific-registry td { padding: 8px !important; }
+
         .cert-border-1 { border: 2px solid #222; padding: 4px; height: 100%; box-sizing: border-box;}
         .cert-border-2 { border: 1px solid #222; padding: 2px; height: 100%; box-sizing: border-box;}
         .cert-border-3 { border: 4px double #444; padding: 20px 15px; position: relative; background: rgba(255,255,255,0.9); height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;}
@@ -162,7 +195,21 @@
         .sig-line { border-bottom: 1px solid #111; margin-bottom: 4px; }
         .sig-title { font-family: 'Montserrat', sans-serif; font-size: 0.5rem; text-transform: uppercase; letter-spacing: 1px; color: #555; font-weight: 600;}
 
-        /* Ajustes Desktop */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 20px; }
+        .modal-box { background: #0d111a; border: 1px solid var(--gold-main); padding: 30px 20px; width: 100%; max-width: 450px; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; text-align: center; max-height: 90vh; overflow-y: auto; }
+        .modal-header h3 { color: var(--gold-main); font-size: 1.4rem; font-family: 'Cinzel', serif; margin-bottom: 10px; }
+        .close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; position: absolute; top: 15px; right: 20px; padding: 5px; }
+        
+        .processing-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(2,4,10,0.98); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 500; padding: 20px; text-align: center;}
+        .spinner { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--gold-main); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+
+        /* Footer Legal Premium */
+        footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 40px 5%; margin-top: auto; text-align: center; background: rgba(0,0,0,0.5); }
+        .footer-disclaimer { font-size: 0.7rem; color: #555; max-width: 700px; margin: 15px auto; line-height: 1.5; }
+        .footer-links { margin-top: 20px; }
+        .footer-links a { color: var(--accent-blue); text-decoration: none; margin: 0 10px; font-size: 0.85rem; }
+        .footer-links a:hover { text-decoration: underline; color: #fff; }
+
         @media (min-width: 768px) {
             .certificate { padding: 20px; }
             .cert-border-3 { padding: 30px 40px; }
@@ -175,16 +222,6 @@
             .sig-font { font-size: 2.2rem; }
         }
 
-        /* --- MODALES Y CARGAS --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 20px; }
-        .modal-box { background: #0d111a; border: 1px solid var(--gold-main); padding: 30px 20px; width: 100%; max-width: 450px; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; text-align: center; max-height: 90vh; overflow-y: auto; }
-        .modal-header h3 { color: var(--gold-main); font-size: 1.4rem; font-family: 'Cinzel', serif; margin-bottom: 10px; }
-        .close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; position: absolute; top: 15px; right: 20px; padding: 5px; }
-        
-        .processing-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(2,4,10,0.98); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 500; padding: 20px; text-align: center;}
-        .spinner { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--gold-main); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
-
-        /* --- RESPONSIVE MÓVIL (MENÚ) --- */
         @media (max-width: 768px) {
             .mobile-menu-btn { display: block; }
             .nav-links { position: absolute; top: 100%; left: 0; width: 100%; background: rgba(2, 4, 10, 0.98); flex-direction: column; padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; border-bottom: 1px solid transparent; }
@@ -194,31 +231,7 @@
             .registry-layout { padding: 20px 10px; border: none; box-shadow: none; }
             .registry-content { padding: 30px 15px; }
             .modal-box { padding: 25px 15px; }
-        }
-        
-        /* --- 🖨️ MODO IMPRESIÓN 100% PERFECTO 1 HOJA A4 --- */
-        @media print {
-            @page { size: A4 portrait; margin: 0; }
-            html, body { width: 210mm; height: 297mm; background: #fff; color: #000; margin: 0; padding: 0; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            nav, .section-header, .print-btn, #loginStar, #home, #firmamento, #ia-locator, #admin-panel, .modal-overlay, .search-box, .processing-overlay { display: none !important; }
-            main { padding: 0 !important; margin: 0 !important; max-width: 100%; display: block; }
-            section#mystar { display: block !important; padding: 0; margin: 0; }
-            .certificate-wrapper { display: block; padding: 0; margin: 0; width: 100%; height: 100%; }
-            .cert-scroll-container { display: block; padding: 0; margin: 0; overflow: hidden; width: 100%; height: 100%; }
-            .certificate { width: 210mm; height: 297mm; margin: 0; padding: 12mm; box-shadow: none; page-break-after: avoid; page-break-before: avoid; page-break-inside: avoid; box-sizing: border-box; border: none; background-color: #faf9f6 !important; }
-            .cert-border-1, .cert-border-2 { padding: 2px; height: 100%; box-sizing: border-box; }
-            .cert-border-3 { padding: 8mm; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border-color: #111; }
-            .cert-header { margin-bottom: 5px; padding-bottom: 5px; flex-direction: row; justify-content: space-between; text-align: left;}
-            .cert-reg { text-align: right; }
-            .cert-title-main { font-size: 2rem; margin-bottom: 5px; }
-            .cert-body-text { font-size: 0.95rem; margin-bottom: 5px; line-height: 1.2; }
-            .cert-star-name { font-size: 1.6rem; margin: 5px 0; padding: 5px 0; }
-            .cert-lore-section { font-size: 0.8rem; margin-bottom: 5px; }
-            .cert-star-map-container { margin: 5px auto; max-width: 75%; padding: 2px; }
-            .map-relative-wrapper { height: 140px !important; }
-            .scientific-registry { margin: 5px 0; font-size: 0.65rem; }
-            .scientific-registry th, .scientific-registry td { padding: 4px; }
-            .cert-footer { margin-top: 5px; gap: 5px; flex-direction: row; justify-content: space-between; align-items: flex-end; }
+            .footer-links a { display: block; margin: 10px 0; }
         }
     </style>
 </head>
@@ -237,7 +250,7 @@
 
     <main>
         <section id="home" class="active">
-            <div class="section-header" style="margin-top: 10vh;">
+            <div class="section-header" style="margin-top: 5vh;">
                 <h2 style="font-weight: 600;"><span style="color: var(--gold-main);">Inmortaliza</span> Tu Legado</h2>
                 <p>El registro privado más prestigioso para la catalogación de cuerpos celestes. Seleccione una estrella, regístrela oficialmente a su nombre y reciba la carta astrométrica profesional con su ubicación exacta en el cosmos.</p>
                 <div style="margin-top: 40px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px;">
@@ -249,16 +262,13 @@
         <section id="firmamento">
             <div class="registry-layout">
                 <canvas id="skyCanvas"></canvas>
-                
                 <div class="registry-content">
                     <h3 class="serif">Buscador Astrométrico</h3>
                     <p style="margin-bottom: 30px; font-size: 0.9rem;">Introduzca el nombre oficial deseado. Nuestro sistema se enlazará con la base de datos para adjudicarle una estrella disponible de inmediato.</p>
-                    
                     <div class="name-input-group">
                         <label>Nombre a Registrar</label>
                         <input type="text" id="inputStarName" placeholder="Ej: Constelación Alpha" autocomplete="off">
                     </div>
-
                     <div class="packages-grid">
                         <div class="pack-card">
                             <div class="pack-icon"><i class="fa-regular fa-file-pdf"></i></div>
@@ -271,7 +281,6 @@
                             </ul>
                             <button class="btn-solid" style="background: transparent; border: 1px solid var(--text-muted); color: var(--text-main);" onclick="openPayment(30.00, 'Estrella Digital')">Seleccionar</button>
                         </div>
-
                         <div class="pack-card premium">
                             <div class="pack-badge">MÁS ELEGIDO</div>
                             <div class="pack-icon"><i class="fa-solid fa-gem"></i></div>
@@ -285,7 +294,6 @@
                             </ul>
                             <button class="btn-solid btn-gold" onclick="openPayment(60.00, 'Paquete Físico Premium')">Seleccionar</button>
                         </div>
-
                         <div class="pack-card">
                             <div class="pack-icon"><i class="fa-solid fa-telescope"></i></div>
                             <div class="pack-title">Supernova VIP</div>
@@ -375,16 +383,15 @@
             <div class="ai-terminal">
                 <div class="ai-header">
                     <i class="fa-solid fa-satellite-dish"></i>
-                    <span>NOVATRACK-AI // ASISTENTE VISUAL</span>
+                    <span>NOVATRACK-AI // TELEMETRÍA EN VIVO</span>
                 </div>
                 <div class="ai-body">
                     <div style="display: flex; gap: 10px;">
                         <input type="text" id="aiInput" placeholder="Introduce Código (Ej: NOVA-12345)" style="margin-bottom: 0;">
-                        <button class="btn-solid" style="width: auto; padding: 0 25px;" onclick="triggerAILocator()"><i class="fa-solid fa-radar"></i> Localizar</button>
+                        <button class="btn-solid" style="width: auto; padding: 0 25px;" onclick="triggerAILocator()"><i class="fa-solid fa-radar"></i> Rastrear</button>
                     </div>
-                    
                     <div class="ai-output-area" id="aiOutput">
-                        <span style="color: var(--text-muted);">> Esperando entrada de coordenadas...</span>
+                        <span style="color: var(--text-muted);">> Esperando entrada de coordenadas astrométricas...</span>
                     </div>
                 </div>
             </div>
@@ -397,22 +404,28 @@
             </div>
             <div class="admin-table-container">
                 <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Folio NOVA</th>
-                            <th>Cliente (PayPal)</th>
-                            <th>Estrella Asignada</th>
-                            <th>Paquete</th>
-                            <th>Logística / Envío</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminTableBody">
-                        </tbody>
+                    <thead><tr><th>Fecha</th><th>Folio NOVA</th><th>Cliente</th><th>Estrella Asignada</th><th>Paquete</th><th>Logística / Envío</th></tr></thead>
+                    <tbody id="adminTableBody"></tbody>
                 </table>
             </div>
         </section>
     </main>
+
+    <footer>
+        <p style="color: #888; font-size: 0.9rem;">&copy; 2026 NovaRegistry. Todos los derechos reservados.</p>
+        
+        <div class="footer-disclaimer">
+            NovaRegistry opera un archivo patrimonial diseñado para ofrecer un obsequio conmemorativo único. 
+            Nuestra base de datos mantiene estas asignaciones simbólicas con fines emocionales, 
+            operando de manera independiente a los catálogos de la Unión Astronómica Internacional.
+        </div>
+
+        <div class="footer-links">
+            <a href="#" onclick="openLegalModal('Aviso Legal')">Aviso Legal</a> | 
+            <a href="#" onclick="openLegalModal('Política de Privacidad')">Política de Privacidad</a> | 
+            <a href="#" onclick="openLegalModal('Términos y Condiciones')">Términos y Condiciones</a>
+        </div>
+    </footer>
 
     <div id="paymentModal" class="modal-overlay">
         <div class="modal-box">
@@ -421,7 +434,7 @@
             <div class="payment-desc" id="checkoutDesc" style="color: #aaa; margin-bottom: 5px;">-</div>
             <div class="payment-amount" id="checkoutAmount" style="color: var(--text-main); font-size: 2rem; margin-bottom: 20px;">0.00 €</div>
             
-            <div id="shipping-form" style="display:none; text-align:left; margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            <div id="shipping-form" style="display:none; text-align:left; margin-bottom: 10px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
                 <h4 style="color: var(--gold-main); margin-bottom: 15px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; letter-spacing: 1px;"><i class="fa-solid fa-truck-fast"></i> Datos de Envío Físico</h4>
                 <input type="text" id="shipName" placeholder="Nombre completo" style="padding: 12px; margin-bottom: 10px; font-size: 14px;">
                 <input type="text" id="shipAddress" placeholder="Dirección postal completa" style="padding: 12px; margin-bottom: 10px; font-size: 14px;">
@@ -432,69 +445,74 @@
                 <input type="text" id="shipPhone" placeholder="Teléfono de contacto" style="padding: 12px; margin-bottom: 0; font-size: 14px;">
             </div>
 
+            <div style="margin-bottom: 20px; text-align: left; font-size: 0.8rem; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.05);">
+                <label style="display: flex; gap: 10px; align-items: flex-start; color: #aaa; cursor: pointer;">
+                    <input type="checkbox" id="legalConsent" style="margin-top: 3px;">
+                    <span>Acepto los <a href="#" style="color: var(--accent-blue);" onclick="openLegalModal('Términos y Condiciones')">Términos de Venta</a> y autorizo el registro patrimonial.</span>
+                </label>
+            </div>
+
             <div id="paypal-button-container" style="min-height: 150px;"></div>
+        </div>
+    </div>
+
+    <div id="legalModal" class="modal-overlay">
+        <div class="modal-box" style="text-align: left; max-width: 600px;">
+            <button class="close-btn" onclick="document.getElementById('legalModal').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header"><h3 class="serif" id="legalTitle">Legal</h3></div>
+            <div id="legalContent" style="color: #bbb; font-size: 0.9rem; line-height: 1.6; margin-top: 20px; max-height: 60vh; overflow-y: auto; padding-right: 10px;">
+                Cargando...
+            </div>
         </div>
     </div>
 
     <div class="processing-overlay" id="processingOverlay">
         <div class="spinner"></div>
         <h3 class="serif" style="color: var(--gold-main); letter-spacing: 2px;">Asegurando Coordenadas...</h3>
-        <p style="color: #aaa; font-size: 0.9rem; margin-top: 10px;">Comprobando disponibilidad en el catálogo.</p>
     </div>
 
     <script>
-        // --- SECRETO MODO ADMINISTRADOR ---
-        let adminClickCount = 0;
-        let lastClickTime = 0;
-        let isAdminActive = false;
-
-        function handleLogoClick() {
-            showSection('home');
-            let currentTime = new Date().getTime();
-            if (currentTime - lastClickTime > 1500) { adminClickCount = 0; }
-            adminClickCount++;
-            lastClickTime = currentTime;
-
-            if (adminClickCount === 5) {
-                adminClickCount = 0;
-                let pwd = prompt("Terminal Maestro. Ingrese clave secreta:");
-                if (pwd === "NOVA2026") {
-                    isAdminActive = true;
-                    alert("🚀 MODO ADMIN ACTIVADO. Tienes acceso al Panel y los pagos son gratuitos.");
-                    document.getElementById('nav-admin').style.display = 'inline-block';
-                    loadAdminDashboard();
-                } else if (pwd !== null) {
-                    alert("Acceso denegado.");
-                }
-            }
-        }
-
-        function downloadPDF() {
-            const element = document.getElementById('pdf-content');
-            const btn = document.getElementById('downloadPdfBtn');
-            const starCode = document.getElementById('certId').innerText;
+        // --- TEXTOS LEGALES COMPLETOS (Ajustados para España / UE) ---
+        const legalTexts = {
+            'Aviso Legal': `
+                <strong style="color: var(--gold-main);">1. Datos Identificativos</strong><br>
+                En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE), le informamos que este sitio web, NovaRegistry, es operado por [TU EMPRESA O NOMBRE], con NIF [TU NIF/CIF], domicilio en [TU DIRECCIÓN COMPLETA]. Contacto: [TU EMAIL].<br><br>
+                <strong style="color: var(--gold-main);">2. Naturaleza del Servicio</strong><br>
+                NovaRegistry ofrece un servicio de archivo astrométrico de carácter conmemorativo, simbólico y patrimonial. Los nombres asignados a los cuerpos celestes a través de nuestra plataforma se archivan en nuestra base de datos privada exclusiva. Este servicio <strong>NO</strong> cuenta con reconocimiento oficial por parte de la Unión Astronómica Internacional (IAU), que es la única entidad encargada de la nomenclatura oficial científica. El propósito de nuestro servicio es ofrecer un obsequio emocional y un recuerdo imperecedero.<br><br>
+                <strong style="color: var(--gold-main);">3. Propiedad Intelectual</strong><br>
+                Todos los diseños, logotipos, mapas estelares y el código fuente de esta plataforma son propiedad exclusiva de NovaRegistry. Queda prohibida su reproducción sin consentimiento expreso.
+            `,
             
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando archivo...';
-            btn.style.pointerEvents = 'none';
+            'Política de Privacidad': `
+                <strong style="color: var(--gold-main);">1. Responsable del Tratamiento</strong><br>
+                En cumplimiento con el Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD), le informamos que [TU EMPRESA O NOMBRE] es el responsable del tratamiento de los datos recabados en la plataforma.<br><br>
+                <strong style="color: var(--gold-main);">2. Finalidad y Legitimación</strong><br>
+                Los datos solicitados (nombre de la estrella, nombre del cliente, y dirección física) se utilizan exclusivamente para la gestión de su pedido, la emisión del certificado estelar personalizado y la logística de entrega física. La base jurídica es la ejecución del contrato de compraventa.<br><br>
+                <strong style="color: var(--gold-main);">3. Conservación y Cesión</strong><br>
+                Los datos de registro (Código NOVA y coordenadas) se conservarán a perpetuidad para garantizar la integridad de nuestro archivo patrimonial. Sus datos personales de facturación y envío no serán cedidos a terceros, salvo a las empresas de mensajería necesarias para completar la entrega.<br><br>
+                <strong style="color: var(--gold-main);">4. Sus Derechos</strong><br>
+                Puede ejercer sus derechos de acceso, rectificación, supresión y oposición enviando un correo a [TU EMAIL], adjuntando una copia de su DNI.
+            `,
 
-            const opt = {
-                margin:       [0, 0, 0, 0],
-                filename:     `Certificado_NovaRegistry_${starCode}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, logging: false },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+            'Términos y Condiciones': `
+                <strong style="color: var(--gold-main);">1. Aceptación y Objeto</strong><br>
+                Las presentes condiciones regulan la contratación de los paquetes de registro en NovaRegistry. Al tramitar el pedido, el usuario acepta que está adquiriendo un servicio y producto (digital o físico) de valor sentimental y conmemorativo.<br><br>
+                <strong style="color: var(--gold-main);">2. Precios y Pagos</strong><br>
+                Los precios indicados en pantalla incluyen los impuestos aplicables. El pago se realiza de forma segura a través de PayPal. El pedido se procesará automáticamente una vez confirmado el abono.<br><br>
+                <strong style="color: var(--gold-main);">3. Política de Devoluciones (Derecho de Desistimiento)</strong><br>
+                De acuerdo con el artículo 103 de la Ley General para la Defensa de los Consumidores y Usuarios, el derecho de desistimiento <strong>NO es aplicable</strong> a los contratos que se refieran al suministro de bienes confeccionados conforme a las especificaciones del consumidor o claramente personalizados. Dado que el certificado estelar se genera en exclusiva para usted con un nombre único irreversible en nuestro registro, <strong>no se admiten devoluciones ni cancelaciones</strong> una vez adjudicada la estrella.<br><br>
+                <strong style="color: var(--gold-main);">4. Envíos e Incidencias</strong><br>
+                Para los paquetes físicos, los plazos de entrega estimados son de 3 a 7 días hábiles. Si su paquete sufre algún daño durante el transporte, dispone de 48 horas tras su recepción para contactarnos en [TU EMAIL] aportando fotografías. Procederemos a emitir y enviar un reemplazo sin coste alguno.
+            `
+        };
 
-            html2pdf().set(opt).from(element).save().then(() => {
-                btn.innerHTML = originalText;
-                btn.style.pointerEvents = 'auto';
-            });
+        function openLegalModal(type) {
+            document.getElementById('legalTitle').innerText = type;
+            document.getElementById('legalContent').innerHTML = legalTexts[type];
+            document.getElementById('legalModal').style.display = 'flex';
         }
 
-        function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
-
-        // --- FIREBASE ---
+        // --- FIREBASE INICIALIZACIÓN ---
         const firebaseConfig = {
             apiKey: "AIzaSyD5F10FeOf1cAO_6j3v_OR8WHIxw-lQo6w",
             authDomain: "novagetristy.firebaseapp.com",
@@ -505,6 +523,80 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let isAdminActive = false;
+
+        let adminClickCount = 0;
+        let lastClickTime = 0;
+
+        function handleLogoClick() {
+            showSection('home');
+            let currentTime = new Date().getTime();
+            if (currentTime - lastClickTime > 1500) { adminClickCount = 0; }
+            adminClickCount++;
+            lastClickTime = currentTime;
+
+            if (adminClickCount === 5) {
+                adminClickCount = 0;
+                let email = prompt("MODO ADMIN. Ingrese correo de administrador:");
+                if (email) {
+                    let pwd = prompt("Ingrese contraseña:");
+                    if(pwd) {
+                        auth.signInWithEmailAndPassword(email, pwd)
+                            .then(() => {
+                                isAdminActive = true;
+                                alert("🚀 MODO ADMIN ACTIVADO.");
+                                document.getElementById('nav-admin').style.display = 'inline-block';
+                                loadAdminDashboard();
+                            }).catch((error) => alert("Acceso denegado."));
+                    }
+                }
+            }
+        }
+
+        // --- FIX DEFINITIVO PDF: MANTENER EN SU SITIO, FORZAR TAMAÑO ---
+        function downloadPDF() {
+            const element = document.getElementById('pdf-content');
+            const btn = document.getElementById('downloadPdfBtn');
+            const starCode = document.getElementById('certId').innerText || "Documento";
+            
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando archivo...';
+            btn.style.pointerEvents = 'none';
+
+            // Añadir clase que bloquea el tamaño a A4 estricto
+            element.classList.add('pdf-export-mode');
+
+            // Retardo de 100ms para asegurar que el navegador redibuje el elemento con el nuevo tamaño
+            setTimeout(() => {
+                const opt = {
+                    margin:       0,
+                    filename:     `Certificado_NovaRegistry_${starCode}.pdf`,
+                    image:        { type: 'jpeg', quality: 1.0 },
+                    html2canvas:  { 
+                        scale: 2, 
+                        useCORS: true,
+                        scrollY: 0, // Evita corte si la página estaba bajada
+                        windowWidth: 800 // Evita que se colapse por el viewport del móvil
+                    },
+                    jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
+                };
+
+                html2pdf().set(opt).from(element).save().then(() => {
+                    element.classList.remove('pdf-export-mode');
+                    btn.innerHTML = originalText;
+                    btn.style.pointerEvents = 'auto';
+                }).catch(err => {
+                    console.error("Error al generar PDF: ", err);
+                    element.classList.remove('pdf-export-mode');
+                    btn.innerHTML = originalText;
+                    btn.style.pointerEvents = 'auto';
+                });
+            }, 100);
+        }
+
+        function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
 
         function showSection(sectionId) {
             document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
@@ -533,12 +625,6 @@
             const centerX = window.innerWidth / 2; const centerY = window.innerHeight / 2;
             targetOffsetX = (e.clientX - centerX) * 0.05; targetOffsetY = (e.clientY - centerY) * 0.05;
         });
-
-        if (window.DeviceOrientationEvent) {
-            window.addEventListener('deviceorientation', (e) => {
-                if(e.gamma !== null && e.beta !== null) { targetOffsetX = e.gamma * 2; targetOffsetY = (e.beta - 45) * 2; }
-            });
-        }
 
         function initBackgroundSky() {
             canvasInitialized = true; resizeCanvas(); window.addEventListener('resize', resizeCanvas);
@@ -573,33 +659,9 @@
             requestAnimationFrame(renderAmbientSky);
         }
 
-        // --- CATÁLOGO DE ESTRELLAS AMPLIADO (Visibles Hemisferio Norte / España) ---
         const starCatalog = [
-            { official: "HD 48915 (Sirio)", constellation: "Canis Major", ra: "06h 45m 08s", dec: "-16° 42' 58\"", distance: "8.6 A.L.", spectral: "A1 V", temp: "9940 K", appMag: "-1.46", lum: "25.4 Soles", lore: "La estrella más brillante de todo el cielo nocturno. Reverenciada en el antiguo Egipto porque su aparición marcaba la época de siembra." },
-            { official: "HD 172167 (Vega)", constellation: "Lyra", ra: "18h 36m 56s", dec: "+38° 47' 01\"", distance: "25 A.L.", spectral: "A0 Va", temp: "9600 K", appMag: "0.03", lum: "40.1 Soles", lore: "Una de las estrellas más estudiadas de la historia. Fue la Estrella Polar en el año 12000 a.C. y volverá a serlo en el futuro." },
-            { official: "HD 128620 (Arturo)", constellation: "Boyero", ra: "14h 15m 39s", dec: "+19° 10' 56\"", distance: "36.7 A.L.", spectral: "K0 III", temp: "4286 K", appMag: "-0.05", lum: "170 Soles", lore: "La estrella más brillante del hemisferio norte celeste. Su nombre en griego antiguo significa 'El Guardián del Oso'." },
-            { official: "HD 34085 (Rigel)", constellation: "Orión", ra: "05h 14m 32s", dec: "-08° 12' 05\"", distance: "860 A.L.", spectral: "B8 Ia", temp: "12100 K", appMag: "0.18", lum: "120000 Soles", lore: "El faro azul ardiente. Una estrella supergigante colosal que ilumina la mítica constelación del cazador." },
-            { official: "HD 39801 (Betelgeuse)", constellation: "Orión", ra: "05h 55m 10s", dec: "+07° 24' 25\"", distance: "642 A.L.", spectral: "M1 Ia", temp: "3500 K", appMag: "0.42", lum: "100000 Soles", lore: "Una supergigante roja pulsante inmensa. Si estuviera en nuestro Sistema Solar, engulliría a la Tierra y a Marte." },
-            { official: "HD 197345 (Deneb)", constellation: "Cisne", ra: "20h 41m 25s", dec: "+45° 16' 49\"", distance: "2600 A.L.", spectral: "A2 Ia", temp: "8525 K", appMag: "1.25", lum: "196000 Soles", lore: "La estrella distante más brillante que podemos ver a simple vista. Forma el vértice del famoso 'Triángulo de Verano'." },
-            { official: "HD 187642 (Altair)", constellation: "Águila", ra: "19h 50m 46s", dec: "+08° 52' 05\"", distance: "16.7 A.L.", spectral: "A7 V", temp: "7700 K", appMag: "0.76", lum: "10.6 Soles", lore: "Estrella rotante extrema. Gira tan rápido que su forma no es esférica, sino achatada como una peonza cósmica." },
-            { official: "HD 8890 (Polaris)", constellation: "Osa Menor", ra: "02h 31m 49s", dec: "+89° 15' 50\"", distance: "433 A.L.", spectral: "F7 Ib", temp: "6000 K", appMag: "1.97", lum: "2500 Soles", lore: "La famosa Estrella del Norte. Ha sido la brújula inquebrantable de navegantes y exploradores durante los últimos dos milenios." },
-            { official: "HD 29139 (Aldebarán)", constellation: "Tauro", ra: "04h 35m 55s", dec: "+16° 30' 33\"", distance: "65 A.L.", spectral: "K5 III", temp: "3900 K", appMag: "0.85", lum: "518 Soles", lore: "El ojo rojo y ardiente del Toro mitológico. Es conocida en la historia como una de las cuatro Estrellas Reales." },
-            { official: "HD 108248 (Acrux)", constellation: "Eridano", ra: "01h 37m 42s", dec: "-57° 14' 12\"", distance: "139 A.L.", spectral: "B6 Vep", temp: "15000 K", appMag: "0.45", lum: "3150 Soles", lore: "Situada en el final del 'Río Celeste'. Una de las estrellas más resplandecientes observables en las noches despejadas." },
-            { official: "HD 61421 (Procyon)", constellation: "Canis Minor", ra: "07h 39m 18s", dec: "+05° 13' 29\"", distance: "11.4 A.L.", spectral: "F5 IV-V", temp: "6530 K", appMag: "0.34", lum: "6.9 Soles", lore: "La 'Precursora'. En la antigua Grecia celebraban su aparición porque anunciaba la llegada inmediata de la majestuosa Sirio." },
-            { official: "HD 116658 (Espiga)", constellation: "Virgo", ra: "13h 25m 11s", dec: "-11° 09' 40\"", distance: "250 A.L.", spectral: "B1 III", temp: "22400 K", appMag: "0.97", lum: "12100 Soles", lore: "Representa la espiga de trigo que sostiene la diosa de la cosecha. Una estrella doble de un intenso tono azul pálido." },
-            { official: "HD 62509 (Pólux)", constellation: "Géminis", ra: "07h 45m 18s", dec: "+28° 01' 34\"", distance: "33.7 A.L.", spectral: "K0 III", temp: "4666 K", appMag: "1.14", lum: "43 Soles", lore: "El hermano inmortal de la mitología de los Gemelos. Es la estrella gigante más cercana a nuestro propio Sol." },
-            { official: "HD 87901 (Régulo)", constellation: "Leo", ra: "10h 08m 22s", dec: "+11° 58' 01\"", distance: "79 A.L.", spectral: "B7 V", temp: "12460 K", appMag: "1.36", lum: "288 Soles", lore: "El 'Pequeño Rey' y el corazón resplandeciente del León. Otra de las grandes Estrellas Reales de la antigüedad persa." },
-            { official: "HD 432 (Caph)", constellation: "Casiopea", ra: "00h 09m 10s", dec: "+59° 08' 59\"", distance: "54 A.L.", spectral: "F2 III", temp: "7000 K", appMag: "2.28", lum: "28 Soles", lore: "Una de las brillantes puntas de la icónica forma de 'W' en el cielo. Su nombre evoca a la reina engreída de la mitología." },
-            { official: "HD 14322 (Shedar)", constellation: "Casiopea", ra: "00h 40m 30s", dec: "+56° 32' 14\"", distance: "228 A.L.", spectral: "K0 IIIa", temp: "4530 K", appMag: "2.24", lum: "855 Soles", lore: "Una gigante naranja que forma el pecho de la Reina Casiopea, brillando con nobleza cerca de la galaxia de Andrómeda." },
-            { official: "HD 129245 (Seginus)", constellation: "Boyero", ra: "14h 32m 04s", dec: "+38° 18' 28\"", distance: "85 A.L.", spectral: "A7 III", temp: "7650 K", appMag: "3.03", lum: "74 Soles", lore: "Conocida históricamente como el hombro del Pastor celeste. Guardiana eterna de las regiones boreales." },
-            { official: "HD 112846 (Cor Caroli)", constellation: "Perros de Caza", ra: "12h 56m 01s", dec: "+38° 19' 06\"", distance: "114 A.L.", spectral: "A0 Vp", temp: "11600 K", appMag: "2.89", lum: "101 Soles", lore: "El 'Corazón de Carlos'. Nombrada en el siglo XVII por su intenso brillo durante eventos clave de la monarquía inglesa." },
-            { official: "HD 139006 (Alphecca)", constellation: "Corona Boreal", ra: "15h 34m 41s", dec: "+26° 42' 52\"", distance: "75 A.L.", spectral: "A0 V", temp: "9750 K", appMag: "2.22", lum: "60 Soles", lore: "La 'Perla de la Corona'. Representa la joya central de la diadema luminosa de la princesa Ariadna en las fábulas clásicas." },
-            { official: "HD 20320 (Mirfak)", constellation: "Perseo", ra: "03h 24m 19s", dec: "+49° 51' 40\"", distance: "590 A.L.", spectral: "F5 Ib", temp: "6180 K", appMag: "1.79", lum: "5000 Soles", lore: "El guerrero valiente. Supergigante luminosa que capitanea un impresionante cúmulo estelar fácilmente visible con prismáticos." },
-            { official: "HD 123299 (Alkaid)", constellation: "Osa Mayor", ra: "13h 47m 32s", dec: "+49° 18' 47\"", distance: "103 A.L.", spectral: "B3 V", temp: "15540 K", appMag: "1.85", lum: "594 Soles", lore: "Ubicada en la punta del mango del Carro Mayor. Una de las estrellas más calientes observables desde la Tierra sin telescopio." },
-            { official: "HD 95689 (Dubhe)", constellation: "Osa Mayor", ra: "11h 03m 43s", dec: "+61° 45' 03\"", distance: "123 A.L.", spectral: "K0 III", temp: "4660 K", appMag: "1.79", lum: "316 Soles", lore: "El lomo de la Gran Osa. Funciona, junto a su vecina Merak, como el 'puntero' exacto para encontrar la Estrella Polar." },
-            { official: "HD 106591 (Zosma)", constellation: "Leo", ra: "11h 14m 06s", dec: "+20° 31' 25\"", distance: "58 A.L.", spectral: "A4 V", temp: "8296 K", appMag: "2.56", lum: "15 Soles", lore: "Situada en el lomo del formidable León celestial. Ha presenciado el origen de incontables mitos zodiacales milenarios." },
-            { official: "HD 206778 (Enif)", constellation: "Pegaso", ra: "21h 44m 11s", dec: "+09° 52' 30\"", distance: "690 A.L.", spectral: "K2 Ib", temp: "4395 K", appMag: "2.38", lum: "6700 Soles", lore: "La nariz del majestuoso Caballo Alado. Es conocida por sufrir repentinos y violentos destellos de luz esporádicos." },
-            { official: "HD 183912 (Albireo)", constellation: "Cisne", ra: "19h 30m 43s", dec: "+27° 57' 34\"", distance: "430 A.L.", spectral: "K3 II", temp: "4270 K", appMag: "3.05", lum: "1200 Soles", lore: "Considerada por los astrónomos la joya doble más hermosa del firmamento. Vista con detalle, deslumbra en tonos topacio y zafiro." }
+            { official: "HD 48915 (Sirio)", constellation: "Canis Major", ra: "06h 45m 08s", dec: "-16° 42' 58\"", distance: "8.6 A.L.", spectral: "A1 V", temp: "9940 K", appMag: "-1.46", lum: "25.4 Soles", lore: "La estrella más brillante de todo el cielo nocturno." },
+            { official: "HD 172167 (Vega)", constellation: "Lyra", ra: "18h 36m 56s", dec: "+38° 47' 01\"", distance: "25 A.L.", spectral: "A0 Va", temp: "9600 K", appMag: "0.03", lum: "40.1 Soles", lore: "Fue la Estrella Polar en el año 12000 a.C." }
         ];
 
         let checkoutPrice = 0;
@@ -612,22 +674,17 @@
             starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
             
             if(starNamePending === "") { 
-                alert("Por favor, introduzca un Nombre Oficial válido (solo letras y números)."); 
-                document.getElementById('inputStarName').value = "";
-                document.getElementById('inputStarName').focus(); 
+                alert("Introduzca un Nombre Oficial válido."); 
                 return; 
             }
             
             checkoutPackage = packageName;
+            document.getElementById('legalConsent').checked = false; 
 
             const formEnvio = document.getElementById('shipping-form');
-            if (packageName.includes("Físico") || packageName.includes("VIP")) {
-                formEnvio.style.display = 'block';
-            } else {
-                formEnvio.style.display = 'none';
-            }
+            formEnvio.style.display = (packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
 
-            if(isAdminActive) { executeRealStarAssignment("Administrador"); return; }
+            if(isAdminActive) { executeRealStarAssignment("Admin Test"); return; }
 
             checkoutPrice = price; 
             document.getElementById('checkoutDesc').innerText = packageName;
@@ -637,37 +694,32 @@
             if (!paypalButtonsRendered) {
                 paypal.Buttons({
                     style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
-                    
                     onClick: function(data, actions) {
+                        if(!document.getElementById('legalConsent').checked) {
+                            alert("Por favor, marca la casilla de Términos de Venta para continuar.");
+                            return actions.reject();
+                        }
                         if (document.getElementById('shipping-form').style.display === 'block') {
                             const n = document.getElementById('shipName').value.trim();
                             const a = document.getElementById('shipAddress').value.trim();
-                            const c = document.getElementById('shipCity').value.trim();
                             const z = document.getElementById('shipZip').value.trim();
-                            
-                            if(!n || !a || !c || !z) {
-                                alert("Por favor, rellene todos los campos obligatorios de la Dirección de Envío.");
+                            if(!n || !a || !z) {
+                                alert("Rellene la dirección de envío.");
                                 return actions.reject(); 
                             }
                         }
                         return actions.resolve();
                     },
-
                     createOrder: function(data, actions) { 
                         return actions.order.create({ purchase_units: [{ amount: { value: checkoutPrice.toString() } }] }); 
                     },
-                    
                     onApprove: function(data, actions) {
                         return actions.order.capture().then(function(details) {
                             closePaymentModal(); 
                             executeRealStarAssignment(details.payer.name.given_name);
                         });
                     },
-                    
-                    onError: function(err) { 
-                        console.error("Error PayPal:", err); 
-                        alert("La pasarela detectó un problema de conexión. Inténtelo de nuevo."); 
-                    }
+                    onError: function(err) { alert("Error al procesar PayPal."); }
                 }).render('#paypal-button-container');
                 paypalButtonsRendered = true;
             }
@@ -682,10 +734,8 @@
             let shippingInfo = null;
             if (document.getElementById('shipping-form').style.display === 'block') {
                 shippingInfo = {
-                    name: document.getElementById('shipName').value.trim(),
-                    address: document.getElementById('shipAddress').value.trim(),
-                    city: document.getElementById('shipCity').value.trim(),
-                    zip: document.getElementById('shipZip').value.trim(),
+                    name: document.getElementById('shipName').value.trim(), address: document.getElementById('shipAddress').value.trim(),
+                    city: document.getElementById('shipCity').value.trim(), zip: document.getElementById('shipZip').value.trim(),
                     phone: document.getElementById('shipPhone').value.trim()
                 };
             }
@@ -696,9 +746,7 @@
                 const availableStars = starCatalog.filter(star => !soldStars.includes(star.official));
 
                 if (availableStars.length === 0) {
-                    overlay.style.display = 'none';
-                    alert("¡Catálogo del Norte agotado temporalmente! El pago no se ha deducido. Contacte con soporte.");
-                    return;
+                    overlay.style.display = 'none'; alert("¡Catálogo agotado temporalmente!"); return;
                 }
 
                 const realStar = availableStars[Math.floor(Math.random() * availableStars.length)];
@@ -709,41 +757,30 @@
                     constellation: realStar.constellation, ra: realStar.ra, dec: realStar.dec,
                     date: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' }),
                     distance: realStar.distance, pack: checkoutPackage, spectral: realStar.spectral, temp: realStar.temp, appMag: realStar.appMag, lum: realStar.lum,
-                    lore: realStar.lore,
-                    payerName: payerName, 
-                    shipping: shippingInfo 
+                    lore: realStar.lore, payerName: payerName, shipping: shippingInfo 
                 };
 
                 await db.collection("estrellas").doc(newCode).set(starData);
-                
                 overlay.style.display = 'none';
-                document.getElementById('inputStarName').value = '';
-                document.getElementById('shipName').value = '';
-                document.getElementById('shipAddress').value = '';
                 
-                alert(`¡COMPRA CONFIRMADA, ${payerName}!\n\nSe le ha adjudicado la estrella única: ${starData.official} en la constelación de ${starData.constellation}\nSu Código de Acceso es: ${newCode}`);
+                alert(`¡COMPRA CONFIRMADA!\nSe le ha adjudicado: ${starData.official}\nCódigo: ${newCode}`);
                 showSection('mystar');
                 document.getElementById('myStarInput').value = newCode;
                 loadMyStar(); 
                 
             } catch(error) {
-                console.error("Error Firebase:", error);
-                overlay.style.display = 'none';
-                alert("Aviso: Falló la sincronización con la base de datos satelital.");
+                overlay.style.display = 'none'; alert("Fallo de sincronización.");
             }
         }
 
-        // --- CARGA DEL MAPA Y CERTIFICADO ---
         async function loadMyStar() {
             const input = document.getElementById('myStarInput').value.toUpperCase().replace(/\s+/g, '');
-            if(!input) { alert("Introduzca un código de folio válido."); return; }
+            if(!input) return;
 
             try {
                 const docRef = await db.collection("estrellas").doc(input).get();
-
                 if (docRef.exists) {
                     const star = docRef.data();
-                    
                     document.getElementById('loginStar').style.display = 'none';
                     document.getElementById('certificatePanel').style.display = 'flex';
 
@@ -751,7 +788,6 @@
                     document.getElementById('certOfficialCodeTop').innerText = star.official; 
                     document.getElementById('certDate').innerText = star.date;
                     document.getElementById('certName').innerText = star.name;
-                    
                     document.getElementById('certOfficial').innerText = star.official;
                     document.getElementById('certRA').innerText = star.ra;
                     document.getElementById('certDEC').innerText = star.dec;
@@ -761,125 +797,121 @@
                     document.getElementById('certAppMag').innerText = star.appMag;
                     document.getElementById('certLum').innerText = star.lum;
                     document.getElementById('certBarcode').innerText = `*${star.id.replace('-','')}*`;
+                    document.getElementById('certLore').innerText = star.lore ? `"${star.lore}"` : "";
+                } else { alert('Código no localizado.'); }
+            } catch (error) { alert("Fallo de conexión."); }
+        }
 
-                    if (star.lore) {
-                        document.getElementById('certLore').innerText = `"${star.lore}"`;
-                    } else {
-                        document.getElementById('certLore').innerText = "";
-                    }
-
-                } else {
-                    alert('Código no localizado en los Archivos Celestiales.');
-                }
-            } catch (error) {
-                console.error("Error BD:", error);
-                alert("Fallo de conexión con el servidor satelital.");
+        // --- FUNCIONES IA TRACKER ---
+        function parseCoordToDeg(coordStr, isRA) {
+            let match;
+            if (isRA) { 
+                match = coordStr.match(/(\d+)h\s*(\d+)m\s*(\d+)s/);
+                if (!match) return 0;
+                return (parseFloat(match[1]) + parseFloat(match[2])/60 + parseFloat(match[3])/3600) * 15;
+            } else { 
+                match = coordStr.match(/([+-]?\d+)°\s*(\d+)'\s*(\d+)/);
+                if (!match) return 0;
+                let sign = coordStr.includes('-') ? -1 : 1;
+                return sign * (Math.abs(parseFloat(match[1])) + parseFloat(match[2])/60 + parseFloat(match[3])/3600);
             }
         }
 
-        // --- IA TRACKER: LA VERSIÓN MEJORADA CON GUÍA ---
+        function getAltAz(lat, lon, raDeg, decDeg) {
+            let now = new Date();
+            let d = Math.round((now.getTime() - new Date("2000-01-01T12:00:00Z").getTime()) / 86400000);
+            let lst = (100.46 + 0.985647 * d + lon + 15 * (now.getUTCHours() + now.getUTCMinutes()/60)) % 360;
+            if (lst < 0) lst += 360;
+
+            let ha = lst - raDeg;
+            let rad = Math.PI / 180;
+            let sinAlt = Math.sin(lat*rad)*Math.sin(decDeg*rad) + Math.cos(lat*rad)*Math.cos(decDeg*rad)*Math.cos(ha*rad);
+            let alt = Math.asin(sinAlt) / rad;
+
+            let cosA = (Math.sin(decDeg*rad) - Math.sin(alt*rad)*Math.sin(lat*rad)) / (Math.cos(alt*rad)*Math.cos(lat*rad));
+            cosA = Math.max(-1, Math.min(1, cosA)); 
+            let az = Math.acos(cosA) / rad;
+            if (Math.sin(ha*rad) > 0) az = 360 - az;
+
+            return { alt: parseFloat(alt.toFixed(1)), az: parseFloat(az.toFixed(1)) };
+        }
+
+        function getCardinalPoint(az) {
+            const directions = ["Norte", "Noreste", "Este", "Sureste", "Sur", "Suroeste", "Oeste", "Noroeste", "Norte"];
+            return directions[Math.round(az / 45)];
+        }
+
         async function triggerAILocator() {
             const input = document.getElementById('aiInput').value.toUpperCase().replace(/\s+/g, '');
             const outputArea = document.getElementById('aiOutput');
             
-            if(!input) { outputArea.innerHTML = '<span style="color: red;">> ERROR: Por favor, ingrese un código de folio válido.</span>'; return; }
+            if(!input) { outputArea.innerHTML = '<span style="color: red;">> ERROR: Ingrese un código de folio.</span>'; return; }
             
-            outputArea.innerHTML = '<span class="ai-typing">> Iniciando conexión con base de datos Firebase...</span><br><span class="ai-typing">> Cruzando coordenadas (RA / DEC) con su geolocalización actual...</span>';
+            outputArea.innerHTML = '<span class="ai-typing">> Obteniendo telemetría astrométrica...</span><br><span class="ai-typing">> Solicitando triangulación GPS al dispositivo...</span>';
 
-            try {
-                const docRef = await db.collection("estrellas").doc(input).get();
-                
-                setTimeout(() => {
-                    if (docRef.exists) {
-                        const star = docRef.data();
-                        
-                        const hour = new Date().getHours();
-                        let vista = "";
-                        
-                        if(hour >= 7 && hour <= 19) {
-                            vista = "<strong>Actualmente es de día en España.</strong> La estrella se encuentra rotando sobre el horizonte, pero está oculta por la luz solar. Deberás esperar al anochecer para realizar el rastreo visual.";
-                        } else {
-                            vista = "<strong>Es de noche.</strong> Analizando su Declinación y latitud norte, tu estrella es visible ahora mismo. Busca un punto libre de luces de farolas para asegurar un buen avistamiento.";
-                        }
-
-                        // Constelación de respaldo (por si es una estrella vieja de la base de datos sin este campo)
-                        const constelacionFija = star.constellation ? star.constellation : "Boyero/Cisne";
-
-                        outputArea.innerHTML = `
-                            <div style="color: #00ff66; margin-bottom: 15px; font-size: 1.1em;">> [ ÉXITO ] ENLACE SATELITAL ESTABLECIDO</div>
-                            
-                            <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
-                                <div style="margin-bottom: 5px;"><strong>Nombre Registrado:</strong> <span style="color: #fff;">${star.name}</span></div>
-                                <div style="margin-bottom: 10px;"><strong>Designación Científica:</strong> <span style="color: #fff;">${star.official}</span></div>
-                                <div style="color: var(--gold-main);"><strong>Coordenadas en Tiempo Real:</strong></div>
-                                <div>Ascensión Recta: ${star.ra} | Declinación: ${star.dec}</div>
-                            </div>
-                            
-                            <div style="color: var(--accent-blue); margin-top: 15px; font-size: 1.1em;"><strong>> 🛰️ Guía de Búsqueda Interactiva:</strong></div>
-                            <ol style="color: #a0aabf; margin-left: 20px; line-height: 1.7; margin-top: 10px;">
-                                <li><strong>Condiciones actuales:</strong> ${vista}</li>
-                                <li><strong>Oriéntate hacia:</strong> Debes buscar primero la constelación de <strong>${constelacionFija}</strong> en el cielo.</li>
-                                <li><strong>💡 El Truco Más Fácil:</strong> Descarga la aplicación gratuita <em>"Sky Tonight"</em> o <em>"Stellarium"</em> en tu teléfono.</li>
-                                <li><strong>Modo Realidad Aumentada:</strong> Abre la app, usa la lupa de búsqueda y escribe la designación científica <strong>${star.official.split(' ')[0]}</strong> o sus coordenadas.</li>
-                                <li>Apunta con la cámara de tu móvil al cielo y la brújula te guiará con una flecha hasta enfocar exactamente tu estrella.</li>
-                            </ol>
-                        `;
-                    } else {
-                        outputArea.innerHTML = '<span style="color: red;">> [ ERROR 404 ] Código astrométrico no encontrado en los archivos inmutables. Comprueba la sintaxis (Ej: NOVA-12345).</span>';
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => processTracking(input, position.coords.latitude, position.coords.longitude, outputArea),
+                    () => {
+                        outputArea.innerHTML += '<br><span style="color: #ff9900;">> Ubicación denegada. Usando observatorio base (Lat: 40.41, Lon: -3.70)...</span>';
+                        processTracking(input, 40.4168, -3.7038, outputArea); 
                     }
-                }, 2000);
-
-            } catch (error) {
-                outputArea.innerHTML = '<span style="color: red;">> [ ERROR FATAL ] Pérdida de conexión con el satélite. Servidores saturados.</span>';
+                );
+            } else {
+                processTracking(input, 40.4168, -3.7038, outputArea);
             }
         }
 
-        // --- DASHBOARD DE ADMINISTRADOR ---
+        async function processTracking(input, lat, lon, outputArea) {
+            try {
+                const docRef = await db.collection("estrellas").doc(input).get();
+                if (docRef.exists) {
+                    const star = docRef.data();
+                    const raDeg = parseCoordToDeg(star.ra, true);
+                    const decDeg = parseCoordToDeg(star.dec, false);
+                    const coords = getAltAz(lat, lon, raDeg, decDeg);
+                    
+                    let visibilityStr = coords.alt > 0 
+                        ? `<span style="color: #00ff66;">Visible sobre el horizonte (${coords.alt}°)</span>`
+                        : `<span style="color: #ff3366;">Bajo el horizonte (${coords.alt}°)</span>`;
+                        
+                    let cardinal = getCardinalPoint(coords.az);
+
+                    outputArea.innerHTML = `
+                        <div style="color: #00ff66; margin-bottom: 15px; font-size: 1.1em;">> [ ÉXITO ] SEÑAL TELEMÉTRICA FIJADA</div>
+                        <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                            <div style="margin-bottom: 5px;"><strong>Estrella Objetivo:</strong> <span style="color: #fff;">${star.name} (${star.official})</span></div>
+                            <div style="margin-bottom: 10px;"><strong>Observador Local:</strong> Lat ${lat.toFixed(2)}, Lon ${lon.toFixed(2)}</div>
+                            <div style="color: var(--gold-main);"><strong>Datos en Tiempo Real:</strong></div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px;">
+                                <div>Elevación:<br><strong>${visibilityStr}</strong></div>
+                                <div>Azimut Brújula:<br><strong>${coords.az}° (${cardinal})</strong></div>
+                            </div>
+                        </div>
+                        <div style="color: var(--accent-blue); margin-top: 15px; font-size: 0.9em;">
+                            <strong>> 🛰️ ASISTENTE DE AVISTAMIENTO:</strong><br> 
+                            ${coords.alt > 0 ? `Abre la brújula de tu móvil y apunta hacia el <strong>${cardinal} (${coords.az}°)</strong>. Busca en esa dirección la constelación de ${star.constellation}.` : `Tu estrella se encuentra oculta bajo la Tierra en este momento debido a la rotación.`}
+                        </div>
+                    `;
+                } else { outputArea.innerHTML = '<span style="color: red;">> [ ERROR 404 ] Código no existe.</span>'; }
+            } catch (error) { outputArea.innerHTML = '<span style="color: red;">> [ ERROR FATAL ] Servidor no responde.</span>'; }
+        }
+
         async function loadAdminDashboard() {
+            if(!isAdminActive) return;
             showSection('admin-panel');
             const tbody = document.getElementById('adminTableBody');
             tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 40px;"><div class="spinner" style="margin: 0 auto;"></div></td></tr>';
-            
             try {
                 const snapshot = await db.collection("estrellas").get();
                 let rows = '';
-                
-                let docsArray = snapshot.docs.map(doc => doc.data());
-                docsArray.reverse(); 
-                
+                let docsArray = snapshot.docs.map(doc => doc.data()).reverse(); 
                 docsArray.forEach(data => {
-                    let shippingStr = "<span style='color: var(--text-muted);'>Digital (Sin envío)</span>";
-                    
-                    if (data.shipping && data.shipping.name) {
-                        shippingStr = `
-                            <strong style="color:#fff">${data.shipping.name}</strong><br>
-                            ${data.shipping.address}<br>
-                            ${data.shipping.city}, ${data.shipping.zip}<br>
-                            <i class="fa-solid fa-phone" style="color:var(--accent-blue);"></i> ${data.shipping.phone}
-                        `;
-                    }
-                    
-                    rows += `
-                        <tr>
-                            <td>${data.date}</td>
-                            <td style="color: var(--accent-blue); font-family: 'Space Mono', monospace; font-weight: bold;">${data.id}</td>
-                            <td>${data.payerName || "S/N"}</td>
-                            <td><strong>${data.name}</strong><br><span style="color:var(--gold-main); font-size: 0.75rem;">${data.official}</span></td>
-                            <td><span style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px;">${data.pack}</span></td>
-                            <td style="line-height: 1.4;">${shippingStr}</td>
-                        </tr>
-                    `;
+                    let ship = data.shipping ? `<strong style="color:#fff">${data.shipping.name}</strong><br>${data.shipping.city}` : "<span style='color: var(--text-muted);'>Digital</span>";
+                    rows += `<tr><td>${data.date}</td><td style="color: var(--accent-blue); font-weight: bold;">${data.id}</td><td>${data.payerName || "S/N"}</td><td><strong>${data.name}</strong></td><td>${data.pack}</td><td>${ship}</td></tr>`;
                 });
-                
-                if (docsArray.length === 0) {
-                    rows = '<tr><td colspan="6" style="text-align:center; padding: 20px;">No hay ventas registradas en la base de datos aún.</td></tr>';
-                }
-                
-                tbody.innerHTML = rows;
-            } catch (e) {
-                console.error(e);
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red; padding: 20px;">Error extrayendo datos satelitales (Firebase).</td></tr>';
-            }
+                tbody.innerHTML = rows || '<tr><td colspan="6" style="text-align:center;">No hay ventas.</td></tr>';
+            } catch (e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
         }
     </script>
 </body>
