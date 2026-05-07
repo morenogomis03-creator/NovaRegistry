@@ -109,49 +109,11 @@
         .pack-features li i { color: var(--accent-blue); margin-top: 4px; font-size: 0.8rem; }
         .pack-card.premium .pack-features li i { color: var(--gold-main); }
 
-        /* --- CERTIFICADO Y PDF FIX DEFINITIVO --- */
+        /* --- CONTENEDOR CERTIFICADO WEB (VISUAL NORMAL) --- */
         .certificate-wrapper { display: none; flex-direction: column; align-items: center; width: 100%; }
+        .cert-scroll-container { width: 100%; display: flex; justify-content: center; padding-bottom: 20px; overflow-x: auto; }
         
-        /* Container original del certificado */
-        .cert-scroll-container { 
-            width: 100%; 
-            display: flex; 
-            justify-content: center; 
-            padding-bottom: 20px; 
-            overflow-x: auto; 
-        }
-        
-        .certificate { 
-            background-color: #faf9f6; 
-            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); 
-            color: #111; 
-            padding: 15px; 
-            width: 100%; 
-            max-width: 800px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8); 
-            position: relative; 
-            margin: 0 auto; 
-            box-sizing: border-box; 
-            transition: all 0.1s; /* Transición suave */
-        }
-        
-        /* FIX: EL MODO EXPORTACIÓN AHORA SOLO FUERZA DIMENSIONES EN EL MISMO SITIO */
-        .pdf-export-mode {
-            width: 794px !important; 
-            height: 1123px !important; 
-            min-width: 794px !important;
-            max-width: 794px !important;
-            padding: 30px !important;
-            box-sizing: border-box !important;
-            margin: 0 auto !important; /* Mantiene el centrado pero con el tamaño exacto */
-        }
-        .pdf-export-mode .cert-title-main { font-size: 45px !important; margin-bottom: 20px !important;}
-        .pdf-export-mode .cert-star-name { font-size: 40px !important; margin: 15px 0 25px 0 !important;}
-        .pdf-export-mode .cert-body-text { font-size: 17px !important; line-height: 1.5 !important; }
-        .pdf-export-mode .map-relative-wrapper { height: 260px !important; margin-bottom: 25px !important; }
-        .pdf-export-mode .scientific-registry { font-size: 11px !important; margin-bottom: 25px !important;}
-        .pdf-export-mode .scientific-registry th, .pdf-export-mode .scientific-registry td { padding: 8px !important; }
-
+        .certificate { background-color: #faf9f6; background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); color: #111; padding: 15px; width: 100%; max-width: 800px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); position: relative; margin: 0 auto; box-sizing: border-box; }
         .cert-border-1 { border: 2px solid #222; padding: 4px; height: 100%; box-sizing: border-box;}
         .cert-border-2 { border: 1px solid #222; padding: 2px; height: 100%; box-sizing: border-box;}
         .cert-border-3 { border: 4px double #444; padding: 20px 15px; position: relative; background: rgba(255,255,255,0.9); height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;}
@@ -195,6 +157,47 @@
         .sig-line { border-bottom: 1px solid #111; margin-bottom: 4px; }
         .sig-title { font-family: 'Montserrat', sans-serif; font-size: 0.5rem; text-transform: uppercase; letter-spacing: 1px; color: #555; font-weight: 600;}
 
+        /* =========================================================
+           FIX PDF: ESTILOS FIJOS EXCLUSIVOS PARA EL CLON (A4 PERFECTO)
+           ========================================================= */
+        .pdf-clone-wrapper {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 794px !important;
+            height: 1123px !important; /* Altura estricta A4 */
+            background-color: #faf9f6;
+            z-index: -9999 !important; /* Totalmente invisible para el usuario */
+            overflow: hidden !important; /* Impide cualquier píxel sobrante */
+        }
+        .pdf-clone-wrapper .certificate {
+            width: 794px !important;
+            height: 1123px !important;
+            max-width: 794px !important;
+            margin: 0 !important;
+            padding: 20px !important; /* Margen estrecho para que quepa bien todo */
+            box-shadow: none !important;
+            box-sizing: border-box !important;
+        }
+        /* Reducimos fuentes y márgenes para asegurar el ajuste vertical */
+        .pdf-clone-wrapper .cert-title-main { font-size: 38px !important; margin-bottom: 15px !important;}
+        .pdf-clone-wrapper .cert-star-name { font-size: 34px !important; margin: 15px 0 15px 0 !important;}
+        .pdf-clone-wrapper .cert-body-text { font-size: 15px !important; line-height: 1.4 !important; margin-bottom: 12px !important; }
+        .pdf-clone-wrapper .cert-agency { font-size: 22px !important; }
+        .pdf-clone-wrapper .cert-reg { font-size: 11px !important; text-align: right !important; }
+        .pdf-clone-wrapper .cert-lore-section { font-size: 14px !important; padding: 0 30px !important; margin-bottom: 15px !important; }
+        /* Mapa mucho más bajo para no empujar la firma hacia abajo */
+        .pdf-clone-wrapper .map-relative-wrapper { height: 210px !important; }
+        .pdf-clone-wrapper .cert-star-map-container { margin-bottom: 15px !important; }
+        /* Tabla científica compacta */
+        .pdf-clone-wrapper .scientific-registry { font-size: 11px !important; margin: 15px 0 !important;}
+        .pdf-clone-wrapper .scientific-registry th, .pdf-clone-wrapper .scientific-registry td { padding: 8px !important; }
+        .pdf-clone-wrapper .cert-header { flex-direction: row !important; justify-content: space-between !important; text-align: left !important; margin-bottom: 15px !important;}
+        .pdf-clone-wrapper .cert-footer { flex-direction: row !important; justify-content: space-between !important; align-items: flex-end !important; margin-top: 15px !important;}
+        .pdf-clone-wrapper .seal-official { width: 80px !important; height: 80px !important; font-size: 0.55rem !important; }
+        /* ========================================================= */
+
+        /* --- MODALES Y CARGAS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 20px; }
         .modal-box { background: #0d111a; border: 1px solid var(--gold-main); padding: 30px 20px; width: 100%; max-width: 450px; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; text-align: center; max-height: 90vh; overflow-y: auto; }
         .modal-header h3 { color: var(--gold-main); font-size: 1.4rem; font-family: 'Cinzel', serif; margin-bottom: 10px; }
@@ -472,7 +475,7 @@
     </div>
 
     <script>
-        // --- TEXTOS LEGALES COMPLETOS (Ajustados para España / UE) ---
+        // --- TEXTOS LEGALES COMPLETOS ---
         const legalTexts = {
             'Aviso Legal': `
                 <strong style="color: var(--gold-main);">1. Datos Identificativos</strong><br>
@@ -555,20 +558,27 @@
             }
         }
 
-        // --- FIX DEFINITIVO PDF: MANTENER EN SU SITIO, FORZAR TAMAÑO ---
+        // --- FIX DEFINITIVO PDF: EL MÉTODO DEL CLON A4 EXACTO ---
         function downloadPDF() {
-            const element = document.getElementById('pdf-content');
+            const originalElement = document.getElementById('pdf-content');
             const btn = document.getElementById('downloadPdfBtn');
             const starCode = document.getElementById('certId').innerText || "Documento";
             
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando archivo...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando alta resolución...';
             btn.style.pointerEvents = 'none';
 
-            // Añadir clase que bloquea el tamaño a A4 estricto
-            element.classList.add('pdf-export-mode');
+            // 1. Clonar el elemento
+            const clone = originalElement.cloneNode(true);
+            clone.id = 'pdf-clone'; // Cambiar ID para evitar duplicados
 
-            // Retardo de 100ms para asegurar que el navegador redibuje el elemento con el nuevo tamaño
+            // 2. Crear un contenedor que fije el tamaño a A4 exactamente
+            const wrapper = document.createElement('div');
+            wrapper.className = 'pdf-clone-wrapper';
+            wrapper.appendChild(clone);
+            document.body.appendChild(wrapper);
+
+            // 3. Generar PDF dando 150ms para que se dibuje el clon invisible
             setTimeout(() => {
                 const opt = {
                     margin:       0,
@@ -577,23 +587,29 @@
                     html2canvas:  { 
                         scale: 2, 
                         useCORS: true,
-                        scrollY: 0, // Evita corte si la página estaba bajada
-                        windowWidth: 800 // Evita que se colapse por el viewport del móvil
+                        windowWidth: 794,
+                        width: 794,
+                        height: 1123,
+                        scrollY: 0,
+                        scrollX: 0
                     },
                     jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
                 };
 
-                html2pdf().set(opt).from(element).save().then(() => {
-                    element.classList.remove('pdf-export-mode');
+                html2pdf().set(opt).from(clone).save().then(() => {
+                    // Borramos el clon de la memoria
+                    if(document.body.contains(wrapper)) {
+                        document.body.removeChild(wrapper);
+                    }
                     btn.innerHTML = originalText;
                     btn.style.pointerEvents = 'auto';
                 }).catch(err => {
                     console.error("Error al generar PDF: ", err);
-                    element.classList.remove('pdf-export-mode');
+                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
                     btn.innerHTML = originalText;
                     btn.style.pointerEvents = 'auto';
                 });
-            }, 100);
+            }, 150);
         }
 
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
@@ -659,6 +675,7 @@
             requestAnimationFrame(renderAmbientSky);
         }
 
+        // --- CATALOGO (Acortado para visualización, mantén el tuyo si tenías más de 25) ---
         const starCatalog = [
             { official: "HD 48915 (Sirio)", constellation: "Canis Major", ra: "06h 45m 08s", dec: "-16° 42' 58\"", distance: "8.6 A.L.", spectral: "A1 V", temp: "9940 K", appMag: "-1.46", lum: "25.4 Soles", lore: "La estrella más brillante de todo el cielo nocturno." },
             { official: "HD 172167 (Vega)", constellation: "Lyra", ra: "18h 36m 56s", dec: "+38° 47' 01\"", distance: "25 A.L.", spectral: "A0 Va", temp: "9600 K", appMag: "0.03", lum: "40.1 Soles", lore: "Fue la Estrella Polar en el año 12000 a.C." }
