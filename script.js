@@ -83,7 +83,7 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-        // === GENERADOR DE CERTIFICADOS (Versión Original HTML a PDF) ===
+      // === GENERADOR DE CERTIFICADOS (Versión Original HTML a PDF) ===
 function downloadPDF() {
     const originalElement = document.getElementById('pdf-content');
     const btn = document.getElementById('downloadPdfBtn');
@@ -111,7 +111,6 @@ function downloadPDF() {
         });
     }, 150);
 }
-
         // --- SISTEMA VR / PARALLAX ---
         const canvas = document.getElementById('skyCanvas');
         const ctx = canvas.getContext('2d');
