@@ -560,3 +560,7 @@ async function processTracking(input, lat, lon, outputArea) {
                 tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;">No hay ventas.</td></tr>';
             } catch (e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
         }
+// --- CERRAR MODALES ---
+function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+}
