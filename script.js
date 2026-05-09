@@ -222,12 +222,12 @@ async function downloadPDF() {
         let starNamePending = "";
         let paypalButtonsRendered = false;
 
-        function openPayment(packageName) {
+       function openPayment(packageName) {
     let rawInput = document.getElementById('inputStarName').value;
     starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
     
     if(starNamePending === "") { 
-        alert("Introduzca un Nombre Oficial válido."); return; 
+        alert("Introduza um Nombre Oficial válido."); return; 
     }
     
     checkoutPackage = packageName;
@@ -241,7 +241,6 @@ async function downloadPDF() {
     document.getElementById('checkoutDesc').innerText = packageName;
     document.getElementById('paymentModal').style.display = 'flex';
 
-    // === BYPASS DE ADMIN (ESCRITURA DIRECTA) ===
     const oldAdminBtn = document.getElementById('admin-bypass-btn');
     if (oldAdminBtn) oldAdminBtn.remove();
 
@@ -256,23 +255,30 @@ async function downloadPDF() {
 
         adminBtn.onclick = async () => {
             if(!document.getElementById('legalConsent').checked) {
-                alert("Marca la casilla de Términos de Venta para autorizar el registro interno.");
+                alert("Marque a caixa de Termos para autorizar o registro.");
                 return;
             }
-            if(confirm("¿Forzar registro gratuito en la base de datos para: '" + starNamePending + "'?")) {
+            if(confirm("Deseja registrar '" + starNamePending + "' com mitologia oficial?")) {
                 const overlay = document.getElementById('processingOverlay');
                 overlay.style.display = 'flex';
                 document.getElementById('paymentModal').style.display = 'none';
 
                 try {
-                    // Generamos un código NOVA único
                     const randomNum = Math.floor(10000 + Math.random() * 90000);
                     const newNovaCode = "NOVA-" + randomNum;
-                    
-                    // Fecha actual
                     const fechaActual = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
 
-                    // Datos astrométricos simulados para el certificado
+                    // --- BIBLIOTECA DE MITOLOGIAS (LORE) ---
+                    const mitologias = [
+                        "Conocida como el faro eterno, esta estrella ha guiado a exploradores a través de los siglos, representando la luz constante en la oscuridad del firmamento.",
+                        "Una joya radiante en el tejido cósmico que simboliza la sabiduría y la inmortalidad en las leyendas de las antiguas civilizaciones estelares.",
+                        "Dice la leyenda que esta estrella nació del suspiro de una divinidad, destinada a brillar perpetuamente como guardiana de los sueños nocturnos.",
+                        "Situada en las coordenadas sagradas, esta estrella es el símbolo de la esperanza y la guía para aquellos que buscan su destino bajo el manto de la noche.",
+                        "Una gigante de luz pura cuya energía primordial ha moldeado el destino de las constelaciones que la rodean desde el inicio de los tiempos."
+                    ];
+                    // Escolhe uma mitologia aleatória da lista acima
+                    const loreAleatorio = mitologias[Math.floor(Math.random() * mitologias.length)];
+
                     const starData = {
                         id: newNovaCode,
                         name: starNamePending.toUpperCase(),
@@ -286,29 +292,33 @@ async function downloadPDF() {
                         temp: Math.floor(Math.random() * 5000 + 4000) + " K",
                         appMag: (Math.random() * 6 + 1).toFixed(2),
                         lum: Math.floor(Math.random() * 100 + 1) + " Soles",
-                        lore: "Registro asignado mediante protocolo de Administrador.",
+                        lore: loreAleatorio, // <--- AQUI ESTÁ A MUDANÇA
                         timestamp: new Date().getTime()
                     };
 
-                    // GUARDAMOS DIRECTO EN FIREBASE SIN PASAR POR EL SERVIDOR DE PAYPAL
                     await db.collection("estrellas").doc(newNovaCode).set(starData);
 
                     overlay.style.display = 'none';
-                    alert(`¡ALTA DE ADMIN COMPLETADA!\nCódigo Asignado: ${newNovaCode}`);
+                    alert(`¡ALTA DE ADMIN COMPLETADA!\nCódigo: ${newNovaCode}`);
                     
-                    // Cargamos el certificado en pantalla
                     showSection('mystar');
                     document.getElementById('myStarInput').value = newNovaCode;
                     loadMyStar();
 
                 } catch (e) {
                     overlay.style.display = 'none';
-                    console.error("Error Admin:", e);
-                    alert("Fallo de permisos. Asegúrate de estar logueado como Admin.");
+                    alert("Erro ao acessar a base de dados.");
                 }
             }
         };
     }
+
+    if (!paypalButtonsRendered) {
+        // ... (resto do seu código do PayPal permanece igual)
+        paypal.Buttons({ /* ... */ }).render('#paypal-button-container');
+        paypalButtonsRendered = true;
+    }
+}
 
     // === FLUJO NORMAL DE PAYPAL ===
     if (!paypalButtonsRendered) {
