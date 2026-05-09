@@ -82,43 +82,58 @@
                 loadAdminDashboard();
             }).catch(() => alert("Acceso denegado."));
         }
-
-        // --- FIX PDF ---
-        function downloadPDF() {
-            const originalElement = document.getElementById('pdf-content');
-            const btn = document.getElementById('downloadPdfBtn');
-            const starCode = document.getElementById('certId').innerText || "Documento";
-            
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando alta resolución...';
-            btn.style.pointerEvents = 'none';
-
-            const clone = originalElement.cloneNode(true);
-            clone.id = 'pdf-clone'; 
-            const wrapper = document.createElement('div');
-            wrapper.className = 'pdf-clone-wrapper';
-            wrapper.appendChild(clone);
-            document.body.appendChild(wrapper);
-
-            setTimeout(() => {
-                const opt = {
-                    margin: 0,
-                    filename: `Certificado_NovaRegistry_${starCode}.pdf`,
-                    image: { type: 'jpeg', quality: 1.0 },
-                    html2canvas: { scale: 2, useCORS: true, windowWidth: 794, width: 794, height: 1123, scrollY: 0, scrollX: 0 },
-                    jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
-                };
-                html2pdf().set(opt).from(clone).save().then(() => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                }).catch(err => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                });
-            }, 150);
+async function downloadPDF() {
+    const btn = document.getElementById('downloadPdfBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verificando sistema...';
+    
+    try {
+        // --- COMPROBACIÓN 1: ¿Existe la librería? ---
+        if (typeof PDFLib === 'undefined') {
+            throw new Error("La herramienta PDF-LIB no se ha cargado. Revisa el Paso 3 del HTML.");
         }
+
+        const { PDFDocument, rgb, StandardFonts } = PDFLib;
+        const pdfDoc = await PDFDocument.create();
+
+        // --- COMPROBACIÓN 2: ¿La imagen está ahí? ---
+        console.log("Intentando cargar plantilla.png...");
+        const response = await fetch('plantilla.png');
+        if (!response.ok) {
+            throw new Error(`No encuentro 'plantilla.png'. Asegúrate de que el nombre sea exacto y el archivo esté en GitHub.`);
+        }
+        const imageBytes = await response.arrayBuffer();
+        const bgImage = await pdfDoc.embedPng(imageBytes);
+
+        // --- EL RESTO DEL PROCESO ---
+        const page = pdfDoc.addPage([595.28, 841.89]);
+        page.drawImage(bgImage, { x: 0, y: 0, width: 595.28, height: 841.89 });
+
+        const fontNormal = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+        const starId = document.getElementById('certId').innerText;
+        
+        // Texto de prueba rápido para ver si funciona
+        page.drawText(`ID: ${starId}`, { x: 450, y: 775, size: 10, font: fontNormal });
+
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: "application/pdf" });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `Certificado_${starId}.pdf`;
+        link.click();
+
+        btn.innerHTML = originalText;
+        console.log("¡Certificado generado con éxito!");
+
+    } catch (error) {
+        // ESTO NOS DIRÁ LA VERDAD
+        console.error("ERROR DETECTADO:", error.message);
+        alert("🚨 ERROR TÉCNICO: " + error.message);
+        btn.innerHTML = "Reintentar";
+    } finally {
+        btn.style.pointerEvents = 'auto';
+    }
+}
 
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
         function showSection(sectionId) {
