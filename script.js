@@ -83,42 +83,7 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-        // --- FIX PDF ---
-        function downloadPDF() {
-            const originalElement = document.getElementById('pdf-content');
-            const btn = document.getElementById('downloadPdfBtn');
-            const starCode = document.getElementById('certId').innerText || "Documento";
-            
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando alta resolución...';
-            btn.style.pointerEvents = 'none';
-
-            const clone = originalElement.cloneNode(true);
-            clone.id = 'pdf-clone'; 
-            const wrapper = document.createElement('div');
-            wrapper.className = 'pdf-clone-wrapper';
-            wrapper.appendChild(clone);
-            document.body.appendChild(wrapper);
-
-            setTimeout(() => {
-                const opt = {
-                    margin: 0,
-                    filename: `Certificado_NovaRegistry_${starCode}.pdf`,
-                    image: { type: 'jpeg', quality: 1.0 },
-                    html2canvas: { scale: 2, useCORS: true, windowWidth: 794, width: 794, height: 1123, scrollY: 0, scrollX: 0 },
-                    jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
-                };
-                html2pdf().set(opt).from(clone).save().then(() => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                }).catch(err => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                });
-            }, 150);
-        }
+       
 
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
         function showSection(sectionId) {
@@ -136,6 +101,60 @@
             if(sectionId === 'ia-locator') document.getElementById('link-ia').classList.add('active-link');
             if(sectionId === 'admin-panel' && document.getElementById('link-admin')) document.getElementById('link-admin').classList.add('active-link');
         }
+
+// === GENERADOR DE CERTIFICADOS (Versión Caja Mágica A4) ===
+function downloadPDF() {
+    const originalElement = document.getElementById('pdf-content') || document.getElementById('certificatePanel');
+    const btn = document.getElementById('downloadPdfBtn');
+    
+    // Cambiamos el botón
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando PDF...'; 
+    btn.style.pointerEvents = 'none';
+    
+    // 1. Clonamos el certificado
+    const clone = originalElement.cloneNode(true);
+    
+    // 2. Creamos la "Caja Mágica" con las medidas EXACTAS de un A4 a 96dpi
+    const wrapper = document.createElement('div'); 
+    wrapper.style.width = '794px';
+    wrapper.style.height = '1123px';
+    wrapper.style.position = 'absolute';
+    wrapper.style.top = '-9999px'; // Lo escondemos fuera de la pantalla
+    wrapper.style.left = '-9999px';
+    wrapper.style.backgroundColor = '#faf9f6'; // Color de fondo por si acaso
+    
+    // 3. Forzamos al clon a ocupar exactamente ese A4, matando el responsive
+    clone.style.width = '100%';
+    clone.style.height = '100%';
+    clone.style.maxWidth = 'none';
+    clone.style.margin = '0';
+    clone.style.transform = 'none';
+    clone.style.boxSizing = 'border-box';
+    
+    // Metemos el clon en la caja, y la caja en la web
+    wrapper.appendChild(clone); 
+    document.body.appendChild(wrapper);
+
+    // 4. Le damos 300ms al navegador para dibujar el clon oculto antes de la foto
+    setTimeout(() => {
+        html2pdf().set({ 
+            margin: 0, 
+            filename: `Certificado_NovaRegistry_${document.getElementById('certId').innerText}.pdf`, 
+            image: { type: 'jpeg', quality: 1.0 }, 
+            html2canvas: { 
+                scale: 2, // Doble resolución para que no se vea borroso
+                useCORS: true,
+                windowWidth: 794 // Engañamos a html2canvas para que crea que la pantalla mide 794px
+            }, 
+            jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
+        }).from(wrapper).save().then(() => {
+            // Limpieza: borramos el clon y restauramos el botón
+            document.body.removeChild(wrapper); 
+            btn.innerHTML = '<i class="fa-solid fa-download"></i> Descargar PDF'; 
+            btn.style.pointerEvents = 'auto';
+        });
+    }, 300);
+}
 
         // --- SISTEMA VR / PARALLAX ---
         const canvas = document.getElementById('skyCanvas');
