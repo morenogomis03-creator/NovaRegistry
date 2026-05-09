@@ -84,41 +84,55 @@
         }
 
         // --- FIX PDF ---
-        function downloadPDF() {
-            const originalElement = document.getElementById('pdf-content');
-            const btn = document.getElementById('downloadPdfBtn');
-            const starCode = document.getElementById('certId').innerText || "Documento";
-            
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando alta resolución...';
-            btn.style.pointerEvents = 'none';
+function downloadPDF() {
+    const originalElement = document.getElementById('pdf-content');
+    const btn = document.getElementById('downloadPdfBtn');
+    const starCode = document.getElementById('certId').innerText || "Documento";
+    
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando alta resolución...';
+    btn.style.pointerEvents = 'none';
 
-            const clone = originalElement.cloneNode(true);
-            clone.id = 'pdf-clone'; 
-            const wrapper = document.createElement('div');
-            wrapper.className = 'pdf-clone-wrapper';
-            wrapper.appendChild(clone);
-            document.body.appendChild(wrapper);
+    const clone = originalElement.cloneNode(true);
+    clone.id = 'pdf-clone'; 
+    
+    // AJUSTE: Añadimos espacio al final del certificado para que no se corte el borde
+    clone.style.paddingBottom = "50px";
+    clone.style.boxSizing = "border-box";
 
-            setTimeout(() => {
-                const opt = {
-                    margin: 0,
-                    filename: `Certificado_NovaRegistry_${starCode}.pdf`,
-                    image: { type: 'jpeg', quality: 1.0 },
-                    html2canvas: { scale: 2, useCORS: true, windowWidth: 794, width: 794, height: 1123, scrollY: 0, scrollX: 0 },
-                    jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
-                };
-                html2pdf().set(opt).from(clone).save().then(() => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                }).catch(err => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                });
-            }, 150);
-        }
+    const wrapper = document.createElement('div');
+    wrapper.className = 'pdf-clone-wrapper';
+    wrapper.appendChild(clone);
+    document.body.appendChild(wrapper);
+
+    setTimeout(() => {
+        const opt = {
+            // Margen de seguridad: [Arriba, Izquierda, Abajo, Derecha]
+            margin: [0, 0, 20, 0], 
+            filename: `Certificado_NovaRegistry_${starCode}.pdf`,
+            image: { type: 'jpeg', quality: 1.0 },
+            html2canvas: { 
+                scale: 2, 
+                useCORS: true, 
+                windowWidth: 794, 
+                width: 794, 
+                height: 1123, 
+                scrollY: 0, 
+                scrollX: 0 
+            },
+            jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
+        };
+        html2pdf().set(opt).from(clone).save().then(() => {
+            if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
+            btn.innerHTML = originalText;
+            btn.style.pointerEvents = 'auto';
+        }).catch(err => {
+            if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
+            btn.innerHTML = originalText;
+            btn.style.pointerEvents = 'auto';
+        });
+    }, 150);
+}
 
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
         function showSection(sectionId) {
