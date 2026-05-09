@@ -83,73 +83,34 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-        // === GENERADOR DE CERTIFICADOS EN SERVIDOR (Backend) ===
-async function downloadPDF() {
+        // === GENERADOR DE CERTIFICADOS (Versión Original HTML a PDF) ===
+function downloadPDF() {
+    const originalElement = document.getElementById('pdf-content');
     const btn = document.getElementById('downloadPdfBtn');
-    const originalText = btn.innerHTML;
-    
-    // Cambiamos el botón para que el usuario sepa que está cargando
-    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Imprimiendo en Servidor...'; 
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando PDF...'; 
     btn.style.pointerEvents = 'none';
+    
+    // Clonamos el certificado para que el PDF salga con las medidas perfectas sin deformar la pantalla
+    const clone = originalElement.cloneNode(true);
+    const wrapper = document.createElement('div'); 
+    wrapper.className = 'pdf-clone-wrapper'; 
+    wrapper.appendChild(clone); 
+    document.body.appendChild(wrapper);
 
-    try {
-        // 1. Recogemos los datos que hay en la pantalla
-        const payload = {
-            id: document.getElementById('certId').innerText,
-            name: document.getElementById('certName').innerText,
-            date: document.getElementById('certDate').innerText,
-            starDetails: {
-                ra: document.getElementById('certRA') ? document.getElementById('certRA').innerText : "--",
-                dec: document.getElementById('certDEC') ? document.getElementById('certDEC').innerText : "--"
-            }
-        };
-
-        // 2. Le pedimos a Vercel que fabrique el PDF
-        const response = await fetch('/api/generar-pdf', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+    setTimeout(() => {
+        html2pdf().set({ 
+            margin: 0, 
+            filename: `Certificado_NovaRegistry_${document.getElementById('certId').innerText}.pdf`, 
+            image: { type: 'jpeg', quality: 1.0 }, 
+            html2canvas: { scale: 2, useCORS: true }, 
+            jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
+        }).from(clone).save().then(() => {
+            document.body.removeChild(wrapper); 
+            btn.innerHTML = '<i class="fa-solid fa-download"></i> Descargar PDF'; 
+            btn.style.pointerEvents = 'auto';
         });
-
-        if (!response.ok) throw new Error("Fallo en la comunicación con el servidor central.");
-
-        // 3. Recibimos el archivo digital y forzamos la descarga
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Certificado_NovaRegistry_${payload.id}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-
-    } catch (error) {
-        console.error(error);
-        alert("Aviso: Nuestros servidores están procesando mucha demanda. Inténtelo de nuevo en unos segundos.");
-    } finally {
-        // Restauramos el botón a su estado normal
-        btn.innerHTML = originalText;
-        btn.style.pointerEvents = 'auto';
-    }
+    }, 150);
 }
-
-        function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
-        function showSection(sectionId) {
-            document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active-link'));
-            document.getElementById(sectionId).classList.add('active');
-            document.querySelector('.nav-links').classList.remove('active');
-            
-            if(sectionId === 'home') document.getElementById('link-home').classList.add('active-link');
-            if(sectionId === 'firmamento') {
-                document.getElementById('link-firm').classList.add('active-link');
-                if(!canvasInitialized) initBackgroundSky();
-            }
-            if(sectionId === 'mystar') document.getElementById('link-mystar').classList.add('active-link');
-            if(sectionId === 'ia-locator') document.getElementById('link-ia').classList.add('active-link');
-            if(sectionId === 'admin-panel' && document.getElementById('link-admin')) document.getElementById('link-admin').classList.add('active-link');
-        }
 
         // --- SISTEMA VR / PARALLAX ---
         const canvas = document.getElementById('skyCanvas');
