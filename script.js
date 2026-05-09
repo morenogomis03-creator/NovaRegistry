@@ -83,7 +83,7 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-    // --- GENERADOR DE PDF RECONSTRUIDO (100% ENCUADRADO) ---
+      // --- GENERADOR DE PDF RECONSTRUIDO (100% ENCUADRADO) ---
 async function downloadPDF() {
     const originalElement = document.getElementById('pdf-content');
     const btn = document.getElementById('downloadPdfBtn');
@@ -156,6 +156,7 @@ async function downloadPDF() {
         btn.style.pointerEvents = 'auto';
     }
 }
+
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
         function showSection(sectionId) {
             document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
@@ -221,43 +222,13 @@ async function downloadPDF() {
         let starNamePending = "";
         let paypalButtonsRendered = false;
 
-        // === PASARELA DE PAGO Y BYPASS ADMIN ===
-function openPayment(packageName) {
-    let rawInput = document.getElementById('inputStarName').value;
-    starNamePending = rawInput.trim();
-    if(!starNamePending) return alert("Por favor, dale un nombre a tu pedazo de cielo antes de continuar.");
-
-    checkoutPackage = packageName;
-    document.getElementById('checkoutDesc').innerText = "Iniciando protocolo para: " + packageName;
-    
-    // Si elige paquete físico o superior, mostramos el formulario de envío
-    if (packageName.includes('Físico') || packageName.includes('Herencia') || packageName.includes('Soberanía') || packageName.includes('VIP')) {
-        document.getElementById('shipping-form').style.display = 'block';
-    } else {
-        document.getElementById('shipping-form').style.display = 'none';
-    }
-
-    document.getElementById('paymentModal').style.display = 'flex';
-
-    const container = document.getElementById('paypal-button-container');
-    container.innerHTML = ''; // Limpiamos botones anteriores
-
-    // --- MAGIA: EL BOTÓN DE ADMIN GRATUITO ---
-    if (isAdminActive) {
-        const adminBtn = document.createElement('button');
-        adminBtn.innerHTML = '<i class="fa-solid fa-key"></i> REGISTRO GRATUITO (STAFF)';
-        adminBtn.style = "width:100%; background:#2ecc71; color:white; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:20px; font-size:1rem; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);";
-        adminBtn.onclick = () => {
-            if(confirm("¿Deseas registrar '" + starNamePending + "' de forma gratuita como Administrador?")) {
-                processFinalRegistration("ADMIN_BYPASS_" + Date.now(), "Nova Staff");
+        function openPayment(packageName) {
+            let rawInput = document.getElementById('inputStarName').value;
+            starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
+            
+            if(starNamePending === "") { 
+                alert("Introduzca un Nombre Oficial válido."); return; 
             }
-        };
-        container.appendChild(adminBtn);
-    }
-
-    // Renderizamos los botones normales de PayPal
-    renderPayPal();
-}
             
             checkoutPackage = packageName;
             document.getElementById('legalConsent').checked = false; 
