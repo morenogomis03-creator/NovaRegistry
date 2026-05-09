@@ -223,143 +223,88 @@ async function downloadPDF() {
         let paypalButtonsRendered = false;
 
         function openPayment(packageName) {
-            let rawInput = document.getElementById('inputStarName').value;
-            starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
-            
-            if(starNamePending === "") { 
-                alert("Introduzca un Nombre Oficial válido."); return; 
-            }
-            
-            checkoutPackage = packageName;
-            document.getElementById('legalConsent').checked = false; 
+    // 1. Capturamos el nombre de la estrella
+    let rawInput = document.getElementById('inputStarName').value;
+    starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
+    
+    if(starNamePending === "") { 
+        alert("Por favor, introduce un nombre para la estrella."); return; 
+    }
+    
+    checkoutPackage = packageName;
+    
+    // 2. Preparamos el Modal
+    document.getElementById('legalConsent').checked = false; 
+    document.getElementById('checkoutDesc').innerText = "Registro Oficial: " + packageName;
+    document.getElementById('paymentModal').style.display = 'flex';
 
-            const formEnvio = document.getElementById('shipping-form');
-            formEnvio.style.display = (packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
+    // 3. Limpiamos botones de admin previos para que no se dupliquen
+    const oldAdminBtn = document.getElementById('admin-bypass-btn');
+    if (oldAdminBtn) oldAdminBtn.remove();
 
-            document.getElementById('checkoutDesc').innerText = packageName;
-            document.getElementById('paymentModal').style.display = 'flex';
+    // 4. SI EL ADMIN ESTÁ ACTIVO, CREAMOS EL BOTÓN DE "MODO DIOS"
+    if (isAdminActive) {
+        const adminBtn = document.createElement('button');
+        adminBtn.id = 'admin-bypass-btn';
+        adminBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> REGISTRO GRATUITO (ADMIN)';
+        adminBtn.style = "width:100%; background:#2ecc71; color:black; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:20px; font-size:1rem; box-shadow: 0 4px 15px rgba(46,204,113,0.4);";
+        
+        const paypalContainer = document.getElementById('paypal-button-container');
+        paypalContainer.parentNode.insertBefore(adminBtn, paypalContainer);
 
-            if (!paypalButtonsRendered) {
-                paypal.Buttons({
-                    style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
+        adminBtn.onclick = async () => {
+            if(confirm("¿Confirmar alta gratuita para '" + starNamePending + "'?")) {
+                const overlay = document.getElementById('processingOverlay');
+                overlay.style.display = 'flex';
+                document.getElementById('paymentModal').style.display = 'none';
+
+                try {
+                    // Generamos datos automáticos para que el certificado no salga vacío
+                    const newId = "NOVA-" + Math.floor(10000 + Math.random() * 90000);
+                    const fecha = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
                     
-                    // 1. Pedimos a NUESTRO servidor que cree la orden segura
-                    createOrder: async function(data, actions) { 
-                        if(!document.getElementById('legalConsent').checked) {
-                            alert("Por favor, marca la casilla de Términos de Venta para continuar.");
-                            return actions.reject();
-                        }
-                        if (document.getElementById('shipping-form').style.display === 'block') {
-                            const n = document.getElementById('shipName').value.trim();
-                            const a = document.getElementById('shipAddress').value.trim();
-                            const z = document.getElementById('shipZip').value.trim();
-                            if(!n || !a || !z) {
-                                alert("Rellene la dirección de envío.");
-                                return actions.reject(); 
-                            }
-                        }
+                    const mitologias = [
+                        "Una joya radiante en el tejido cósmico que simboliza la sabiduría eterna.",
+                        "Dice la leyenda que esta estrella nació para guiar a los viajeros del tiempo.",
+                        "Protectora silenciosa de los sueños, brilla con luz propia en la inmensidad."
+                    ];
 
-                        const respuesta = await fetch('/api/crear-orden', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ paqueteId: checkoutPackage })
-                        });
-                        const ordenSegura = await respuesta.json();
-                        
-                        if (!respuesta.ok) {
-                            alert("Error de seguridad en la pasarela.");
-                            throw new Error("Transacción bloqueada.");
-                        }
-                        return ordenSegura.id; 
-                    },
+                    const starData = {
+                        id: newId,
+                        name: starNamePending.toUpperCase(),
+                        date: fecha,
+                        pack: checkoutPackage,
+                        official: "HD " + Math.floor(Math.random() * 200000),
+                        ra: "15h 34m 41s", dec: "+26° 42' 52\"", distance: "75 A.L.", 
+                        spectral: "A0 V", temp: "9750 K", appMag: "2.22", lum: "60 Soles",
+                        lore: mitologias[Math.floor(Math.random() * mitologias.length)],
+                        timestamp: new Date().getTime()
+                    };
+
+                    // GUARDADO DIRECTO EN FIREBASE (Sin pasar por PayPal)
+                    await db.collection("estrellas").doc(newId).set(starData);
+
+                    overlay.style.display = 'none';
+                    alert("¡Estrella registrada con éxito!");
                     
-                    // 2. El usuario paga y capturamos el dinero
-                    onApprove: async function(data, actions) {
-                        const details = await actions.order.capture();
-                        
-                        // 3. Mostramos la pantalla de carga
-                        const overlay = document.getElementById('processingOverlay');
-                        overlay.style.display = 'flex';
-                        closePaymentModal();
+                    // Mostramos el certificado automáticamente
+                    showSection('mystar');
+                    document.getElementById('myStarInput').value = newId;
+                    loadMyStar();
 
-                        let shippingData = null;
-                        if (document.getElementById('shipping-form').style.display === 'block') {
-                            shippingData = {
-                                name: document.getElementById('shipName').value.trim(),
-                                address: document.getElementById('shipAddress').value.trim(),
-                                city: document.getElementById('shipCity').value.trim(),
-                                zip: document.getElementById('shipZip').value.trim(),
-                                phone: document.getElementById('shipPhone').value.trim()
-                            };
-                        }
-
-                        // 4. Pedimos a NUESTRO servidor que guarde en Firebase
-                        const resFirebase = await fetch('/api/guardar-estrella', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                paqueteId: checkoutPackage,
-                                starName: starNamePending,
-                                payerName: details.payer.name.given_name,
-                                paypalTransactionId: details.id,
-                                shippingInfo: shippingData
-                            })
-                        });
-                        const resultado = await resFirebase.json();
-
-                        overlay.style.display = 'none';
-
-                        if(resultado.success) {
-                            alert(`¡COMPRA CONFIRMADA!\nCódigo: ${resultado.novaCode}\n\nGuarda este código NOVA para poder recuperar tu certificado.`);
-                            showSection('mystar');
-                            document.getElementById('myStarInput').value = resultado.novaCode;
-                            loadMyStar();
-                        } else {
-                            alert("Error al contactar con el Registro Central.");
-                        }
-                    },
-                    onError: function(err) { alert("Error al procesar PayPal."); }
-                }).render('#paypal-button-container');
-                paypalButtonsRendered = true;
+                } catch (e) {
+                    overlay.style.display = 'none';
+                    alert("Error al guardar en base de datos. Revisa los permisos.");
+                }
             }
-        }
+        };
+    }
 
-        function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
-
-        async function loadMyStar() {
-            const input = document.getElementById('myStarInput').value.toUpperCase().replace(/\s+/g, '');
-            if(!input) return;
-
-            try {
-                const docRef = await db.collection("estrellas").doc(input).get();
-                if (docRef.exists) {
-                    const star = docRef.data();
-                    document.getElementById('loginStar').style.display = 'none';
-                    document.getElementById('certificatePanel').style.display = 'flex';
-
-                    document.getElementById('certId').innerText = star.id;
-                    document.getElementById('certOfficialCodeTop').innerText = star.official || "--"; 
-                    document.getElementById('certDate').innerText = star.date;
-                    document.getElementById('certName').innerText = star.name;
-                    document.getElementById('certOfficial').innerText = star.official || "--";
-                    document.getElementById('certRA').innerText = star.ra || "--";
-                    document.getElementById('certDEC').innerText = star.dec || "--";
-                    document.getElementById('certDist').innerText = star.distance || "--";
-                    document.getElementById('certClass').innerText = star.spectral || "--";
-                    document.getElementById('certTemp').innerText = star.temp || "--";
-                    document.getElementById('certAppMag').innerText = star.appMag || "--";
-                    document.getElementById('certLum').innerText = star.lum || "--";
-                    document.getElementById('certBarcode').innerText = `*${star.id.replace('-','')}*`;
-                    document.getElementById('certLore').innerText = star.lore ? `"${star.lore}"` : "";
-                    // GENERADOR DE CÓDIGO QR DINÁMICO
-            const qrImage = document.getElementById('certQR');
-            const urlEstrella = "https://www.novaregistry.net/?verify=" + star.id;
-            qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(urlEstrella);
-            qrImage.style.display = "block";
-                } else { alert('Código no localizado en el registro oficial.'); }
-            } catch (error) { alert("Fallo de conexión."); }
-        }
-
+    // 5. RENDERIZAR BOTONES DE PAYPAL (Para clientes normales)
+    if (!paypalButtonsRendered) {
+        renderPayPal(); // Asegúrate de que esta función existe o pega aquí el código de paypal.Buttons
+    }
+}
         // --- FUNCIONES IA TRACKER ---
         function parseCoordToDeg(coordStr, isRA) {
             let match;
