@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- === METAETIQUETAS SEO Y REDES SOCIALES === -->
     <title>NovaRegistry | Registro Internacional de Estrellas</title>
     <meta name="description" content="Inmortaliza tu legado. Registra una estrella oficial a tu nombre, obtén las coordenadas astrométricas exactas y recíbelo en formato físico o digital.">
     <meta name="keywords" content="comprar estrella, registrar estrella, regalo estrella, NovaRegistry, certificado estelar, regalo original">
     <meta name="author" content="NovaRegistry">
     
-    <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="NovaRegistry | Bautiza una Estrella Oficial">
     <meta property="og:description" content="El regalo más exclusivo del universo. Registra un cuerpo celeste, obtén sus coordenadas y rastréalo en el cielo nocturno con nuestra IA.">
@@ -18,33 +16,23 @@
     <meta property="og:url" content="https://www.novaregistry.net">
     <meta property="og:site_name" content="NovaRegistry">
     
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="NovaRegistry | Bautiza una Estrella Oficial">
     <meta name="twitter:description" content="Inmortaliza tu legado. Registra una estrella oficial a tu nombre y obtén las coordenadas exactas.">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=1200">
 
-    <!-- Icono y Color de Tema -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23d4af37' d='M256 0l54.8 153.2L464 168.5l-117.4 101 36.4 150-127-75.5-127 75.5 36.4-150L48 168.5l153.2-15.3L256 0z'/></svg>">
     <meta name="theme-color" content="#02040a">
 
-    <!-- Fuentes y Estilos -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 
-    <!-- === LIBRERÍAS EXTERNAS === -->
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-
-    <!-- PayPal -->
     <script src="https://www.paypal.com/sdk/js?client-id=AYOZLNzAoAg4ce1rEOGAB3lPDZG7_yqRzTcL1oqlddSrIkwauGItQIHzSbUelBnEOe-ByRZFfnOLqsbn&currency=EUR"></script>
-
-    <!-- PASO 3: Nueva Librería Profesional para PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <nav>
@@ -72,21 +60,15 @@
 
        <section id="firmamento">
             <div class="registry-layout">
-                <!-- EL LIENZO QUE FALTABA -->
                 <canvas id="skyCanvas"></canvas>
-                
                 <div class="registry-content">
                     <h3 class="serif">Buscador Astrométrico</h3>
                     <p style="margin-bottom: 30px; font-size: 0.9rem;">Introduzca el nombre del legado que desea inscribir en el firmamento.</p>
-                    
-                    <!-- EL CUADRO DE TEXTO QUE FALTABA (ID: inputStarName) -->
                     <div class="name-input-group">
                         <label>Nombre a Registrar</label>
                         <input type="text" id="inputStarName" placeholder="Ej: Mi Legado Eterno" autocomplete="off">
                     </div>
-
                     <div class="packages-grid">
-                        <!-- TIER 1 -->
                         <div class="pack-card">
                             <div class="pack-icon"><i class="fa-solid fa-cloud-moon"></i></div>
                             <div class="pack-title">Vínculo Estelar</div>
@@ -98,7 +80,6 @@
                             </ul>
                             <button class="btn-solid" onclick="openPayment('Vínculo Estelar')">Reclamar mi Estrella</button>
                         </div>
-                        <!-- TIER 2 -->
                         <div class="pack-card premium">
                             <div class="pack-badge">MÁS ETERNO</div>
                             <div class="pack-icon"><i class="fa-solid fa-scroll"></i></div>
@@ -111,7 +92,6 @@
                             </ul>
                             <button class="btn-solid btn-gold" onclick="openPayment('Herencia Galáctica')">Poseer la Eternidad</button>
                         </div>
-                        <!-- TIER 3 -->
                         <div class="pack-card">
                             <div class="pack-icon"><i class="fa-solid fa-crown"></i></div>
                             <div class="pack-title">Soberanía Infinita</div>
@@ -127,9 +107,7 @@
                 </div>
             </div>
         </section>
-        </section>
 
-        <!-- PRUEBA SOCIAL ANIMADA -->
         <div class="social-proof">
             <div class="marquee">
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"María y Juan"</strong> registrada (Hace 2h)</span>
@@ -138,8 +116,6 @@
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Mi Abuelo"</strong> registrada (Hace 14h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"María y Juan"</strong> registrada (Hace 2h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Legado Familiar"</strong> registrada (Hace 5h)</span>
-                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Paquete Físico Premium asignado a <strong>"Madrid"</strong> (Hace 12h)</span>
-                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Mi Abuelo"</strong> registrada (Hace 14h)</span>
             </div>
         </div>
 
@@ -188,12 +164,14 @@
                             </table>
 
                             <div class="cert-footer">
-                                <div class="qr-container">
-                                    <img id="certQR" src="" alt="Código QR de Verificación" style="display: none; width: 120px; height: 120px;">
+                                <div class="qr-container" style="text-align: left; flex: 1;">
+                                    <img id="certQR" src="" alt="Código QR" style="display: none; width: 100px; height: 100px; border: 1px solid #ddd;">
+                                    <div style="font-size: 0.5rem; color: #666; margin-top: 5px;">VERIFICACIÓN DIGITAL</div>
                                 </div>
-                                <div><div class="barcode-box"></div><div class="barcode-text" id="certBarcode">--</div></div>
-                                <div class="seal-official"><div class="seal-inner"><span>OFFICIAL<br>REGISTRY<br>SEAL</span></div></div>
-                                <div class="signature">
+                                
+                                <div style="flex: 1;"><div class="barcode-box"></div><div class="barcode-text" id="certBarcode">--</div></div>
+                                
+                                <div class="signature" style="flex: 1; text-align: right;">
                                     <div class="sig-font">Nova Registry</div>
                                     <div class="sig-line"></div>
                                     <div class="sig-title">Dirección General de Archivos Estelares</div>
@@ -211,9 +189,8 @@
         <section id="ia-locator">
             <div class="section-header">
                 <h2>Rastreador <span style="color: var(--accent-blue);">Satelital IA</span></h2>
-                <p>Introduzca el código de su estrella. Nuestro modelo de Inteligencia Artificial analizará las coordenadas y generará una guía práctica para que encuentre su estrella fácilmente en el cielo nocturno.</p>
+                <p>Introduzca el código de su estrella. Nuestro modelo de Inteligencia Artificial analizará las coordenadas y generará una guía práctica.</p>
             </div>
-            
             <div class="ai-terminal">
                 <div class="ai-header">
                     <i class="fa-solid fa-satellite-dish"></i>
@@ -221,11 +198,11 @@
                 </div>
                 <div class="ai-body">
                     <div style="display: flex; gap: 10px;">
-                        <input type="text" id="aiInput" placeholder="Introduce Código (Ej: NOVA-12345)" style="margin-bottom: 0;">
+                        <input type="text" id="aiInput" placeholder="Introduce Código" style="margin-bottom: 0;">
                         <button class="btn-solid" style="width: auto; padding: 0 25px;" onclick="triggerAILocator()"><i class="fa-solid fa-radar"></i> Rastrear</button>
                     </div>
                     <div class="ai-output-area" id="aiOutput">
-                        <span style="color: var(--text-muted);">> Esperando entrada de coordenadas astrométricas...</span>
+                        <span style="color: var(--text-muted);">> Esperando entrada...</span>
                     </div>
                 </div>
             </div>
@@ -234,11 +211,11 @@
         <section id="admin-panel">
             <div class="section-header">
                 <h2>Panel de <span style="color: var(--gold-main);">Control</span></h2>
-                <p>Gestión de Pedidos, Envíos y Base de Datos (Acceso Restringido)</p>
+                <p>Gestión de Pedidos (Acceso Restringido)</p>
             </div>
             <div class="admin-table-container">
                 <table class="admin-table">
-                    <thead><tr><th>Fecha</th><th>Folio NOVA</th><th>Importe Pago</th><th>ID Transacción PayPal</th><th>Cliente</th><th>Estrella Asignada</th><th>Logística / Envío</th></tr></thead>
+                    <thead><tr><th>Fecha</th><th>Folio NOVA</th><th>Importe</th><th>ID PayPal</th><th>Cliente</th><th>Estrella</th><th>Envío</th></tr></thead>
                     <tbody id="adminTableBody"></tbody>
                 </table>
             </div>
@@ -247,11 +224,6 @@
 
     <footer>
         <p style="color: #888; font-size: 0.9rem;">&copy; 2026 NovaRegistry. Todos los derechos reservados.</p>
-        <div class="footer-disclaimer">
-            NovaRegistry opera un archivo patrimonial diseñado para ofrecer un obsequio conmemorativo único. 
-            Nuestra base de datos mantiene estas asignaciones simbólicas con fines emocionales, 
-            operando de manera independiente a los catálogos de la Unión Astronómica Internacional.
-        </div>
         <div class="footer-links">
             <a href="#" onclick="openLegalModal('Aviso Legal')">Aviso Legal</a> | 
             <a href="#" onclick="openLegalModal('Política de Privacidad')">Política de Privacidad</a> | 
@@ -259,45 +231,16 @@
         </div>
     </footer>
 
-    <!-- BANNER DE COOKIES -->
     <div id="cookieBanner" class="cookie-banner">
-        <div class="cookie-text">
-            Utilizamos cookies propias y de terceros para asegurar el funcionamiento de la pasarela de pago segura (PayPal), analizar el tráfico y ofrecerle nuestra plataforma de registro estelar. Al hacer clic en "Aceptar", consiente su uso según nuestra <a href="#" onclick="openLegalModal('Política de Privacidad')">Política de Privacidad</a>.
-        </div>
-        <div class="cookie-buttons">
-            <button class="btn-solid" style="padding: 10px 20px; border-radius: 4px; width: auto;" onclick="acceptCookies()">Aceptar Cookies</button>
-        </div>
+        <div class="cookie-text">Utilizamos cookies para asegurar el funcionamiento de la pasarela de pago.</div>
+        <button class="btn-solid" style="padding: 10px 20px; width: auto;" onclick="acceptCookies()">Aceptar</button>
     </div>
 
-    <!-- MODALES -->
     <div id="paymentModal" class="modal-overlay">
         <div class="modal-box">
             <button class="close-btn" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-header"><h3 class="serif">Pasarela de Adjudicación</h3></div>
-            <div class="payment-desc" id="checkoutDesc" style="color: #aaa; margin-bottom: 5px;">-</div>
-            
-            <div id="shipping-form" style="display:none; text-align:left; margin-bottom: 10px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                <h4 style="color: var(--gold-main); margin-bottom: 15px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; letter-spacing: 1px;"><i class="fa-solid fa-truck-fast"></i> Datos de Envío Físico</h4>
-                <input type="text" id="shipName" placeholder="Nombre completo" style="padding: 12px; margin-bottom: 10px; font-size: 14px;">
-                <input type="text" id="shipAddress" placeholder="Dirección postal completa" style="padding: 12px; margin-bottom: 10px; font-size: 14px;">
-                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                    <input type="text" id="shipCity" placeholder="Ciudad / Provincia" style="padding: 12px; margin-bottom: 0; font-size: 14px;">
-                    <input type="text" id="shipZip" placeholder="Cód. Postal" style="padding: 12px; margin-bottom: 0; font-size: 14px;">
-                </div>
-                <input type="text" id="shipPhone" placeholder="Teléfono de contacto" style="padding: 12px; margin-bottom: 0; font-size: 14px;">
-            </div>
-
-            <div style="margin-bottom: 20px; text-align: left; font-size: 0.8rem; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.05);">
-                <label style="display: flex; gap: 10px; align-items: flex-start; color: #aaa; cursor: pointer;">
-                    <input type="checkbox" id="legalConsent" style="margin-top: 3px;">
-                    <span>Acepto los <a href="#" style="color: var(--accent-blue);" onclick="openLegalModal('Términos y Condiciones')">Términos de Venta</a> y autorizo el registro patrimonial.</span>
-                </label>
-            </div>
-
             <div id="paypal-button-container" style="min-height: 150px;"></div>
-            <div style="font-size: 0.65rem; color: #666; text-align: center; margin-top: 15px; line-height: 1.4;">
-                *Servicio de carácter conmemorativo y simbólico. Esta plataforma opera un registro patrimonial privado, independiente y no vinculado científicamente a la Unión Astronómica Internacional (IAU).
-            </div>
         </div>
     </div>
 
@@ -305,19 +248,12 @@
         <div class="modal-box" style="text-align: left; max-width: 600px;">
             <button class="close-btn" onclick="document.getElementById('legalModal').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-header"><h3 class="serif" id="legalTitle">Legal</h3></div>
-            <div id="legalContent" style="color: #bbb; font-size: 0.9rem; line-height: 1.6; margin-top: 20px; max-height: 60vh; overflow-y: auto; padding-right: 10px;">
-                Cargando...
-            </div>
+            <div id="legalContent" style="color: #bbb; overflow-y: auto;">Cargando...</div>
         </div>
     </div>
 
-    <div class="processing-overlay" id="processingOverlay">
-        <div class="spinner"></div>
-        <h3 class="serif" style="color: var(--gold-main); letter-spacing: 2px;">Asegurando Coordenadas...</h3>
-    </div>
+    <div class="processing-overlay" id="processingOverlay"><div class="spinner"></div><h3 class="serif" style="color: var(--gold-main);">Asegurando Coordenadas...</h3></div>
 
-    <!-- LÓGICA PRINCIPAL -->
     <script src="script.js"></script>
-    
 </body>
 </html>
