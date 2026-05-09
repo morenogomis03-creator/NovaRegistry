@@ -273,6 +273,12 @@
             transform: scale(1.15) rotate(-5deg) !important;
             text-shadow: 0 0 20px currentColor !important;
         }
+        /* --- PRUEBA SOCIAL (Fase 1 - Paso 3) --- */
+        .social-proof { width: 100vw; margin-left: -5vw; margin-top: 50px; background: rgba(212,175,55,0.05); padding: 15px 0; border-top: 1px solid rgba(212,175,55,0.2); border-bottom: 1px solid rgba(212,175,55,0.2); overflow: hidden; position: relative; }
+        .marquee { display: flex; width: max-content; animation: scroll 25s linear infinite; }
+        .marquee span { color: #888; font-size: 0.85rem; margin-right: 50px; }
+        .marquee span strong { color: var(--gold-main); }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
     </style>
 </head>
 <body>
@@ -351,6 +357,20 @@
             </div>
         </section>
 
+        <!-- PRUEBA SOCIAL ANIMADA -->
+        <div class="social-proof">
+            <div class="marquee">
+                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"María y Juan"</strong> registrada (Hace 2h)</span>
+                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Legado Familiar"</strong> registrada (Hace 5h)</span>
+                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Paquete Físico Premium asignado a <strong>"Madrid"</strong> (Hace 12h)</span>
+                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Mi Abuelo"</strong> registrada (Hace 14h)</span>
+                <!-- Se repite para que el efecto infinito no se corte -->
+                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"María y Juan"</strong> registrada (Hace 2h)</span>
+                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Legado Familiar"</strong> registrada (Hace 5h)</span>
+                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Paquete Físico Premium asignado a <strong>"Madrid"</strong> (Hace 12h)</span>
+                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Mi Abuelo"</strong> registrada (Hace 14h)</span>
+            </div>
+        </div>
         <section id="mystar">
             <div id="loginStar">
                 <div class="section-header">
