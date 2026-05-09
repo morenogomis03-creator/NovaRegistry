@@ -259,7 +259,7 @@ function downloadPDF() {
                     onError: function(err) { alert("Error al procesar PayPal."); }
                 }).render('#paypal-button-container');
                 paypalButtonsRendered = true;
-            }
+            
         }
 
         function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
