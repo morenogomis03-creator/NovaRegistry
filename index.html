@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="google-site-verification" content="42reQ2lxQPTSkVyVSuSdU-gRyVsnbk_pY9wMDgmlllM" />
+    
     <!-- === METAETIQUETAS SEO Y REDES SOCIALES === -->
     <title>NovaRegistry | Registro Internacional de Estrellas</title>
     <meta name="description" content="Inmortaliza tu legado. Registra una estrella oficial a tu nombre, obtén las coordenadas astrométricas exactas y recíbelo en formato físico o digital.">
@@ -15,7 +15,7 @@
     <meta property="og:title" content="NovaRegistry | Bautiza una Estrella Oficial">
     <meta property="og:description" content="El regalo más exclusivo del universo. Registra un cuerpo celeste, obtén sus coordenadas y rastréalo en el cielo nocturno con nuestra IA.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=1200">
-    <meta property="og:url" content="https://www.novaregistry.com">
+    <meta property="og:url" content="https://www.novaregistry.net">
     <meta property="og:site_name" content="NovaRegistry">
     
     <!-- Twitter Card -->
@@ -24,6 +24,9 @@
     <meta name="twitter:description" content="Inmortaliza tu legado. Registra una estrella oficial a tu nombre y obtén las coordenadas exactas.">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=1200">
     <!-- ========================================== -->
+
+    <!-- IMPORTANTE: El código de verificación de Google Search Console debe ir aquí -->
+    <!-- <meta name="google-site-verification" content="TU_CÓDIGO_AQUÍ" /> -->
 
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23d4af37' d='M256 0l54.8 153.2L464 168.5l-117.4 101 36.4 150-127-75.5-127 75.5 36.4-150L48 168.5l153.2-15.3L256 0z'/></svg>">
     <meta name="theme-color" content="#02040a">
@@ -35,7 +38,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
-    <!-- Asegúrate de poner tu Client-ID REAL en Modo LIVE antes de lanzar -->
+    <!-- Asegúrate de poner tu Client-ID PÚBLICO REAL aquí -->
     <script src="https://www.paypal.com/sdk/js?client-id=AYOZLNzAoAg4ce1rEOGAB3lPDZG7_yqRzTcL1oqlddSrIkwauGItQIHzSbUelBnEOe-ByRZFfnOLqsbn&currency=EUR"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
@@ -287,7 +290,7 @@
                                 <li><i class="fa-solid fa-check"></i> Título Oficial (PDF Alta Res.)</li>
                                 <li><i class="fa-solid fa-check"></i> Carta astrométrica de precisión</li>
                             </ul>
-                            <button class="btn-solid" style="background: transparent; border: 1px solid var(--text-muted); color: var(--text-main);" onclick="openPayment(30.00, 'Estrella Digital')">Seleccionar</button>
+                            <button class="btn-solid" style="background: transparent; border: 1px solid var(--text-muted); color: var(--text-main);" onclick="openPayment('Estrella Digital')">Seleccionar</button>
                         </div>
                         <div class="pack-card premium">
                             <div class="pack-badge">MÁS ELEGIDO</div>
@@ -300,7 +303,7 @@
                                 <li><i class="fa-solid fa-check"></i> Certificado en Papel Pergamino</li>
                                 <li><i class="fa-solid fa-check"></i> Envío Express Integrado</li>
                             </ul>
-                            <button class="btn-solid btn-gold" onclick="openPayment(60.00, 'Paquete Físico Premium')">Seleccionar</button>
+                            <button class="btn-solid btn-gold" onclick="openPayment('Paquete Físico Premium')">Seleccionar</button>
                         </div>
                         <div class="pack-card">
                             <div class="pack-icon"><i class="fa-solid fa-telescope"></i></div>
@@ -312,7 +315,7 @@
                                 <li><i class="fa-solid fa-check"></i> Placa Acrílica Grabada</li>
                                 <li><i class="fa-solid fa-check"></i> Prioridad Soporte 24/7</li>
                             </ul>
-                            <button class="btn-solid" style="background: transparent; border: 1px solid var(--text-muted); color: var(--text-main);" onclick="openPayment(90.00, 'Pack Supernova VIP')">Seleccionar</button>
+                            <button class="btn-solid" style="background: transparent; border: 1px solid var(--text-muted); color: var(--text-main);" onclick="openPayment('Pack Supernova VIP')">Seleccionar</button>
                         </div>
                     </div>
                 </div>
@@ -449,7 +452,6 @@
             <button class="close-btn" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-header"><h3 class="serif">Pasarela de Adjudicación</h3></div>
             <div class="payment-desc" id="checkoutDesc" style="color: #aaa; margin-bottom: 5px;">-</div>
-            <div class="payment-amount" id="checkoutAmount" style="color: var(--text-main); font-size: 2rem; margin-bottom: 20px;">0.00 €</div>
             
             <div id="shipping-form" style="display:none; text-align:left; margin-bottom: 10px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
                 <h4 style="color: var(--gold-main); margin-bottom: 15px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; letter-spacing: 1px;"><i class="fa-solid fa-truck-fast"></i> Datos de Envío Físico</h4>
@@ -471,7 +473,6 @@
 
             <div id="paypal-button-container" style="min-height: 150px;"></div>
             
-            <!-- Aviso legal extra anti-scam -->
             <div style="font-size: 0.65rem; color: #666; text-align: center; margin-top: 15px; line-height: 1.4;">
                 *Servicio de carácter conmemorativo y simbólico. Esta plataforma opera un registro patrimonial privado, independiente y no vinculado científicamente a la Unión Astronómica Internacional (IAU).
             </div>
@@ -506,7 +507,6 @@
             document.getElementById("cookieBanner").style.display = "none";
         }
 
-        // --- TEXTOS LEGALES ACTUALIZADOS (Recuerda poner aquí tus datos reales) ---
         const legalTexts = {
             'Aviso Legal': `
                 <strong style="color: var(--gold-main);">1. Datos Identificativos</strong><br>
@@ -532,7 +532,7 @@
             document.getElementById('legalModal').style.display = 'flex';
         }
 
-        // --- FIREBASE INICIALIZACIÓN ---
+        // --- FIREBASE INICIALIZACIÓN (Solo lectura para Frontend) ---
         const firebaseConfig = {
             apiKey: "AIzaSyD5F10FeOf1cAO_6j3v_OR8WHIxw-lQo6w",
             authDomain: "novagetristy.firebaseapp.com",
@@ -678,42 +678,11 @@
             requestAnimationFrame(renderAmbientSky);
         }
 
-        // --- CATALOGO MASIVO DE ESTRELLAS REALES (Ahorra lecturas gratuitas de Firestore) ---
-        // Puedes añadir miles más copiando el mismo formato.
-        const starCatalog = [
-            { official: "HD 48915 (Sirio)", constellation: "Canis Major", ra: "06h 45m 08s", dec: "-16° 42' 58\"", distance: "8.6 A.L.", spectral: "A1 V", temp: "9940 K", appMag: "-1.46", lum: "25.4 Soles", lore: "La estrella más brillante de todo el cielo nocturno, reverenciada en el antiguo Egipto." },
-            { official: "HD 172167 (Vega)", constellation: "Lyra", ra: "18h 36m 56s", dec: "+38° 47' 01\"", distance: "25 A.L.", spectral: "A0 Va", temp: "9600 K", appMag: "0.03", lum: "40.1 Soles", lore: "Fue la Estrella Polar en el año 12000 a.C. y es uno de los vértices del Triángulo de Verano." },
-            { official: "HD 39801 (Betelgeuse)", constellation: "Orion", ra: "05h 55m 10s", dec: "+07° 24' 25\"", distance: "548 A.L.", spectral: "M1-M2 Ia-ab", temp: "3500 K", appMag: "0.42", lum: "100,000 Soles", lore: "Una supergigante roja masiva en la constelación de Orión a punto de convertirse en supernova." },
-            { official: "HD 34085 (Rigel)", constellation: "Orion", ra: "05h 14m 32s", dec: "-08° 12' 05\"", distance: "860 A.L.", spectral: "B8 Ia", temp: "12100 K", appMag: "0.18", lum: "120,000 Soles", lore: "Una supergigante azul luminosa, marcando el pie izquierdo del cazador Orión." },
-            { official: "HD 45348 (Canopus)", constellation: "Carina", ra: "06h 23m 57s", dec: "-52° 41' 44\"", distance: "310 A.L.", spectral: "A9 II", temp: "7400 K", appMag: "-0.74", lum: "10,700 Soles", lore: "La segunda estrella más brillante del cielo, usada vitalmente para la navegación espacial." },
-            { official: "HD 29139 (Aldebarán)", constellation: "Taurus", ra: "04h 35m 55s", dec: "+16° 30' 33\"", distance: "65 A.L.", spectral: "K5 III", temp: "3900 K", appMag: "0.85", lum: "425 Soles", lore: "Conocida como 'el ojo del toro', es una gigante naranja rojiza." },
-            { official: "HD 148478 (Antares)", constellation: "Scorpius", ra: "16h 29m 24s", dec: "-26° 25' 55\"", distance: "550 A.L.", spectral: "M1.5 Iab-Ib", temp: "3400 K", appMag: "1.06", lum: "75,900 Soles", lore: "El corazón del Escorpión, a menudo confundida con Marte por su color cobrizo." },
-            { official: "HD 61421 (Procyon)", constellation: "Canis Minor", ra: "07h 39m 18s", dec: "+05° 13' 29\"", distance: "11.4 A.L.", spectral: "F5 IV-V", temp: "6530 K", appMag: "0.34", lum: "6.9 Soles", lore: "Parte del Hexágono de Invierno, su nombre significa 'antes del perro' en griego." },
-            { official: "HD 10144 (Achernar)", constellation: "Eridanus", ra: "01h 37m 42s", dec: "-57° 14' 12\"", distance: "139 A.L.", spectral: "B6 Vep", temp: "15000 K", appMag: "0.45", lum: "3,150 Soles", lore: "Una estrella muy achatada debido a su rápida rotación ecuatorial." },
-            { official: "HD 187642 (Altair)", constellation: "Aquila", ra: "19h 50m 46s", dec: "+08° 52' 05\"", distance: "16.7 A.L.", spectral: "A7 V", temp: "7700 K", appMag: "0.76", lum: "10.6 Soles", lore: "Estrella principal del Águila, rota tan rápido que su ecuador es un 20% mayor que sus polos." },
-            { official: "HD 116658 (Spica)", constellation: "Virgo", ra: "13h 25m 11s", dec: "-11° 09' 40\"", distance: "250 A.L.", spectral: "B1 III-IV", temp: "22400 K", appMag: "0.98", lum: "12,100 Soles", lore: "Representa la espiga de trigo en la mano de la constelación de la Virgen." },
-            { official: "HD 62509 (Pollux)", constellation: "Gemini", ra: "07h 45m 18s", dec: "+28° 01' 34\"", distance: "33.7 A.L.", spectral: "K0 III", temp: "4666 K", appMag: "1.14", lum: "43 Soles", lore: "El gemelo inmortal de Cástor en la mitología griega, tiene al menos un exoplaneta confirmado." },
-            { official: "HD 216956 (Fomalhaut)", constellation: "Piscis Austrinus", ra: "22h 57m 39s", dec: "-29° 37' 20\"", distance: "25 A.L.", spectral: "A3 V", temp: "8590 K", appMag: "1.16", lum: "16.6 Soles", lore: "Rodeada por un inmenso disco de polvo cósmico y restos protoplanetarios." },
-            { official: "HD 197345 (Deneb)", constellation: "Cygnus", ra: "20h 41m 25s", dec: "+45° 16' 49\"", distance: "2600 A.L.", spectral: "A2 Ia", temp: "8525 K", appMag: "1.25", lum: "196,000 Soles", lore: "Una de las estrellas más lejanas que se pueden ver a simple vista desde la Tierra." },
-            { official: "HD 87901 (Regulus)", constellation: "Leo", ra: "10h 08m 22s", dec: "+11° 58' 01\"", distance: "79 A.L.", spectral: "B7 V", temp: "12460 K", appMag: "1.36", lum: "288 Soles", lore: "Conocida como el 'Corazón del León', es un sistema estelar múltiple." },
-            { official: "HD 108248 (Acrux)", constellation: "Crux", ra: "12h 26m 35s", dec: "-63° 05' 56\"", distance: "320 A.L.", spectral: "B0.5 IV", temp: "28000 K", appMag: "0.77", lum: "25,000 Soles", lore: "La estrella más brillante de la Cruz del Sur." },
-            { official: "HD 111123 (Mimosa)", constellation: "Crux", ra: "12h 47m 43s", dec: "-59° 41' 19\"", distance: "280 A.L.", spectral: "B0.5 III", temp: "27000 K", appMag: "1.25", lum: "34,000 Soles", lore: "Representa el brazo izquierdo de la mítica Cruz del Sur." },
-            { official: "HD 68273 (Suhail)", constellation: "Vela", ra: "08h 09m 31s", dec: "-47° 20' 11\"", distance: "570 A.L.", spectral: "WC8", temp: "50000 K", appMag: "1.75", lum: "10,000 Soles", lore: "Una de las estrellas más calientes visibles a simple vista." },
-            { official: "HD 222404 (Errai)", constellation: "Cepheus", ra: "23h 39m 20s", dec: "+77° 37' 56\"", distance: "45 A.L.", spectral: "K1 IV", temp: "4800 K", appMag: "3.22", lum: "11 Soles", lore: "Debido a la precesión de los equinoccios, será nuestra futura Estrella Polar." },
-            { official: "HD 172167 (Polaris)", constellation: "Ursa Minor", ra: "02h 31m 49s", dec: "+89° 15' 50\"", distance: "433 A.L.", spectral: "F7 Ib", temp: "6015 K", appMag: "1.97", lum: "2,500 Soles", lore: "La Estrella del Norte, guía histórica de navegantes y exploradores." },
-            { official: "HD 128620 (Alpha Centauri)", constellation: "Centaurus", ra: "14h 39m 36s", dec: "-60° 50' 02\"", distance: "4.37 A.L.", spectral: "G2 V", temp: "5790 K", appMag: "-0.27", lum: "1.51 Soles", lore: "El sistema estelar más cercano a nuestro Sistema Solar." },
-            { official: "HD 122451 (Arcturus)", constellation: "Boötes", ra: "14h 15m 39s", dec: "+19° 10' 56\"", distance: "36.7 A.L.", spectral: "K0 III", temp: "4286 K", appMag: "-0.05", lum: "170 Soles", lore: "La estrella más brillante del hemisferio celeste norte." },
-            { official: "HD 34029 (Capella)", constellation: "Auriga", ra: "05h 16m 41s", dec: "+45° 59' 52\"", distance: "42.9 A.L.", spectral: "G8 III", temp: "4940 K", appMag: "0.08", lum: "78.5 Soles", lore: "Un sistema estelar cuádruple, conocido como la 'Pequeña Cabra'." },
-            { official: "HD 173692 (Nunki)", constellation: "Sagittarius", ra: "18h 55m 15s", dec: "-26° 17' 48\"", distance: "228 A.L.", spectral: "B2.5 V", temp: "20000 K", appMag: "2.05", lum: "3,300 Soles", lore: "La estrella más antigua con nombre registrado por los babilonios." },
-            { official: "HD 206778 (Enif)", constellation: "Pegasus", ra: "21h 44m 11s", dec: "+09° 52' 30\"", distance: "690 A.L.", spectral: "K2 Ib", temp: "3900 K", appMag: "2.38", lum: "6,700 Soles", lore: "Marca el hocico del mítico Caballo Alado." }
-        ];
-
-        let checkoutPrice = 0;
         let checkoutPackage = "";
         let starNamePending = "";
         let paypalButtonsRendered = false;
 
-        function openPayment(price, packageName) {
+        function openPayment(packageName) {
             let rawInput = document.getElementById('inputStarName').value;
             starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
             
@@ -727,17 +696,15 @@
             const formEnvio = document.getElementById('shipping-form');
             formEnvio.style.display = (packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
 
-            if(isAdminActive) { executeRealStarAssignment("Admin Test", "TRANS_ADMIN_0000", price); return; }
-
-            checkoutPrice = price; 
             document.getElementById('checkoutDesc').innerText = packageName;
-            document.getElementById('checkoutAmount').innerText = price.toFixed(2) + " €";
             document.getElementById('paymentModal').style.display = 'flex';
 
             if (!paypalButtonsRendered) {
                 paypal.Buttons({
                     style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
-                    onClick: function(data, actions) {
+                    
+                    // 1. Pedimos a NUESTRO servidor que cree la orden segura
+                    createOrder: async function(data, actions) { 
                         if(!document.getElementById('legalConsent').checked) {
                             alert("Por favor, marca la casilla de Términos de Venta para continuar.");
                             return actions.reject();
@@ -751,16 +718,65 @@
                                 return actions.reject(); 
                             }
                         }
-                        return actions.resolve();
-                    },
-                    createOrder: function(data, actions) { 
-                        return actions.order.create({ purchase_units: [{ amount: { value: checkoutPrice.toString() } }] }); 
-                    },
-                    onApprove: function(data, actions) {
-                        return actions.order.capture().then(function(details) {
-                            closePaymentModal(); 
-                            executeRealStarAssignment(details.payer.name.given_name, details.id, checkoutPrice);
+
+                        const respuesta = await fetch('/api/crear-orden', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ paqueteId: checkoutPackage })
                         });
+                        const ordenSegura = await respuesta.json();
+                        
+                        if (!respuesta.ok) {
+                            alert("Error de seguridad en la pasarela.");
+                            throw new Error("Transacción bloqueada.");
+                        }
+                        return ordenSegura.id; 
+                    },
+                    
+                    // 2. El usuario paga y capturamos el dinero
+                    onApprove: async function(data, actions) {
+                        const details = await actions.order.capture();
+                        
+                        // 3. Mostramos la pantalla de carga
+                        const overlay = document.getElementById('processingOverlay');
+                        overlay.style.display = 'flex';
+                        closePaymentModal();
+
+                        let shippingData = null;
+                        if (document.getElementById('shipping-form').style.display === 'block') {
+                            shippingData = {
+                                name: document.getElementById('shipName').value.trim(),
+                                address: document.getElementById('shipAddress').value.trim(),
+                                city: document.getElementById('shipCity').value.trim(),
+                                zip: document.getElementById('shipZip').value.trim(),
+                                phone: document.getElementById('shipPhone').value.trim()
+                            };
+                        }
+
+                        // 4. Pedimos a NUESTRO servidor que guarde en Firebase
+                        const resFirebase = await fetch('/api/guardar-estrella', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                paqueteId: checkoutPackage,
+                                starName: starNamePending,
+                                payerName: details.payer.name.given_name,
+                                paypalTransactionId: details.id,
+                                shippingInfo: shippingData
+                            })
+                        });
+                        const resultado = await resFirebase.json();
+
+                        overlay.style.display = 'none';
+
+                        if(resultado.success) {
+                            alert(`¡COMPRA CONFIRMADA!\nCódigo: ${resultado.novaCode}\n\nGuarda este código NOVA para poder recuperar tu certificado.`);
+                            showSection('mystar');
+                            document.getElementById('myStarInput').value = resultado.novaCode;
+                            loadMyStar();
+                        } else {
+                            alert("Error al contactar con el Registro Central.");
+                        }
                     },
                     onError: function(err) { alert("Error al procesar PayPal."); }
                 }).render('#paypal-button-container');
@@ -769,59 +785,6 @@
         }
 
         function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
-
-        async function executeRealStarAssignment(payerName, paypalTransactionId, importeEsperado) {
-            const overlay = document.getElementById('processingOverlay');
-            overlay.style.display = 'flex';
-
-            let shippingInfo = null;
-            if (document.getElementById('shipping-form').style.display === 'block') {
-                shippingInfo = {
-                    name: document.getElementById('shipName').value.trim(), address: document.getElementById('shipAddress').value.trim(),
-                    city: document.getElementById('shipCity').value.trim(), zip: document.getElementById('shipZip').value.trim(),
-                    phone: document.getElementById('shipPhone').value.trim()
-                };
-            }
-
-            try {
-                const snapshot = await db.collection("estrellas").get();
-                const soldStars = snapshot.docs.map(doc => doc.data().official);
-                
-                const availableStars = starCatalog.filter(star => !soldStars.includes(star.official));
-
-                if (availableStars.length === 0) {
-                    overlay.style.display = 'none'; alert("¡Catálogo agotado temporalmente!"); return;
-                }
-
-                const realStar = availableStars[Math.floor(Math.random() * availableStars.length)];
-                let newCode = 'NOVA-' + Math.floor(10000 + Math.random() * 90000);
-
-                const starData = {
-                    id: newCode, name: starNamePending.toUpperCase(), official: realStar.official, 
-                    constellation: realStar.constellation, ra: realStar.ra, dec: realStar.dec,
-                    date: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' }),
-                    distance: realStar.distance, pack: checkoutPackage, spectral: realStar.spectral, temp: realStar.temp, appMag: realStar.appMag, lum: realStar.lum,
-                    lore: realStar.lore, payerName: payerName, shipping: shippingInfo,
-                    paypalTransactionId: paypalTransactionId,
-                    expectedAmount: importeEsperado 
-                };
-
-                await db.collection("estrellas").doc(newCode).set(starData);
-                overlay.style.display = 'none';
-                
-                // IMPORTANTE: Aviso sobre la descarga del PDF (UX)
-                alert(`¡COMPRA CONFIRMADA!\nSe le ha adjudicado: ${starData.official}\nCódigo: ${newCode}\n\nIMPORTANTE: Descarga ahora mismo tu certificado estelar o guarda este código NOVA para poder recuperarlo en el futuro.`);
-                
-                showSection('mystar');
-                document.getElementById('myStarInput').value = newCode;
-                loadMyStar(); 
-                
-            } catch(error) {
-                overlay.style.display = 'none'; 
-                console.error(error);
-                alert("Fallo de sincronización con la Base de Datos. Póngase en contacto con soporte.");
-            }
-        }
 
         async function loadMyStar() {
             const input = document.getElementById('myStarInput').value.toUpperCase().replace(/\s+/g, '');
@@ -835,17 +798,17 @@
                     document.getElementById('certificatePanel').style.display = 'flex';
 
                     document.getElementById('certId').innerText = star.id;
-                    document.getElementById('certOfficialCodeTop').innerText = star.official; 
+                    document.getElementById('certOfficialCodeTop').innerText = star.official || "--"; 
                     document.getElementById('certDate').innerText = star.date;
                     document.getElementById('certName').innerText = star.name;
-                    document.getElementById('certOfficial').innerText = star.official;
-                    document.getElementById('certRA').innerText = star.ra;
-                    document.getElementById('certDEC').innerText = star.dec;
-                    document.getElementById('certDist').innerText = star.distance;
-                    document.getElementById('certClass').innerText = star.spectral;
-                    document.getElementById('certTemp').innerText = star.temp;
-                    document.getElementById('certAppMag').innerText = star.appMag;
-                    document.getElementById('certLum').innerText = star.lum;
+                    document.getElementById('certOfficial').innerText = star.official || "--";
+                    document.getElementById('certRA').innerText = star.ra || "--";
+                    document.getElementById('certDEC').innerText = star.dec || "--";
+                    document.getElementById('certDist').innerText = star.distance || "--";
+                    document.getElementById('certClass').innerText = star.spectral || "--";
+                    document.getElementById('certTemp').innerText = star.temp || "--";
+                    document.getElementById('certAppMag').innerText = star.appMag || "--";
+                    document.getElementById('certLum').innerText = star.lum || "--";
                     document.getElementById('certBarcode').innerText = `*${star.id.replace('-','')}*`;
                     document.getElementById('certLore').innerText = star.lore ? `"${star.lore}"` : "";
                 } else { alert('Código no localizado en el registro oficial.'); }
@@ -910,7 +873,8 @@
                 const docRef = await db.collection("estrellas").doc(input).get();
                 if (docRef.exists) {
                     const star = docRef.data();
-                    const raDeg = parseCoordToDeg(star.ra, true); const decDeg = parseCoordToDeg(star.dec, false);
+                    const raDeg = star.ra ? parseCoordToDeg(star.ra, true) : 0; 
+                    const decDeg = star.dec ? parseCoordToDeg(star.dec, false) : 0;
                     const coords = getAltAz(lat, lon, raDeg, decDeg);
                     let visibilityStr = coords.alt > 0 ? `<span style="color: #00ff66;">Visible sobre el horizonte (${coords.alt}°)</span>` : `<span style="color: #ff3366;">Bajo el horizonte (${coords.alt}°)</span>`;
                     let cardinal = getCardinalPoint(coords.az);
@@ -918,7 +882,7 @@
                     outputArea.innerHTML = `
                         <div style="color: #00ff66; margin-bottom: 15px; font-size: 1.1em;">> [ ÉXITO ] SEÑAL TELEMÉTRICA FIJADA</div>
                         <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
-                            <div style="margin-bottom: 5px;"><strong>Estrella Objetivo:</strong> <span style="color: #fff;">${star.name} (${star.official})</span></div>
+                            <div style="margin-bottom: 5px;"><strong>Estrella Objetivo:</strong> <span style="color: #fff;">${star.name}</span></div>
                             <div style="margin-bottom: 10px;"><strong>Observador Local:</strong> Lat ${lat.toFixed(2)}, Lon ${lon.toFixed(2)}</div>
                             <div style="color: var(--gold-main);"><strong>Datos en Tiempo Real:</strong></div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px;">
@@ -928,7 +892,7 @@
                         </div>
                         <div style="color: var(--accent-blue); margin-top: 15px; font-size: 0.9em;">
                             <strong>> 🛰️ ASISTENTE DE AVISTAMIENTO:</strong><br> 
-                            ${coords.alt > 0 ? `Abre la brújula de tu móvil y apunta hacia el <strong>${cardinal} (${coords.az}°)</strong>. Busca en esa dirección la constelación de ${star.constellation}.` : `Tu estrella se encuentra oculta bajo la Tierra en este momento debido a la rotación.`}
+                            ${coords.alt > 0 ? `Abre la brújula de tu móvil y apunta hacia el <strong>${cardinal} (${coords.az}°)</strong>.` : `Tu estrella se encuentra oculta bajo la Tierra en este momento debido a la rotación.`}
                         </div>
                     `;
                 } else { outputArea.innerHTML = '<span style="color: red;">> [ ERROR 404 ] Código no existe.</span>'; }
