@@ -945,7 +945,7 @@
             } else { processTracking(input, 40.4168, -3.7038, outputArea); }
         }
 
-        async function processTracking(input, lat, lon, outputArea) {
+async function processTracking(input, lat, lon, outputArea) {
             try {
                 const docRef = await db.collection("estrellas").doc(input).get();
                 if (docRef.exists) {
@@ -962,10 +962,16 @@
                             <div style="margin-bottom: 5px;"><strong>Estrella Objetivo:</strong> <span style="color: #fff;">${star.name}</span></div>
                             <div style="margin-bottom: 10px;"><strong>Observador Local:</strong> Lat ${lat.toFixed(2)}, Lon ${lon.toFixed(2)}</div>
                             <div style="color: var(--gold-main);"><strong>Datos en Tiempo Real:</strong></div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; margin-bottom: 15px;">
                                 <div>Elevación:<br><strong>${visibilityStr}</strong></div>
                                 <div>Azimut Brújula:<br><strong>${coords.az}° (${cardinal})</strong></div>
                             </div>
+                            
+                            <!-- NUEVO RADAR AR -->
+                            <div class="radar-compass">
+                                <div class="radar-needle" style="transform: translateX(-50%) rotate(${coords.az}deg);"></div>
+                            </div>
+                            
                         </div>
                         <div style="color: var(--accent-blue); margin-top: 15px; font-size: 0.9em;">
                             <strong>> 🛰️ ASISTENTE DE AVISTAMIENTO:</strong><br> 
@@ -974,6 +980,7 @@
                     `;
                 } else { outputArea.innerHTML = '<span style="color: red;">> [ ERROR 404 ] Código no existe.</span>'; }
             } catch (error) { outputArea.innerHTML = '<span style="color: red;">> [ ERROR FATAL ] Servidor no responde.</span>'; }
+        }
         }
 
         async function loadAdminDashboard() {
