@@ -102,60 +102,51 @@
             if(sectionId === 'admin-panel' && document.getElementById('link-admin')) document.getElementById('link-admin').classList.add('active-link');
         }
 
-// === GENERADOR DE CERTIFICADOS (Versión Caja Mágica A4) ===
+// === GENERADOR DE CERTIFICADOS (Versión "Cortina de Humo" A4) ===
 function downloadPDF() {
-    const originalElement = document.getElementById('pdf-content') || document.getElementById('certificatePanel');
+    const certElement = document.getElementById('pdf-content') || document.getElementById('certificatePanel');
     const btn = document.getElementById('downloadPdfBtn');
+    const overlay = document.getElementById('processingOverlay'); // Reutilizamos tu pantalla de carga
     
-    // Cambiamos el botón
-    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando PDF...'; 
+    // 1. Bajamos la cortina de humo y cambiamos el botón
+    if(overlay) overlay.style.display = 'flex';
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Generando...'; 
     btn.style.pointerEvents = 'none';
-    
-    // 1. Clonamos el certificado
-    const clone = originalElement.cloneNode(true);
-    
-    // 2. Creamos la "Caja Mágica" con las medidas EXACTAS de un A4 a 96dpi
-    const wrapper = document.createElement('div'); 
-    wrapper.style.width = '794px';
-    wrapper.style.height = '1123px';
-    wrapper.style.position = 'absolute';
-    wrapper.style.top = '-9999px'; // Lo escondemos fuera de la pantalla
-    wrapper.style.left = '-9999px';
-    wrapper.style.backgroundColor = '#faf9f6'; // Color de fondo por si acaso
-    
-    // 3. Forzamos al clon a ocupar exactamente ese A4, matando el responsive
-    clone.style.width = '100%';
-    clone.style.height = '100%';
-    clone.style.maxWidth = 'none';
-    clone.style.margin = '0';
-    clone.style.transform = 'none';
-    clone.style.boxSizing = 'border-box';
-    
-    // Metemos el clon en la caja, y la caja en la web
-    wrapper.appendChild(clone); 
-    document.body.appendChild(wrapper);
 
-    // 4. Le damos 300ms al navegador para dibujar el clon oculto antes de la foto
+    // 2. Guardamos cómo estaba el diseño antes de tocarlo
+    const originalWidth = certElement.style.width;
+    const originalMaxWidth = certElement.style.maxWidth;
+    const originalMargin = certElement.style.margin;
+    const originalTransform = certElement.style.transform;
+
+    // 3. Forzamos el tamaño A4 perfecto (el usuario no lo ve por la cortina)
+    certElement.style.width = '794px';
+    certElement.style.maxWidth = '794px';
+    certElement.style.margin = '0';
+    certElement.style.transform = 'none';
+
+    // 4. Le damos 500ms al navegador para "dibujar" el nuevo tamaño antes de la foto
     setTimeout(() => {
         html2pdf().set({ 
             margin: 0, 
             filename: `Certificado_NovaRegistry_${document.getElementById('certId').innerText}.pdf`, 
             image: { type: 'jpeg', quality: 1.0 }, 
-            html2canvas: { 
-                scale: 2, // Doble resolución para que no se vea borroso
-                useCORS: true,
-                windowWidth: 794 // Engañamos a html2canvas para que crea que la pantalla mide 794px
-            }, 
+            html2canvas: { scale: 2, useCORS: true }, 
             jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
-        }).from(wrapper).save().then(() => {
-            // Limpieza: borramos el clon y restauramos el botón
-            document.body.removeChild(wrapper); 
+        }).from(certElement).save().then(() => {
+            
+            // 5. Restauramos la web a su estado original y quitamos la cortina
+            certElement.style.width = originalWidth;
+            certElement.style.maxWidth = originalMaxWidth;
+            certElement.style.margin = originalMargin;
+            certElement.style.transform = originalTransform;
+            
+            if(overlay) overlay.style.display = 'none';
             btn.innerHTML = '<i class="fa-solid fa-download"></i> Descargar PDF'; 
             btn.style.pointerEvents = 'auto';
         });
-    }, 300);
+    }, 500);
 }
-
         // --- SISTEMA VR / PARALLAX ---
         const canvas = document.getElementById('skyCanvas');
         const ctx = canvas.getContext('2d');
