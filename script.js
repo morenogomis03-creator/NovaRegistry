@@ -222,26 +222,38 @@ async function downloadPDF() {
         let starNamePending = "";
         let paypalButtonsRendered = false;
 
-      function openPayment(packageName) {
-    let rawInput = document.getElementById('inputStarName').value;
-    starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
+     // === PASARELA DE PAGO Y BYPASS ADMIN ===
+function openPayment(packageName) {
+    let inputName = document.getElementById('inputStarName').value;
     
-    if(starNamePending === "") { 
-        alert("Introduzca un Nombre Oficial válido."); return; 
+    // Limpiamos el texto de caracteres raros
+    starNamePending = inputName.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
+    
+    // 1. SEGURIDAD: Si no hay nombre, avisamos y no abramos la pasarela
+    if (starNamePending === "") { 
+        alert("Por favor, introduce el nombre de tu estrella en la caja de texto antes de continuar."); 
+        return; 
     }
     
     checkoutPackage = packageName;
-    document.getElementById('legalConsent').checked = false; 
+    
+    // Reiniciamos el checkbox de legales
+    let legalCheckbox = document.getElementById('legalConsent');
+    if(legalCheckbox) legalCheckbox.checked = false; 
 
-    // Mostrar formulario de envío según los nuevos nombres de los packs
+    // 2. FORMULARIO DE ENVÍO: Mostrarlo si el pack es físico
     const formEnvio = document.getElementById('shipping-form');
-    formEnvio.style.display = (packageName.includes("Herencia") || packageName.includes("Soberanía") || packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
+    if (packageName.includes("Herencia") || packageName.includes("Soberanía") || packageName.includes("Físico") || packageName.includes("VIP")) {
+        formEnvio.style.display = 'block';
+    } else {
+        formEnvio.style.display = 'none';
+    }
 
+    // 3. ABRIR EL MODAL (Ventana negra)
     document.getElementById('checkoutDesc').innerText = packageName;
     document.getElementById('paymentModal').style.display = 'flex';
 
-    // === BYPASS PARA EL DUEÑO (MODO ADMIN) ===
-    // Limpiamos cualquier botón de admin anterior para que no se dupliquen
+    // 4. MODO ADMIN: Generar el botón verde si somos Staff
     const oldAdminBtn = document.getElementById('admin-bypass-btn');
     if (oldAdminBtn) oldAdminBtn.remove();
 
@@ -249,23 +261,21 @@ async function downloadPDF() {
         const adminBtn = document.createElement('button');
         adminBtn.id = 'admin-bypass-btn';
         adminBtn.innerHTML = '<i class="fa-solid fa-key"></i> REGISTRO GRATUITO (STAFF)';
-        adminBtn.style = "width:100%; background:#2ecc71; color:white; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:20px; font-size:1rem; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);";
+        adminBtn.style = "width:100%; background:#2ecc71; color:white; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:20px; font-size:1rem;";
         
-        // Lo insertamos justo ANTES del contenedor de PayPal
         const paypalContainer = document.getElementById('paypal-button-container');
         paypalContainer.parentNode.insertBefore(adminBtn, paypalContainer);
 
         adminBtn.onclick = async () => {
             if(!document.getElementById('legalConsent').checked) {
-                alert("Aunque seas admin, marca la casilla de Términos para simular el flujo.");
+                alert("Marca la casilla de Términos para simular el flujo.");
                 return;
             }
-            if(confirm("¿Deseas registrar '" + starNamePending + "' de forma gratuita como Administrador?")) {
+            if(confirm("¿Registrar '" + starNamePending + "' gratis como Administrador?")) {
                 const overlay = document.getElementById('processingOverlay');
                 overlay.style.display = 'flex';
-                closePaymentModal();
+                document.getElementById('paymentModal').style.display = 'none';
 
-                // Simulamos los datos de envío si es necesario
                 let shippingData = null;
                 if (formEnvio.style.display === 'block') {
                     shippingData = {
@@ -277,7 +287,6 @@ async function downloadPDF() {
                     };
                 }
 
-                // Llamada directa al backend
                 try {
                     const resFirebase = await fetch('/api/guardar-estrella', {
                         method: 'POST',
@@ -285,7 +294,7 @@ async function downloadPDF() {
                         body: JSON.stringify({
                             paqueteId: checkoutPackage,
                             starName: starNamePending,
-                            payerName: "Staff de NovaRegistry",
+                            payerName: "Staff NovaRegistry",
                             paypalTransactionId: "ADMIN_BYPASS_" + Date.now(),
                             shippingInfo: shippingData
                         })
@@ -295,20 +304,98 @@ async function downloadPDF() {
                     overlay.style.display = 'none';
 
                     if(resultado.success) {
-                        alert(`¡REGISTRO ADMIN CONFIRMADO!\nCódigo: ${resultado.novaCode}`);
+                        alert(`¡REGISTRO CONFIRMADO!\nCódigo: ${resultado.novaCode}`);
                         showSection('mystar');
                         document.getElementById('myStarInput').value = resultado.novaCode;
                         loadMyStar();
                     } else {
-                        alert("Error al contactar con el Registro Central.");
+                        alert("Error de conexión.");
                     }
                 } catch (e) {
                     overlay.style.display = 'none';
-                    alert("Error en la conexión bypass.");
+                    alert("Error crítico.");
                 }
             }
         };
     }
+
+    // 5. RENDERIZAR PAYPAL (Si no se ha hecho ya)
+    if (!paypalButtonsRendered) {
+        paypal.Buttons({
+            style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
+            createOrder: async function(data, actions) { 
+                if(!document.getElementById('legalConsent').checked) {
+                    alert("Por favor, marca la casilla de Términos de Venta para continuar.");
+                    return actions.reject();
+                }
+                if (formEnvio.style.display === 'block') {
+                    const n = document.getElementById('shipName').value.trim();
+                    const a = document.getElementById('shipAddress').value.trim();
+                    const z = document.getElementById('shipZip').value.trim();
+                    if(!n || !a || !z) {
+                        alert("Rellene los datos principales de envío.");
+                        return actions.reject(); 
+                    }
+                }
+
+                const respuesta = await fetch('/api/crear-orden', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ paqueteId: checkoutPackage })
+                });
+                const ordenSegura = await respuesta.json();
+                
+                if (!respuesta.ok) {
+                    alert("Error en la pasarela.");
+                    throw new Error("Transacción bloqueada.");
+                }
+                return ordenSegura.id; 
+            },
+            onApprove: async function(data, actions) {
+                const details = await actions.order.capture();
+                const overlay = document.getElementById('processingOverlay');
+                overlay.style.display = 'flex';
+                document.getElementById('paymentModal').style.display = 'none';
+
+                let shippingData = null;
+                if (formEnvio.style.display === 'block') {
+                    shippingData = {
+                        name: document.getElementById('shipName').value.trim(),
+                        address: document.getElementById('shipAddress').value.trim(),
+                        city: document.getElementById('shipCity').value.trim(),
+                        zip: document.getElementById('shipZip').value.trim(),
+                        phone: document.getElementById('shipPhone').value.trim()
+                    };
+                }
+
+                const resFirebase = await fetch('/api/guardar-estrella', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        paqueteId: checkoutPackage,
+                        starName: starNamePending,
+                        payerName: details.payer.name.given_name,
+                        paypalTransactionId: details.id,
+                        shippingInfo: shippingData
+                    })
+                });
+                const resultado = await resFirebase.json();
+                overlay.style.display = 'none';
+
+                if(resultado.success) {
+                    alert(`¡COMPRA CONFIRMADA!\nCódigo: ${resultado.novaCode}\n\nGuarda este código NOVA para poder recuperar tu certificado.`);
+                    showSection('mystar');
+                    document.getElementById('myStarInput').value = resultado.novaCode;
+                    loadMyStar();
+                } else {
+                    alert("Error al contactar con el Registro Central.");
+                }
+            },
+            onError: function(err) { alert("Transacción cancelada o errónea."); }
+        }).render('#paypal-button-container');
+        paypalButtonsRendered = true;
+    }
+}
 
     // === FLUJO NORMAL DE PAYPAL ===
     if (!paypalButtonsRendered) {
