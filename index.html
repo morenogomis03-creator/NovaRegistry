@@ -6,13 +6,6 @@
     
     <!-- === METAETIQUETAS SEO Y REDES SOCIALES === -->
     <title>NovaRegistry | Registro Internacional de Estrellas</title>
-    <!-- OPTIMIZACIÓN SEO Y REDES SOCIALES -->
-    <meta name="description" content="Inmortaliza tu legado. Registra una estrella oficial en NovaRegistry con certificado patrimonial y mapa astrométrico.">
-    <meta property="og:title" content="NovaRegistry | Registro Internacional de Estrellas">
-    <meta property="og:description" content="Nombra una estrella real en el firmamento. El regalo más exclusivo y eterno.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
-    <meta property="og:url" content="https://www.novaregistry.net">
-    <meta name="twitter:card" content="summary_large_image">
     <meta name="description" content="Inmortaliza tu legado. Registra una estrella oficial a tu nombre, obtén las coordenadas astrométricas exactas y recíbelo en formato físico o digital.">
     <meta name="keywords" content="comprar estrella, registrar estrella, regalo estrella, NovaRegistry, certificado estelar, regalo original">
     <meta name="author" content="NovaRegistry">
@@ -30,26 +23,27 @@
     <meta name="twitter:title" content="NovaRegistry | Bautiza una Estrella Oficial">
     <meta name="twitter:description" content="Inmortaliza tu legado. Registra una estrella oficial a tu nombre y obtén las coordenadas exactas.">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=1200">
-    <!-- ========================================== -->
 
-    <!-- IMPORTANTE: El código de verificación de Google Search Console debe ir aquí -->
-    <!-- <meta name="google-site-verification" content="TU_CÓDIGO_AQUÍ" /> -->
-
+    <!-- Icono y Color de Tema -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23d4af37' d='M256 0l54.8 153.2L464 168.5l-117.4 101 36.4 150-127-75.5-127 75.5 36.4-150L48 168.5l153.2-15.3L256 0z'/></svg>">
     <meta name="theme-color" content="#02040a">
 
+    <!-- Fuentes y Estilos -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="style.css">
+
+    <!-- === LIBRERÍAS EXTERNAS === -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
-    <!-- Asegúrate de poner tu Client-ID PÚBLICO REAL aquí -->
+    <!-- PayPal -->
     <script src="https://www.paypal.com/sdk/js?client-id=AYOZLNzAoAg4ce1rEOGAB3lPDZG7_yqRzTcL1oqlddSrIkwauGItQIHzSbUelBnEOe-ByRZFfnOLqsbn&currency=EUR"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-   <link rel="stylesheet" href="style.css">
+    <!-- PASO 3: Nueva Librería Profesional para PDF -->
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
     
 </head>
 <body>
@@ -135,13 +129,13 @@
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Legado Familiar"</strong> registrada (Hace 5h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Paquete Físico Premium asignado a <strong>"Madrid"</strong> (Hace 12h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Mi Abuelo"</strong> registrada (Hace 14h)</span>
-                <!-- Se repite para que el efecto infinito no se corte -->
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"María y Juan"</strong> registrada (Hace 2h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Legado Familiar"</strong> registrada (Hace 5h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Paquete Físico Premium asignado a <strong>"Madrid"</strong> (Hace 12h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Mi Abuelo"</strong> registrada (Hace 14h)</span>
             </div>
         </div>
+
         <section id="mystar">
             <div id="loginStar">
                 <div class="section-header">
@@ -187,10 +181,9 @@
                             </table>
 
                             <div class="cert-footer">
-                                <!-- CÓDIGO QR -->
-        <div class="qr-code-box">
-            <img id="certQR" src="" alt="QR Oficial" style="width: 70px; height: 70px; border: 2px solid #222; padding: 2px; background: #fff; display: none;">
-        </div>
+                                <div class="qr-code-box">
+                                    <img id="certQR" src="" alt="QR Oficial" style="width: 70px; height: 70px; border: 2px solid #222; padding: 2px; background: #fff; display: none;">
+                                </div>
                                 <div><div class="barcode-box"></div><div class="barcode-text" id="certBarcode">--</div></div>
                                 <div class="seal-official"><div class="seal-inner"><span>OFFICIAL<br>REGISTRY<br>SEAL</span></div></div>
                                 <div class="signature">
@@ -247,13 +240,11 @@
 
     <footer>
         <p style="color: #888; font-size: 0.9rem;">&copy; 2026 NovaRegistry. Todos los derechos reservados.</p>
-        
         <div class="footer-disclaimer">
             NovaRegistry opera un archivo patrimonial diseñado para ofrecer un obsequio conmemorativo único. 
             Nuestra base de datos mantiene estas asignaciones simbólicas con fines emocionales, 
             operando de manera independiente a los catálogos de la Unión Astronómica Internacional.
         </div>
-
         <div class="footer-links">
             <a href="#" onclick="openLegalModal('Aviso Legal')">Aviso Legal</a> | 
             <a href="#" onclick="openLegalModal('Política de Privacidad')">Política de Privacidad</a> | 
@@ -271,6 +262,7 @@
         </div>
     </div>
 
+    <!-- MODALES -->
     <div id="paymentModal" class="modal-overlay">
         <div class="modal-box">
             <button class="close-btn" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
@@ -296,7 +288,6 @@
             </div>
 
             <div id="paypal-button-container" style="min-height: 150px;"></div>
-            
             <div style="font-size: 0.65rem; color: #666; text-align: center; margin-top: 15px; line-height: 1.4;">
                 *Servicio de carácter conmemorativo y simbólico. Esta plataforma opera un registro patrimonial privado, independiente y no vinculado científicamente a la Unión Astronómica Internacional (IAU).
             </div>
@@ -318,7 +309,7 @@
         <h3 class="serif" style="color: var(--gold-main); letter-spacing: 2px;">Asegurando Coordenadas...</h3>
     </div>
 
-  <!-- LÓGICA PRINCIPAL -->
+    <!-- LÓGICA PRINCIPAL -->
     <script src="script.js"></script>
     
 </body>
