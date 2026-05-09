@@ -83,42 +83,146 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-        // --- FIX PDF ---
-        function downloadPDF() {
-            const originalElement = document.getElementById('pdf-content');
-            const btn = document.getElementById('downloadPdfBtn');
-            const starCode = document.getElementById('certId').innerText || "Documento";
-            
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando alta resolución...';
-            btn.style.pointerEvents = 'none';
+      // === CONFIGURACIÓN Y ESTADO ===
+const firebaseConfig = {
+    apiKey: "AIzaSyD5F10FeOf1cAO_6j3v_OR8WHIxw-lQo6w",
+    authDomain: "novagetristy.firebaseapp.com",
+    projectId: "novagetristy",
+    storageBucket: "novagetristy.firebasestorage.app",
+    messagingSenderId: "428175556961",
+    appId: "1:428175556961:web:2f227bdd521a8994b34520"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
 
-            const clone = originalElement.cloneNode(true);
-            clone.id = 'pdf-clone'; 
-            const wrapper = document.createElement('div');
-            wrapper.className = 'pdf-clone-wrapper';
-            wrapper.appendChild(clone);
-            document.body.appendChild(wrapper);
+let isAdminActive = false;
+let adminClickCount = 0;
+let lastClickTime = 0;
+let checkoutPackage = "";
+let starNamePending = "";
 
-            setTimeout(() => {
-                const opt = {
-                    margin: 0,
-                    filename: `Certificado_NovaRegistry_${starCode}.pdf`,
-                    image: { type: 'jpeg', quality: 1.0 },
-                    html2canvas: { scale: 2, useCORS: true, windowWidth: 794, width: 794, height: 1123, scrollY: 0, scrollX: 0 },
-                    jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
-                };
-                html2pdf().set(opt).from(clone).save().then(() => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                }).catch(err => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                });
-            }, 150);
+// === MODO ADMIN (EL TRUCO DEL LOGO) ===
+function handleLogoClick() {
+    showSection('home');
+    let currentTime = new Date().getTime();
+    if (currentTime - lastClickTime > 1500) { adminClickCount = 0; }
+    adminClickCount++;
+    lastClickTime = currentTime;
+
+    if (adminClickCount === 5) {
+        adminClickCount = 0;
+        let adminModalHtml = `
+            <div id="adminLogin" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#111; padding:25px; border:2px solid gold; z-index:9999; border-radius:15px; text-align:center; box-shadow: 0 0 20px rgba(0,0,0,0.8);">
+                <h3 style="color:gold; margin-bottom:15px; font-family:serif;">Acceso Nova Staff</h3>
+                <input type="email" id="admE" placeholder="Email Admin" style="margin-bottom:10px; padding:10px; width:100%;">
+                <input type="password" id="admP" placeholder="Contraseña" style="margin-bottom:15px; padding:10px; width:100%;">
+                <button onclick="loginAdmin()" style="background:gold; color:black; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; width:100%; border-radius:5px;">ACTIVAR MODO DIOS</button>
+                <button onclick="document.getElementById('adminLogin').remove()" style="background:transparent; color:gray; border:none; margin-top:10px; cursor:pointer;">Cancelar</button>
+            </div>`;
+        document.body.insertAdjacentHTML('beforeend', adminModalHtml);
+    }
+}
+
+function loginAdmin() {
+    let e = document.getElementById('admE').value;
+    let p = document.getElementById('admP').value;
+    auth.signInWithEmailAndPassword(e, p).then(() => {
+        isAdminActive = true;
+        alert("🚀 SISTEMA DESBLOQUEADO: Ahora puedes registrar estrellas sin pagar.");
+        document.getElementById('nav-admin').style.display = 'inline-block';
+        document.getElementById('adminLogin').remove();
+    }).catch(() => alert("Acceso denegado."));
+}
+
+// === EL GENERADOR DE PDF (CORREGIDO PARA MÓVIL) ===
+function downloadPDF() {
+    const element = document.getElementById('pdf-content');
+    const btn = document.getElementById('downloadPdfBtn');
+    
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Generando PDF...';
+    btn.style.pointerEvents = 'none';
+
+    // Ajustes para evitar el corte inferior
+    const opt = {
+        margin: [5, 5, 10, 5], // Añadimos 10mm de margen extra abajo (el tercer número)
+        filename: `Certificado_NovaRegistry_${document.getElementById('certId').innerText}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true, 
+            letterRendering: true,
+            scrollY: 0
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+        btn.innerHTML = '<i class="fa-solid fa-download"></i> Descargar Certificado en PDF';
+        btn.style.pointerEvents = 'auto';
+    }).catch(err => {
+        console.error(err);
+        btn.innerHTML = 'Error al descargar';
+        btn.style.pointerEvents = 'auto';
+    });
+}
+
+// === PASARELA DE PAGO CON BYPASS ADMIN ===
+function openPayment(packageName) {
+    let rawInput = document.getElementById('inputStarName').value;
+    starNamePending = rawInput.trim();
+    if(!starNamePending) return alert("Por favor, introduce un nombre para la estrella.");
+
+    checkoutPackage = packageName;
+    document.getElementById('checkoutDesc').innerText = packageName;
+    document.getElementById('paymentModal').style.display = 'flex';
+
+    const container = document.getElementById('paypal-button-container');
+    container.innerHTML = ''; // Limpiamos
+
+    // Si eres ADMIN, mostramos el botón secreto
+    if (isAdminActive) {
+        const adminBtn = document.createElement('button');
+        adminBtn.innerHTML = "🚀 REGISTRAR GRATIS (MODO ADMIN)";
+        adminBtn.style = "width:100%; background:#00ff66; color:black; padding:15px; border:none; border-radius:5px; font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:1.1rem;";
+        adminBtn.onclick = () => processFinalRegistration("ADMIN_" + Date.now(), "Acceso Staff");
+        container.appendChild(adminBtn);
+    }
+
+    renderPayPal();
+}
+
+async function processFinalRegistration(transId, payerName) {
+    const overlay = document.getElementById('processingOverlay');
+    overlay.style.display = 'flex';
+    
+    try {
+        const res = await fetch('/api/guardar-estrella', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                paqueteId: checkoutPackage,
+                starName: starNamePending,
+                payerName: payerName,
+                paypalTransactionId: transId
+            })
+        });
+        
+        const data = await res.json();
+        if(data.success) {
+            document.getElementById('paymentModal').style.display = 'none';
+            showSection('mystar');
+            document.getElementById('myStarInput').value = data.novaCode;
+            loadMyStar();
         }
+    } catch (e) {
+        alert("Error en el registro.");
+    } finally {
+        overlay.style.display = 'none';
+    }
+}
+
+// ... (El resto de tus funciones: loadMyStar, showSection, toggleMenu, etc.)
 
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
         function showSection(sectionId) {
