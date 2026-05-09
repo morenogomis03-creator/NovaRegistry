@@ -48,7 +48,28 @@
     <!-- Asegúrate de poner tu Client-ID PÚBLICO REAL aquí -->
     <script src="https://www.paypal.com/sdk/js?client-id=AYOZLNzAoAg4ce1rEOGAB3lPDZG7_yqRzTcL1oqlddSrIkwauGItQIHzSbUelBnEOe-ByRZFfnOLqsbn&currency=EUR"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+/* --- MEJORAS VISUALES DE PAQUETES (Fase 1 - Paso 2) --- */
+        .pack-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        }
+        .pack-card:hover {
+            transform: translateY(-12px) scale(1.02) !important;
+            box-shadow: 0 20px 40px rgba(0, 229, 255, 0.2) !important;
+            border-color: var(--accent-blue) !important;
+            background: rgba(10, 15, 25, 0.9) !important;
+        }
+        .pack-card.premium:hover {
+            box-shadow: 0 20px 50px rgba(212, 175, 55, 0.35) !important;
+            border-color: var(--gold-main) !important;
+            background: linear-gradient(180deg, rgba(40, 35, 5, 0.95) 0%, rgba(5, 5, 5, 0.9) 100%) !important;
+        }
+        .pack-icon {
+            transition: transform 0.5s ease, text-shadow 0.5s ease !important;
+        }
+        .pack-card:hover .pack-icon {
+            transform: scale(1.15) rotate(-5deg) !important;
+            text-shadow: 0 0 20px currentColor !important;
+        }
     <style>
         :root {
             --bg-deep: #02040a;
