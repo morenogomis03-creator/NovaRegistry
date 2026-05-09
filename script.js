@@ -332,6 +332,11 @@ async function downloadPDF() {
         };
     }
 
+             // --- CERRAR MODAL DE PAGO ---
+function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+}
+
     // 4. LÓGICA DE PAYPAL (FLUJO NORMAL)
     if (!paypalButtonsRendered) {
         paypal.Buttons({
