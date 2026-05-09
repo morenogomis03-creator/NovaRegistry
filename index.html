@@ -279,6 +279,25 @@
         .marquee span { color: #888; font-size: 0.85rem; margin-right: 50px; }
         .marquee span strong { color: var(--gold-main); }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        /* --- RADAR IA TRACKER (Fase 3) --- */
+        .radar-compass { 
+            width: 140px; height: 140px; border: 2px solid var(--accent-blue); 
+            border-radius: 50%; position: relative; margin: 25px auto; 
+            background: radial-gradient(circle, rgba(0,229,255,0.1) 0%, transparent 70%); 
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.15); 
+        }
+        .radar-compass::after { 
+            content: 'N'; position: absolute; top: -25px; left: 50%; 
+            transform: translateX(-50%); color: var(--accent-blue); 
+            font-weight: bold; font-family: 'Montserrat', sans-serif; letter-spacing: 2px;
+        }
+        .radar-needle { 
+            width: 3px; height: 50%; background: #ff0055; 
+            position: absolute; bottom: 50%; left: 50%; 
+            transform-origin: bottom center; box-shadow: 0 0 12px #ff0055; 
+            transition: transform 2s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+            border-radius: 2px 2px 0 0;
+        }
     </style>
 </head>
 <body>
