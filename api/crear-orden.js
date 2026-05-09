@@ -3,9 +3,9 @@ export default async function handler(req, res) {
 
     const { paqueteId } = req.body;
     const catalogoPrecios = {
-        'Estrella Digital': 30.00,
-        'Paquete Físico Premium': 60.00,
-        'Pack Supernova VIP': 90.00
+        'Estrella Digital': 20.00,
+        'Paquete Físico Premium': 40.00,
+        'Pack Supernova VIP': 60.00
     };
 
     const precioReal = catalogoPrecios[paqueteId];
