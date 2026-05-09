@@ -83,73 +83,79 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-      // --- FIX PDF (Encuadre Total 1 Sola Página) ---
-function downloadPDF() {
+    // --- GENERADOR DE PDF RECONSTRUIDO (100% ENCUADRADO) ---
+async function downloadPDF() {
     const originalElement = document.getElementById('pdf-content');
     const btn = document.getElementById('downloadPdfBtn');
     const starCode = document.getElementById('certId').innerText || "Documento";
     
+    // 1. Bloqueo de botón y feedback
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-expand fa-spin"></i> Encuadrando...';
+    btn.innerHTML = '<i class="fa-solid fa-sync fa-spin"></i> Renderizando...';
     btn.style.pointerEvents = 'none';
 
-    // 1. Creamos el clon con medidas fijas de papel A4
-    const clone = originalElement.cloneNode(true);
-    clone.style.width = "794px"; 
-    clone.style.height = "1123px";
-    clone.style.padding = "40px"; // Margen de cortesía para que el borde no toque el filo del papel
-    clone.style.boxSizing = "border-box";
-    clone.style.display = "flex";
-    clone.style.flexDirection = "column";
-    clone.style.justifyContent = "space-between";
-    clone.style.backgroundColor = "white";
-    clone.style.margin = "0";
+    try {
+        // 2. Creamos un contenedor "Estudio Fotográfico" fuera de la pantalla
+        const container = document.createElement('div');
+        container.style.position = 'absolute';
+        container.style.left = '-9999px';
+        container.style.top = '0';
+        container.style.width = '794px'; // Ancho A4 exacto
+        
+        // 3. Clonamos y forzamos el estilo de "página única"
+        const clone = originalElement.cloneNode(true);
+        clone.style.width = '794px';
+        clone.style.height = '1123px'; // Alto A4 exacto
+        clone.style.margin = '0';
+        clone.style.padding = '40px'; // Margen interno de seguridad
+        clone.style.boxSizing = 'border-box';
+        clone.style.display = 'flex';
+        clone.style.flexDirection = 'column';
+        clone.style.justifyContent = 'space-between';
+        clone.style.backgroundColor = 'white';
 
-    // 2. Contenedor temporal centrado e invisible
-    const wrapper = document.createElement('div');
-    wrapper.style.position = 'fixed';
-    wrapper.style.top = '0';
-    wrapper.style.left = '0';
-    wrapper.style.width = '100vw';
-    wrapper.style.height = '100vh';
-    wrapper.style.display = 'flex';
-    wrapper.style.justifyContent = 'center';
-    wrapper.style.alignItems = 'flex-start';
-    wrapper.style.zIndex = '-9999'; // Detrás de todo
-    wrapper.style.overflow = 'hidden';
-    wrapper.appendChild(clone);
-    document.body.appendChild(wrapper);
+        container.appendChild(clone);
+        document.body.appendChild(container);
 
-    // 3. Disparo de cámara con corrección de scroll
-    setTimeout(() => {
-        const opt = {
+        // 4. Esperamos a que las imágenes (QR, Mapa) se carguen en el clon
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        // 5. Configuración de alta precisión para html2pdf
+        const options = {
             margin: 0,
             filename: `Certificado_NovaRegistry_${starCode}.pdf`,
             image: { type: 'jpeg', quality: 1.0 },
             html2canvas: { 
-                scale: 2, 
-                useCORS: true, 
+                scale: 2,           // Doble resolución
+                useCORS: true,      // Para cargar imágenes externas (QR)
                 logging: false,
-                // ESTA LÍNEA ES LA QUE EVITA QUE SE CORTE EL PRINCIPIO:
-                scrollY: -window.scrollY, 
-                windowWidth: 794
+                letterRendering: true,
+                scrollY: 0,         // Forzamos el inicio en el borde superior
+                windowWidth: 794    // Engañamos al navegador para que crea que mide 794px
             },
-            jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' }
+            jsPDF: { 
+                unit: 'px', 
+                format: [794, 1123], 
+                orientation: 'portrait',
+                hotfixes: ['px_scaling'] 
+            }
         };
 
-        html2pdf().set(opt).from(clone).save().then(() => {
-            document.body.removeChild(wrapper);
-            btn.innerHTML = originalText;
-            btn.style.pointerEvents = 'auto';
-        }).catch(err => {
-            console.error(err);
-            if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-            btn.innerHTML = originalText;
-            btn.style.pointerEvents = 'auto';
-        });
-    }, 500); // Damos medio segundo para que el navegador asiente el diseño
-}
+        // 6. Generar y guardar
+        await html2pdf().set(options).from(clone).save();
 
+        // 7. Limpieza
+        document.body.removeChild(container);
+        btn.innerHTML = originalText;
+
+    } catch (error) {
+        console.error("Error crítico en PDF:", error);
+        alert("Hubo un error al generar el archivo. Por favor, inténtelo de nuevo.");
+        btn.innerHTML = "Reintentar";
+    } finally {
+        btn.style.pointerEvents = 'auto';
+    }
+}
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
         function showSection(sectionId) {
             document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
