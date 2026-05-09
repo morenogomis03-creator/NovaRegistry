@@ -83,57 +83,62 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-       // --- FIX PDF (Ajustado para 1 Sola Página) ---
+      // --- FIX PDF (Encuadre Total 1 Sola Página) ---
 function downloadPDF() {
     const originalElement = document.getElementById('pdf-content');
     const btn = document.getElementById('downloadPdfBtn');
     const starCode = document.getElementById('certId').innerText || "Documento";
     
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ajustando dimensiones...';
+    btn.innerHTML = '<i class="fa-solid fa-expand fa-spin"></i> Encuadrando...';
     btn.style.pointerEvents = 'none';
 
-    // 1. Creamos el clon
+    // 1. Creamos el clon con medidas fijas de papel A4
     const clone = originalElement.cloneNode(true);
-    clone.id = 'pdf-clone'; 
-    
-    // 2. AJUSTE DE DISEÑO PARA EL PDF
-    // Forzamos el ancho exacto de un A4 y reducimos un poco el padding inferior 
-    // para que el pie de página (QR y sellos) no salte a la siguiente hoja.
-    clone.style.width = "790px"; 
-    clone.style.margin = "0";
-    clone.style.paddingBottom = "20px"; // Menos espacio abajo para que suba el pie
+    clone.style.width = "794px"; 
+    clone.style.height = "1123px";
+    clone.style.padding = "40px"; // Margen de cortesía para que el borde no toque el filo del papel
     clone.style.boxSizing = "border-box";
-    clone.style.backgroundColor = "#fff"; 
+    clone.style.display = "flex";
+    clone.style.flexDirection = "column";
+    clone.style.justifyContent = "space-between";
+    clone.style.backgroundColor = "white";
+    clone.style.margin = "0";
 
+    // 2. Contenedor temporal centrado e invisible
     const wrapper = document.createElement('div');
-    // Lo ponemos invisible pero con ancho fijo
     wrapper.style.position = 'fixed';
-    wrapper.style.left = '-9999px';
     wrapper.style.top = '0';
-    wrapper.style.width = '794px'; 
+    wrapper.style.left = '0';
+    wrapper.style.width = '100vw';
+    wrapper.style.height = '100vh';
+    wrapper.style.display = 'flex';
+    wrapper.style.justifyContent = 'center';
+    wrapper.style.alignItems = 'flex-start';
+    wrapper.style.zIndex = '-9999'; // Detrás de todo
+    wrapper.style.overflow = 'hidden';
     wrapper.appendChild(clone);
     document.body.appendChild(wrapper);
 
+    // 3. Disparo de cámara con corrección de scroll
     setTimeout(() => {
         const opt = {
-            margin: 0, // Sin márgenes para usar todo el folio
+            margin: 0,
             filename: `Certificado_NovaRegistry_${starCode}.pdf`,
             image: { type: 'jpeg', quality: 1.0 },
             html2canvas: { 
-                scale: 2, // Alta calidad
+                scale: 2, 
                 useCORS: true, 
-                width: 794,
+                logging: false,
+                // ESTA LÍNEA ES LA QUE EVITA QUE SE CORTE EL PRINCIPIO:
+                scrollY: -window.scrollY, 
                 windowWidth: 794
             },
-            // Formato A4 exacto en píxeles
-            jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' },
-            // FORZAR UNA SOLA PÁGINA: evita que se rompa el contenido
-            pagebreak: { mode: 'avoid-all' }
+            jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' }
         };
 
         html2pdf().set(opt).from(clone).save().then(() => {
-            if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
+            document.body.removeChild(wrapper);
             btn.innerHTML = originalText;
             btn.style.pointerEvents = 'auto';
         }).catch(err => {
@@ -142,7 +147,7 @@ function downloadPDF() {
             btn.innerHTML = originalText;
             btn.style.pointerEvents = 'auto';
         });
-    }, 250);
+    }, 500); // Damos medio segundo para que el navegador asiente el diseño
 }
 
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
