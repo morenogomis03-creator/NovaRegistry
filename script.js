@@ -444,6 +444,27 @@ async function loadMyStar() {
     }
 }
       
+// --- FÓRMULA MATEMÁTICA PARA EL TRACKER IA ---
+function parseCoordToDeg(coordStr, isRA) {
+    if (!coordStr) return 0;
+    // Extrae los números de la coordenada (ej: "12h 30m" -> 12, 30)
+    let nums = coordStr.match(/-?\d+\.?\d*/g);
+    if (!nums || nums.length === 0) return 0;
+    
+    let deg = parseFloat(nums[0]);
+    let min = nums.length > 1 ? parseFloat(nums[1]) : 0;
+    let sec = nums.length > 2 ? parseFloat(nums[2]) : 0;
+    
+    let total = Math.abs(deg) + (min / 60) + (sec / 3600);
+    if (deg < 0 || coordStr.includes('-')) total = -total;
+    
+    // Si es Ascensión Recta (RA), hay que multiplicarlo por 15 para pasarlo a grados
+    if (isRA) {
+        return total * 15; 
+    }
+    return total;
+}
+
 
         function getAltAz(lat, lon, raDeg, decDeg) {
             let now = new Date();
