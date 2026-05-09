@@ -4,6 +4,36 @@
                 document.getElementById("cookieBanner").style.display = "flex";
             }
 
+
+
+
+                // --- SISTEMA DE NOTIFICACIONES TOAST ---
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    // Elegimos el icono según el tipo de aviso
+    let icon = 'fa-info-circle';
+    if (type === 'success') icon = 'fa-check-circle';
+    if (type === 'error') icon = 'fa-exclamation-circle';
+    if (type === 'warning') icon = 'fa-exclamation-triangle';
+
+    toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+    container.appendChild(toast);
+
+    // Animación de entrada
+    setTimeout(() => toast.classList.add('show'), 10);
+
+    // Animación de salida y borrado tras 3.5 segundos
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400); 
+    }, 3500);
+}
+                
             // --- NUEVA LÓGICA: DETECCIÓN DE QR AL CARGAR ---
             const urlParams = new URLSearchParams(window.location.search);
             const starIdFromUrl = urlParams.get('verify'); // Busca el ?verify=XXXXX
