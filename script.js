@@ -83,55 +83,66 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-        // --- FIX PDF ---
+       // --- FIX PDF (Ajustado para 1 Sola Página) ---
 function downloadPDF() {
     const originalElement = document.getElementById('pdf-content');
     const btn = document.getElementById('downloadPdfBtn');
     const starCode = document.getElementById('certId').innerText || "Documento";
     
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando alta resolución...';
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ajustando dimensiones...';
     btn.style.pointerEvents = 'none';
 
+    // 1. Creamos el clon
     const clone = originalElement.cloneNode(true);
     clone.id = 'pdf-clone'; 
     
-    // AJUSTE: Añadimos espacio al final del certificado para que no se corte el borde
-    clone.style.paddingBottom = "50px";
+    // 2. AJUSTE DE DISEÑO PARA EL PDF
+    // Forzamos el ancho exacto de un A4 y reducimos un poco el padding inferior 
+    // para que el pie de página (QR y sellos) no salte a la siguiente hoja.
+    clone.style.width = "790px"; 
+    clone.style.margin = "0";
+    clone.style.paddingBottom = "20px"; // Menos espacio abajo para que suba el pie
     clone.style.boxSizing = "border-box";
+    clone.style.backgroundColor = "#fff"; 
 
     const wrapper = document.createElement('div');
-    wrapper.className = 'pdf-clone-wrapper';
+    // Lo ponemos invisible pero con ancho fijo
+    wrapper.style.position = 'fixed';
+    wrapper.style.left = '-9999px';
+    wrapper.style.top = '0';
+    wrapper.style.width = '794px'; 
     wrapper.appendChild(clone);
     document.body.appendChild(wrapper);
 
     setTimeout(() => {
         const opt = {
-            // Margen de seguridad: [Arriba, Izquierda, Abajo, Derecha]
-            margin: [0, 0, 20, 0], 
+            margin: 0, // Sin márgenes para usar todo el folio
             filename: `Certificado_NovaRegistry_${starCode}.pdf`,
             image: { type: 'jpeg', quality: 1.0 },
             html2canvas: { 
-                scale: 2, 
+                scale: 2, // Alta calidad
                 useCORS: true, 
-                windowWidth: 794, 
-                width: 794, 
-                height: 1123, 
-                scrollY: 0, 
-                scrollX: 0 
+                width: 794,
+                windowWidth: 794
             },
-            jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
+            // Formato A4 exacto en píxeles
+            jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' },
+            // FORZAR UNA SOLA PÁGINA: evita que se rompa el contenido
+            pagebreak: { mode: 'avoid-all' }
         };
+
         html2pdf().set(opt).from(clone).save().then(() => {
             if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
             btn.innerHTML = originalText;
             btn.style.pointerEvents = 'auto';
         }).catch(err => {
+            console.error(err);
             if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
             btn.innerHTML = originalText;
             btn.style.pointerEvents = 'auto';
         });
-    }, 150);
+    }, 250);
 }
 
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
