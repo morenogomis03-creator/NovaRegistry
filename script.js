@@ -83,109 +83,55 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
- // === GENERADOR DE CERTIFICADOS PROFESIONAL (Vía Plantilla Fija) ===
-async function downloadPDF() {
+ async function downloadPDF() {
     const btn = document.getElementById('downloadPdfBtn');
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Forjando Certificado...';
-    btn.style.pointerEvents = 'none';
-
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verificando sistema...';
+    
     try {
-        // 1. Obtener datos de la pantalla (ya cargados por loadMyStar)
-        const starId = document.getElementById('certId').innerText;
-        const starName = document.getElementById('certName').innerText;
-        const starDate = document.getElementById('certDate').innerText;
-        
-        // Datos de la tabla
-        const starOfficial = document.getElementById('certOfficial').innerText;
-        const starRA = document.getElementById('certRA').innerText;
-        const starDEC = document.getElementById('certDEC').innerText;
-        const starDist = document.getElementById('certDist').innerText;
-        const starClass = document.getElementById('certClass').innerText;
-        const starTemp = document.getElementById('certTemp').innerText;
-        const starMag = document.getElementById('certAppMag').innerText;
-        const starLum = document.getElementById('certLum').innerText;
+        // --- COMPROBACIÓN 1: ¿Existe la librería? ---
+        if (typeof PDFLib === 'undefined') {
+            throw new Error("La herramienta PDF-LIB no se ha cargado. Revisa el Paso 3 del HTML.");
+        }
 
-        // 2. Iniciar pdf-lib
         const { PDFDocument, rgb, StandardFonts } = PDFLib;
         const pdfDoc = await PDFDocument.create();
 
-        // 3. Cargar la imagen de fondo (tu plantilla limpia)
-        const imageBytes = await fetch('plantilla.png').then(res => res.arrayBuffer());
+        // --- COMPROBACIÓN 2: ¿La imagen está ahí? ---
+        console.log("Intentando cargar plantilla.png...");
+        const response = await fetch('plantilla.png');
+        if (!response.ok) {
+            throw new Error(`No encuentro 'plantilla.png'. Asegúrate de que el nombre sea exacto y el archivo esté en GitHub.`);
+        }
+        const imageBytes = await response.arrayBuffer();
         const bgImage = await pdfDoc.embedPng(imageBytes);
 
-        // 4. Crear página A4 y poner el fondo
-        const page = pdfDoc.addPage([595.28, 841.89]); // Tamaño A4 estándar
+        // --- EL RESTO DEL PROCESO ---
+        const page = pdfDoc.addPage([595.28, 841.89]);
         page.drawImage(bgImage, { x: 0, y: 0, width: 595.28, height: 841.89 });
 
-        // 5. Cargar Fuentes
-        const fontTitle = await pdfDoc.embedFont(StandardFonts.TimesRomanBoldItalic);
         const fontNormal = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-        const fontBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
-
-        // --- 6. IMPRESIÓN DE DATOS (Coordenadas Calibradas) ---
+        const starId = document.getElementById('certId').innerText;
         
-        // Bloque Superior Derecho (Registro, Catálogo, Fecha)
-        const headerX = 445;
-        page.drawText(starId, { x: headerX, y: 775, size: 10, font: fontBold });
-        page.drawText(starOfficial, { x: headerX, y: 762, size: 9, font: fontNormal });
-        page.drawText(starDate, { x: headerX, y: 749, size: 9, font: fontNormal });
+        // Texto de prueba rápido para ver si funciona
+        page.drawText(`ID: ${starId}`, { x: 450, y: 775, size: 10, font: fontNormal });
 
-        // Nombre de la Estrella (Centro)
-        // Calculamos el centro para el nombre
-        const nameSize = 34;
-        const nameWidth = fontTitle.widthOfTextAtSize(starName.toUpperCase(), nameSize);
-        page.drawText(starName.toUpperCase(), { 
-            x: (595.28 / 2) - (nameWidth / 2), 
-            y: 585, 
-            size: nameSize, 
-            font: fontTitle, 
-            color: rgb(0.72, 0.52, 0.04) // Dorado Nova
-        });
-
-        // Tabla de Datos Técnicos (Coordenadas exactas por cajas)
-        const col1X = 185; 
-        const col2X = 435;
-        
-        // Fila 1: Catálogo IAU / Distancia
-        page.drawText(starOfficial, { x: col1X, y: 284, size: 9, font: fontNormal });
-        page.drawText(starDist, { x: col2X, y: 284, size: 9, font: fontNormal });
-        
-        // Fila 2: Ascensión / Declinación
-        page.drawText(starRA, { x: col1X, y: 265, size: 9, font: fontNormal });
-        page.drawText(starDEC, { x: col2X, y: 265, size: 9, font: fontNormal });
-        
-        // Fila 3: Clase Espectral / Temperatura
-        page.drawText(starClass, { x: col1X, y: 245, size: 9, font: fontNormal });
-        page.drawText(starTemp, { x: col2X, y: 245, size: 9, font: fontNormal });
-        
-        // Fila 4: Magnitud / Luminosidad
-        page.drawText(starMag, { x: col1X, y: 220, size: 9, font: fontNormal });
-        page.drawText(starLum, { x: col2X, y: 220, size: 9, font: fontNormal });
-
-        // Texto bajo Código de Barras
-        const barcodeText = `*${starId}*`;
-        page.drawText(barcodeText, { x: 255, y: 88, size: 8, font: fontNormal });
-
-        // 7. Generar y pegar Código QR
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.novaregistry.net/?verify=${starId}`;
-        const qrBytes = await fetch(qrUrl).then(res => res.arrayBuffer());
-        const qrImage = await pdfDoc.embedPng(qrBytes);
-        page.drawImage(qrImage, { x: 88, y: 85, width: 60, height: 60 });
-
-        // 8. Finalizar y Descargar
         const pdfBytes = await pdfDoc.save();
         const blob = new Blob([pdfBytes], { type: "application/pdf" });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = `Certificado_NovaRegistry_${starId}.pdf`;
+        link.download = `Certificado_${starId}.pdf`;
         link.click();
 
-    } catch (error) {
-        console.error("Error PDF:", error);
-        alert("Error al generar el certificado.");
-    } finally {
         btn.innerHTML = originalText;
+        console.log("¡Certificado generado con éxito!");
+
+    } catch (error) {
+        // ESTO NOS DIRÁ LA VERDAD
+        console.error("ERROR DETECTADO:", error.message);
+        alert("🚨 ERROR TÉCNICO: " + error.message);
+        btn.innerHTML = "Reintentar";
+    } finally {
         btn.style.pointerEvents = 'auto';
     }
 }
