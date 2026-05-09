@@ -222,70 +222,111 @@ async function downloadPDF() {
         let starNamePending = "";
         let paypalButtonsRendered = false;
 
-        function openPayment(packageName) {
+     function openPayment(packageName) {
+    // 1. Validación del nombre
     let rawInput = document.getElementById('inputStarName').value;
     starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
     
     if(starNamePending === "") { 
-        alert("Introduce un nombre para la estrella."); return; 
+        alert("Por favor, introduce el nombre oficial para la estrella."); 
+        return; 
     }
     
     checkoutPackage = packageName;
-    document.getElementById('legalConsent').checked = false; 
-    document.getElementById('checkoutDesc').innerText = "Pack: " + packageName;
+
+    // 2. Configuración del Modal
+    const legalCheckbox = document.getElementById('legalConsent');
+    if (legalCheckbox) legalCheckbox.checked = false; 
+
+    // Mostrar formulario de envío si el pack es físico/premium
+    const formEnvio = document.getElementById('shipping-form');
+    formEnvio.style.display = (packageName.includes("Herencia") || packageName.includes("Soberanía") || packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
+
+    document.getElementById('checkoutDesc').innerText = "Registro: " + packageName;
     document.getElementById('paymentModal').style.display = 'flex';
 
-    // Limpiar botones de admin previos
+    // 3. LÓGICA DE ADMINISTRADOR (BOTÓN VERDE)
     const oldAdminBtn = document.getElementById('admin-bypass-btn');
     if (oldAdminBtn) oldAdminBtn.remove();
 
-    // === LÓGICA DE ADMIN (REGISTRO GRATIS) ===
     if (isAdminActive) {
         const adminBtn = document.createElement('button');
         adminBtn.id = 'admin-bypass-btn';
         adminBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> REGISTRO GRATUITO (ADMIN)';
-        adminBtn.style = "width:100%; background:#2ecc71; color:black; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:20px; font-size:1rem;";
+        adminBtn.style = "width:100%; background:#2ecc71; color:black; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:20px; font-size:1rem; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);";
         
         const paypalContainer = document.getElementById('paypal-button-container');
         paypalContainer.parentNode.insertBefore(adminBtn, paypalContainer);
 
         adminBtn.onclick = async () => {
-            if(!document.getElementById('legalConsent').checked) { alert("Acepta los términos."); return; }
-            if(confirm("¿Registrar gratis?")) {
+            if(!document.getElementById('legalConsent').checked) {
+                alert("Debes marcar la casilla de términos para proceder con el registro interno.");
+                return;
+            }
+
+            if(confirm("¿Confirmar alta directa para '" + starNamePending + "'?")) {
                 const overlay = document.getElementById('processingOverlay');
                 overlay.style.display = 'flex';
                 document.getElementById('paymentModal').style.display = 'none';
+
                 try {
                     const newId = "NOVA-" + Math.floor(10000 + Math.random() * 90000);
+                    const fecha = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+
+                    // Mitologías aleatorias
+                    const mitologias = [
+                        "Conocida como el faro eterno, esta estrella ha guiado a exploradores a través de los siglos, representando la luz constante en el cosmos.",
+                        "Una joya radiante en el tejido cósmico que simboliza la sabiduría y la inmortalidad en las leyendas de antiguas civilizaciones.",
+                        "Dice la leyenda que esta estrella nació de un suspiro divino, destinada a brillar perpetuamente como guardiana de los sueños.",
+                        "Situada en las coordenadas sagradas, es el símbolo de la esperanza para aquellos que buscan su destino bajo el manto de la noche.",
+                        "Una gigante de luz pura cuya energía primordial ha moldeado el destino de las constelaciones desde el inicio de los tiempos."
+                    ];
+                    const loreSeleccionado = mitologias[Math.floor(Math.random() * mitologias.length)];
+
                     const starData = {
                         id: newId,
                         name: starNamePending.toUpperCase(),
-                        date: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' }),
+                        date: fecha,
                         pack: checkoutPackage,
                         official: "HD " + Math.floor(Math.random() * 200000),
-                        ra: "15h 34m 41s", dec: "+26° 42' 52\"", distance: "75 A.L.", 
-                        spectral: "A0 V", temp: "9750 K", appMag: "2.22", lum: "60 Soles",
-                        lore: "Una joya radiante en el tejido cósmico.",
-                        timestamp: new Date().getTime()
+                        ra: (Math.floor(Math.random() * 24)) + "h " + (Math.floor(Math.random() * 60)) + "m " + (Math.floor(Math.random() * 60)) + "s",
+                        dec: (Math.random() > 0.5 ? "+" : "-") + Math.floor(Math.random() * 90) + "° " + Math.floor(Math.random() * 60) + "'",
+                        distance: (Math.floor(Math.random() * 1000) + 10) + " A.L.",
+                        spectral: "A0 V",
+                        temp: (Math.floor(Math.random() * 5000) + 5000) + " K",
+                        appMag: (Math.random() * 5 + 1).toFixed(2),
+                        lum: Math.floor(Math.random() * 100) + " Soles",
+                        lore: loreSeleccionado,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     };
+
+                    // GUARDADO DIRECTO
                     await db.collection("estrellas").doc(newId).set(starData);
+
                     overlay.style.display = 'none';
+                    alert("¡Estrella registrada con éxito! Código: " + newId);
+                    
+                    // Cargar el certificado automáticamente
                     document.getElementById('myStarInput').value = newId;
                     loadMyStar(); 
-                } catch (e) { overlay.style.display = 'none'; alert("Error DB."); }
+
+                } catch (e) {
+                    overlay.style.display = 'none';
+                    console.error("Error al guardar:", e);
+                    alert("Error al conectar con la base de datos: " + e.message);
+                }
             }
         };
     }
 
-    // === LÓGICA DE PAYPAL CORREGIDA ===
+    // 4. LÓGICA DE PAYPAL (FLUJO NORMAL)
     if (!paypalButtonsRendered) {
         paypal.Buttons({
             style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
-            // VALIDACIÓN CORRECTA: Se hace en onClick, no en createOrder
             onClick: (data, actions) => {
                 if(!document.getElementById('legalConsent').checked) {
                     alert("Por favor, acepta los términos de venta.");
-                    return actions.reject(); // Aquí SÍ funciona el reject
+                    return actions.reject();
                 }
                 return actions.resolve();
             },
@@ -296,14 +337,11 @@ async function downloadPDF() {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ paqueteId: checkoutPackage })
                     });
-                    
-                    if (!respuesta.ok) throw new Error("Error en servidor");
-                    
                     const orden = await respuesta.json();
-                    return orden.id;
+                    if (!respuesta.ok) throw new Error("Error en servidor");
+                    return orden.id; 
                 } catch (err) {
-                    console.error(err);
-                    alert("Error al conectar con PayPal. Revisa tu conexión o servidor.");
+                    alert("Error en la conexión con PayPal.");
                 }
             },
             onApprove: async function(data, actions) {
@@ -333,20 +371,55 @@ async function downloadPDF() {
         paypalButtonsRendered = true;
     }
 }
-        // --- FUNCIONES IA TRACKER ---
-        function parseCoordToDeg(coordStr, isRA) {
-            let match;
-            if (isRA) { 
-                match = coordStr.match(/(\d+)h\s*(\d+)m\s*(\d+)s/);
-                if (!match) return 0;
-                return (parseFloat(match[1]) + parseFloat(match[2])/60 + parseFloat(match[3])/3600) * 15;
-            } else { 
-                match = coordStr.match(/([+-]?\d+)°\s*(\d+)'\s*(\d+)/);
-                if (!match) return 0;
-                let sign = coordStr.includes('-') ? -1 : 1;
-                return sign * (Math.abs(parseFloat(match[1])) + parseFloat(match[2])/60 + parseFloat(match[3])/3600);
-            }
+
+
+// === FUNCIÓN DEL BUSCADOR (IA TRACKER) ===
+async function loadMyStar() {
+    const inputField = document.getElementById('myStarInput');
+    if(!inputField) return;
+    
+    const input = inputField.value.toUpperCase().replace(/\s+/g, '');
+    if(!input) return alert("Introduce un código NOVA.");
+
+    try {
+        const docRef = await db.collection("estrellas").doc(input).get();
+
+        if (docRef.exists) {
+            const star = docRef.data();
+            
+            // Mostrar panel y ocultar buscador
+            showSection('mystar'); 
+            document.getElementById('loginStar').style.display = 'none';
+            document.getElementById('certificatePanel').style.display = 'flex';
+
+            // Rellenar certificado
+            document.getElementById('certId').innerText = star.id;
+            document.getElementById('certOfficialCodeTop').innerText = star.official || "--"; 
+            document.getElementById('certDate').innerText = star.date;
+            document.getElementById('certName').innerText = star.name;
+            document.getElementById('certOfficial').innerText = star.official || "--";
+            document.getElementById('certRA').innerText = star.ra || "--";
+            document.getElementById('certDEC').innerText = star.dec || "--";
+            document.getElementById('certDist').innerText = star.distance || "--";
+            document.getElementById('certClass').innerText = star.spectral || "--";
+            document.getElementById('certTemp').innerText = star.temp || "--";
+            document.getElementById('certAppMag').innerText = star.appMag || "--";
+            document.getElementById('certLum').innerText = star.lum || "--";
+            document.getElementById('certLore').innerText = star.lore || "";
+
+            // Actualizar QR
+            const qrImage = document.getElementById('certQR');
+            qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent("https://novaregistry.net/?verify=" + star.id)}`;
+
+        } else {
+            alert('Código no encontrado.');
         }
+    } catch (error) {
+        console.error("Error buscando estrella:", error);
+        alert("Fallo al conectar con la base de datos.");
+    }
+}
+      
 
         function getAltAz(lat, lon, raDeg, decDeg) {
             let now = new Date();
