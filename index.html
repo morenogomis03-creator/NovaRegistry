@@ -31,8 +31,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+
     <script src="https://www.paypal.com/sdk/js?client-id=AYOZLNzAoAg4ce1rEOGAB3lPDZG7_yqRzTcL1oqlddSrIkwauGItQIHzSbUelBnEOe-ByRZFfnOLqsbn&currency=EUR"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
 </head>
 <body>
     <nav>
@@ -61,13 +64,16 @@
        <section id="firmamento">
             <div class="registry-layout">
                 <canvas id="skyCanvas"></canvas>
+                
                 <div class="registry-content">
                     <h3 class="serif">Buscador Astrométrico</h3>
                     <p style="margin-bottom: 30px; font-size: 0.9rem;">Introduzca el nombre del legado que desea inscribir en el firmamento.</p>
+                    
                     <div class="name-input-group">
                         <label>Nombre a Registrar</label>
                         <input type="text" id="inputStarName" placeholder="Ej: Mi Legado Eterno" autocomplete="off">
                     </div>
+
                     <div class="packages-grid">
                         <div class="pack-card">
                             <div class="pack-icon"><i class="fa-solid fa-cloud-moon"></i></div>
@@ -116,6 +122,8 @@
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Mi Abuelo"</strong> registrada (Hace 14h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"María y Juan"</strong> registrada (Hace 2h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Legado Familiar"</strong> registrada (Hace 5h)</span>
+                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Paquete Físico Premium asignado a <strong>"Madrid"</strong> (Hace 12h)</span>
+                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Mi Abuelo"</strong> registrada (Hace 14h)</span>
             </div>
         </div>
 
@@ -164,20 +172,26 @@
                             </table>
 
                             <div class="cert-footer">
-                                <div class="qr-container" style="text-align: left; flex: 1;">
-                                    <img id="certQR" src="" alt="Código QR" style="display: none; width: 100px; height: 100px; border: 1px solid #ddd;">
-                                    <div style="font-size: 0.5rem; color: #666; margin-top: 5px;">VERIFICACIÓN DIGITAL</div>
+                                <div class="qr-container" style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
+                                    <img id="certQR" src="" alt="Código QR de Verificación" style="display: none; width: 90px; height: 90px; padding: 2px; border: 1px solid #222;">
+                                    <div style="font-size: 0.5rem; color: #333; margin-top: 5px; font-weight: bold; font-family: 'Montserrat', sans-serif; text-transform: uppercase;">Verificación Digital</div>
                                 </div>
                                 
-                                <div style="flex: 1;"><div class="barcode-box"></div><div class="barcode-text" id="certBarcode">--</div></div>
+                                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                                    <div class="barcode-box"></div>
+                                    <div class="barcode-text" id="certBarcode">--</div>
+                                </div>
                                 
-                                <div class="signature" style="flex: 1; text-align: right;">
-                                    <div class="sig-font">Nova Registry</div>
-                                    <div class="sig-line"></div>
-                                    <div class="sig-title">Dirección General de Archivos Estelares</div>
+                                <div style="flex: 1; display: flex; justify-content: flex-end; align-items: flex-end; gap: 10px;">
+                                    <div class="seal-official"><div class="seal-inner"><span>OFFICIAL<br>REGISTRY<br>SEAL</span></div></div>
+                                    <div class="signature" style="text-align: right; width: auto;">
+                                        <div class="sig-font">Nova Registry</div>
+                                        <div class="sig-line" style="margin-left: auto; width: 100%;"></div>
+                                        <div class="sig-title">Dirección<br>General de Archivos</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div></div></div>
+                            </div></div></div>
                     </div>
                 </div>
                 <button id="downloadPdfBtn" class="btn-solid print-btn" onclick="downloadPDF()" style="margin-top: 30px; width: auto; background: rgba(255,255,255,0.1); border: 1px solid var(--border-glow); color: var(--accent-blue); backdrop-filter: blur(5px);">
@@ -189,8 +203,9 @@
         <section id="ia-locator">
             <div class="section-header">
                 <h2>Rastreador <span style="color: var(--accent-blue);">Satelital IA</span></h2>
-                <p>Introduzca el código de su estrella. Nuestro modelo de Inteligencia Artificial analizará las coordenadas y generará una guía práctica.</p>
+                <p>Introduzca el código de su estrella. Nuestro modelo de Inteligencia Artificial analizará las coordenadas y generará una guía práctica para que encuentre su estrella fácilmente en el cielo nocturno.</p>
             </div>
+            
             <div class="ai-terminal">
                 <div class="ai-header">
                     <i class="fa-solid fa-satellite-dish"></i>
@@ -198,11 +213,11 @@
                 </div>
                 <div class="ai-body">
                     <div style="display: flex; gap: 10px;">
-                        <input type="text" id="aiInput" placeholder="Introduce Código" style="margin-bottom: 0;">
+                        <input type="text" id="aiInput" placeholder="Introduce Código (Ej: NOVA-12345)" style="margin-bottom: 0;">
                         <button class="btn-solid" style="width: auto; padding: 0 25px;" onclick="triggerAILocator()"><i class="fa-solid fa-radar"></i> Rastrear</button>
                     </div>
                     <div class="ai-output-area" id="aiOutput">
-                        <span style="color: var(--text-muted);">> Esperando entrada...</span>
+                        <span style="color: var(--text-muted);">> Esperando entrada de coordenadas astrométricas...</span>
                     </div>
                 </div>
             </div>
@@ -211,11 +226,11 @@
         <section id="admin-panel">
             <div class="section-header">
                 <h2>Panel de <span style="color: var(--gold-main);">Control</span></h2>
-                <p>Gestión de Pedidos (Acceso Restringido)</p>
+                <p>Gestión de Pedidos, Envíos y Base de Datos (Acceso Restringido)</p>
             </div>
             <div class="admin-table-container">
                 <table class="admin-table">
-                    <thead><tr><th>Fecha</th><th>Folio NOVA</th><th>Importe</th><th>ID PayPal</th><th>Cliente</th><th>Estrella</th><th>Envío</th></tr></thead>
+                    <thead><tr><th>Fecha</th><th>Folio NOVA</th><th>Importe Pago</th><th>ID Transacción PayPal</th><th>Cliente</th><th>Estrella Asignada</th><th>Logística / Envío</th></tr></thead>
                     <tbody id="adminTableBody"></tbody>
                 </table>
             </div>
@@ -224,6 +239,11 @@
 
     <footer>
         <p style="color: #888; font-size: 0.9rem;">&copy; 2026 NovaRegistry. Todos los derechos reservados.</p>
+        <div class="footer-disclaimer">
+            NovaRegistry opera un archivo patrimonial diseñado para ofrecer un obsequio conmemorativo único. 
+            Nuestra base de datos mantiene estas asignaciones simbólicas con fines emocionales, 
+            operando de manera independiente a los catálogos de la Unión Astronómica Internacional.
+        </div>
         <div class="footer-links">
             <a href="#" onclick="openLegalModal('Aviso Legal')">Aviso Legal</a> | 
             <a href="#" onclick="openLegalModal('Política de Privacidad')">Política de Privacidad</a> | 
@@ -232,15 +252,42 @@
     </footer>
 
     <div id="cookieBanner" class="cookie-banner">
-        <div class="cookie-text">Utilizamos cookies para asegurar el funcionamiento de la pasarela de pago.</div>
-        <button class="btn-solid" style="padding: 10px 20px; width: auto;" onclick="acceptCookies()">Aceptar</button>
+        <div class="cookie-text">
+            Utilizamos cookies propias y de terceros para asegurar el funcionamiento de la pasarela de pago segura (PayPal), analizar el tráfico y ofrecerle nuestra plataforma de registro estelar. Al hacer clic en "Aceptar", consiente su uso según nuestra <a href="#" onclick="openLegalModal('Política de Privacidad')">Política de Privacidad</a>.
+        </div>
+        <div class="cookie-buttons">
+            <button class="btn-solid" style="padding: 10px 20px; border-radius: 4px; width: auto;" onclick="acceptCookies()">Aceptar Cookies</button>
+        </div>
     </div>
 
     <div id="paymentModal" class="modal-overlay">
         <div class="modal-box">
             <button class="close-btn" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-header"><h3 class="serif">Pasarela de Adjudicación</h3></div>
+            <div class="payment-desc" id="checkoutDesc" style="color: #aaa; margin-bottom: 5px;">-</div>
+            
+            <div id="shipping-form" style="display:none; text-align:left; margin-bottom: 10px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <h4 style="color: var(--gold-main); margin-bottom: 15px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; letter-spacing: 1px;"><i class="fa-solid fa-truck-fast"></i> Datos de Envío Físico</h4>
+                <input type="text" id="shipName" placeholder="Nombre completo" style="padding: 12px; margin-bottom: 10px; font-size: 14px;">
+                <input type="text" id="shipAddress" placeholder="Dirección postal completa" style="padding: 12px; margin-bottom: 10px; font-size: 14px;">
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="text" id="shipCity" placeholder="Ciudad / Provincia" style="padding: 12px; margin-bottom: 0; font-size: 14px;">
+                    <input type="text" id="shipZip" placeholder="Cód. Postal" style="padding: 12px; margin-bottom: 0; font-size: 14px;">
+                </div>
+                <input type="text" id="shipPhone" placeholder="Teléfono de contacto" style="padding: 12px; margin-bottom: 0; font-size: 14px;">
+            </div>
+
+            <div style="margin-bottom: 20px; text-align: left; font-size: 0.8rem; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.05);">
+                <label style="display: flex; gap: 10px; align-items: flex-start; color: #aaa; cursor: pointer;">
+                    <input type="checkbox" id="legalConsent" style="margin-top: 3px;">
+                    <span>Acepto los <a href="#" style="color: var(--accent-blue);" onclick="openLegalModal('Términos y Condiciones')">Términos de Venta</a> y autorizo el registro patrimonial.</span>
+                </label>
+            </div>
+
             <div id="paypal-button-container" style="min-height: 150px;"></div>
+            <div style="font-size: 0.65rem; color: #666; text-align: center; margin-top: 15px; line-height: 1.4;">
+                *Servicio de carácter conmemorativo y simbólico. Esta plataforma opera un registro patrimonial privado, independiente y no vinculado científicamente a la Unión Astronómica Internacional (IAU).
+            </div>
         </div>
     </div>
 
@@ -248,12 +295,18 @@
         <div class="modal-box" style="text-align: left; max-width: 600px;">
             <button class="close-btn" onclick="document.getElementById('legalModal').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-header"><h3 class="serif" id="legalTitle">Legal</h3></div>
-            <div id="legalContent" style="color: #bbb; overflow-y: auto;">Cargando...</div>
+            <div id="legalContent" style="color: #bbb; font-size: 0.9rem; line-height: 1.6; margin-top: 20px; max-height: 60vh; overflow-y: auto; padding-right: 10px;">
+                Cargando...
+            </div>
         </div>
     </div>
 
-    <div class="processing-overlay" id="processingOverlay"><div class="spinner"></div><h3 class="serif" style="color: var(--gold-main);">Asegurando Coordenadas...</h3></div>
+    <div class="processing-overlay" id="processingOverlay">
+        <div class="spinner"></div>
+        <h3 class="serif" style="color: var(--gold-main); letter-spacing: 2px;">Asegurando Coordenadas...</h3>
+    </div>
 
     <script src="script.js"></script>
+    
 </body>
 </html>
