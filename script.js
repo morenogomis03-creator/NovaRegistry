@@ -83,7 +83,7 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-   // --- FIX PDF ---
+        // --- FIX PDF ---
         function downloadPDF() {
             const originalElement = document.getElementById('pdf-content');
             const btn = document.getElementById('downloadPdfBtn');
@@ -119,6 +119,24 @@
                 });
             }, 150);
         }
+
+        function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active-link'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelector('.nav-links').classList.remove('active');
+            
+            if(sectionId === 'home') document.getElementById('link-home').classList.add('active-link');
+            if(sectionId === 'firmamento') {
+                document.getElementById('link-firm').classList.add('active-link');
+                if(!canvasInitialized) initBackgroundSky();
+            }
+            if(sectionId === 'mystar') document.getElementById('link-mystar').classList.add('active-link');
+            if(sectionId === 'ia-locator') document.getElementById('link-ia').classList.add('active-link');
+            if(sectionId === 'admin-panel' && document.getElementById('link-admin')) document.getElementById('link-admin').classList.add('active-link');
+        }
+
         // --- SISTEMA VR / PARALLAX ---
         const canvas = document.getElementById('skyCanvas');
         const ctx = canvas.getContext('2d');
@@ -415,4 +433,5 @@ async function processTracking(input, lat, lon, outputArea) {
                 tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;">No hay ventas.</td></tr>';
             } catch (e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
         }
+    
     
