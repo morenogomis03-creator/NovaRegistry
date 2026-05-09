@@ -83,7 +83,7 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-      // === GENERADOR DE CERTIFICADOS PROFESIONAL (Vía Plantilla Fija) ===
+ // === GENERADOR DE CERTIFICADOS PROFESIONAL (Vía Plantilla Fija) ===
 async function downloadPDF() {
     const btn = document.getElementById('downloadPdfBtn');
     const originalText = btn.innerHTML;
@@ -189,22 +189,6 @@ async function downloadPDF() {
         btn.style.pointerEvents = 'auto';
     }
 }
-        function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
-        function showSection(sectionId) {
-            document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active-link'));
-            document.getElementById(sectionId).classList.add('active');
-            document.querySelector('.nav-links').classList.remove('active');
-            
-            if(sectionId === 'home') document.getElementById('link-home').classList.add('active-link');
-            if(sectionId === 'firmamento') {
-                document.getElementById('link-firm').classList.add('active-link');
-                if(!canvasInitialized) initBackgroundSky();
-            }
-            if(sectionId === 'mystar') document.getElementById('link-mystar').classList.add('active-link');
-            if(sectionId === 'ia-locator') document.getElementById('link-ia').classList.add('active-link');
-            if(sectionId === 'admin-panel' && document.getElementById('link-admin')) document.getElementById('link-admin').classList.add('active-link');
-        }
 
         // --- SISTEMA VR / PARALLAX ---
         const canvas = document.getElementById('skyCanvas');
