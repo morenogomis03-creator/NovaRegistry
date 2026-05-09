@@ -83,67 +83,111 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-      // === GENERADOR DE CERTIFICADOS DEFINITIVO (Sin Plantilla Externa) ===
-function downloadPDF() {
-    const originalElement = document.getElementById('pdf-content') || document.getElementById('certificatePanel');
+      // === GENERADOR DE CERTIFICADOS PROFESIONAL (Vía Plantilla Fija) ===
+async function downloadPDF() {
     const btn = document.getElementById('downloadPdfBtn');
-    
-    // 1. Efecto visual de carga
-    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Digitalizando...'; 
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Forjando Certificado...';
     btn.style.pointerEvents = 'none';
-    
-    // 2. Creamos un CLON que forzamos a ser un folio A4 Vertical (Proporción perfecta)
-    const clone = originalElement.cloneNode(true);
-    const container = document.createElement('div');
-    
-    // Estilizamos el contenedor para que sea un folio A4 perfecto e invisible
-    container.style.position = 'fixed';
-    container.style.left = '-9999px';
-    container.style.top = '0';
-    container.style.width = '794px';  // Ancho exacto de un A4 a 96dpi
-    container.style.height = '1123px'; // Alto exacto de un A4 a 96dpi
-    container.style.backgroundColor = 'white';
-    container.style.zIndex = '-1';
-    
-    // Forzamos al clon a ocupar todo el espacio del contenedor A4
-    clone.style.width = '794px';
-    clone.style.height = '1123px';
-    clone.style.margin = '0';
-    clone.style.padding = '40px'; // Espaciado interno para los marcos
-    clone.style.boxSizing = 'border-box';
-    clone.style.display = 'block';
-    clone.style.transform = 'scale(1)'; // Evitamos deformaciones por zoom del navegador
 
-    container.appendChild(clone);
-    document.body.appendChild(container);
+    try {
+        // 1. Obtener datos de la pantalla (ya cargados por loadMyStar)
+        const starId = document.getElementById('certId').innerText;
+        const starName = document.getElementById('certName').innerText;
+        const starDate = document.getElementById('certDate').innerText;
+        
+        // Datos de la tabla
+        const starOfficial = document.getElementById('certOfficial').innerText;
+        const starRA = document.getElementById('certRA').innerText;
+        const starDEC = document.getElementById('certDEC').innerText;
+        const starDist = document.getElementById('certDist').innerText;
+        const starClass = document.getElementById('certClass').innerText;
+        const starTemp = document.getElementById('certTemp').innerText;
+        const starMag = document.getElementById('certAppMag').innerText;
+        const starLum = document.getElementById('certLum').innerText;
 
-    // 3. Pequeña pausa para que el navegador renderice el clon invisible
-    setTimeout(() => {
-        const options = {
-            margin: 0,
-            filename: `Certificado_NovaRegistry_${document.getElementById('certId').innerText}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { 
-                scale: 3, // Alta calidad para que no se pixele el mapa
-                useCORS: true,
-                logging: false,
-                width: 794,
-                height: 1123
-            },
-            jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' }
-        };
+        // 2. Iniciar pdf-lib
+        const { PDFDocument, rgb, StandardFonts } = PDFLib;
+        const pdfDoc = await PDFDocument.create();
 
-        html2pdf().set(options).from(clone).save().then(() => {
-            // Limpieza
-            document.body.removeChild(container);
-            btn.innerHTML = '<i class="fa-solid fa-download"></i> Descargar PDF'; 
-            btn.style.pointerEvents = 'auto';
-        }).catch(err => {
-            console.error("Error en PDF:", err);
-            btn.innerHTML = 'Error';
-            btn.style.pointerEvents = 'auto';
+        // 3. Cargar la imagen de fondo (tu plantilla limpia)
+        const imageBytes = await fetch('plantilla.png').then(res => res.arrayBuffer());
+        const bgImage = await pdfDoc.embedPng(imageBytes);
+
+        // 4. Crear página A4 y poner el fondo
+        const page = pdfDoc.addPage([595.28, 841.89]); // Tamaño A4 estándar
+        page.drawImage(bgImage, { x: 0, y: 0, width: 595.28, height: 841.89 });
+
+        // 5. Cargar Fuentes
+        const fontTitle = await pdfDoc.embedFont(StandardFonts.TimesRomanBoldItalic);
+        const fontNormal = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+        const fontBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+
+        // --- 6. IMPRESIÓN DE DATOS (Coordenadas Calibradas) ---
+        
+        // Bloque Superior Derecho (Registro, Catálogo, Fecha)
+        const headerX = 445;
+        page.drawText(starId, { x: headerX, y: 775, size: 10, font: fontBold });
+        page.drawText(starOfficial, { x: headerX, y: 762, size: 9, font: fontNormal });
+        page.drawText(starDate, { x: headerX, y: 749, size: 9, font: fontNormal });
+
+        // Nombre de la Estrella (Centro)
+        // Calculamos el centro para el nombre
+        const nameSize = 34;
+        const nameWidth = fontTitle.widthOfTextAtSize(starName.toUpperCase(), nameSize);
+        page.drawText(starName.toUpperCase(), { 
+            x: (595.28 / 2) - (nameWidth / 2), 
+            y: 585, 
+            size: nameSize, 
+            font: fontTitle, 
+            color: rgb(0.72, 0.52, 0.04) // Dorado Nova
         });
-    }, 500);
+
+        // Tabla de Datos Técnicos (Coordenadas exactas por cajas)
+        const col1X = 185; 
+        const col2X = 435;
+        
+        // Fila 1: Catálogo IAU / Distancia
+        page.drawText(starOfficial, { x: col1X, y: 284, size: 9, font: fontNormal });
+        page.drawText(starDist, { x: col2X, y: 284, size: 9, font: fontNormal });
+        
+        // Fila 2: Ascensión / Declinación
+        page.drawText(starRA, { x: col1X, y: 265, size: 9, font: fontNormal });
+        page.drawText(starDEC, { x: col2X, y: 265, size: 9, font: fontNormal });
+        
+        // Fila 3: Clase Espectral / Temperatura
+        page.drawText(starClass, { x: col1X, y: 245, size: 9, font: fontNormal });
+        page.drawText(starTemp, { x: col2X, y: 245, size: 9, font: fontNormal });
+        
+        // Fila 4: Magnitud / Luminosidad
+        page.drawText(starMag, { x: col1X, y: 220, size: 9, font: fontNormal });
+        page.drawText(starLum, { x: col2X, y: 220, size: 9, font: fontNormal });
+
+        // Texto bajo Código de Barras
+        const barcodeText = `*${starId}*`;
+        page.drawText(barcodeText, { x: 255, y: 88, size: 8, font: fontNormal });
+
+        // 7. Generar y pegar Código QR
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.novaregistry.net/?verify=${starId}`;
+        const qrBytes = await fetch(qrUrl).then(res => res.arrayBuffer());
+        const qrImage = await pdfDoc.embedPng(qrBytes);
+        page.drawImage(qrImage, { x: 88, y: 85, width: 60, height: 60 });
+
+        // 8. Finalizar y Descargar
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: "application/pdf" });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `Certificado_NovaRegistry_${starId}.pdf`;
+        link.click();
+
+    } catch (error) {
+        console.error("Error PDF:", error);
+        alert("Error al generar el certificado.");
+    } finally {
+        btn.innerHTML = originalText;
+        btn.style.pointerEvents = 'auto';
+    }
 }
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
         function showSection(sectionId) {
