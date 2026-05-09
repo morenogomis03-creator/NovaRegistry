@@ -1,4 +1,4 @@
-   // --- GESTIÓN DE COOKIES ---
+         // --- GESTIÓN DE COOKIES ---
         document.addEventListener("DOMContentLoaded", () => {
             if (!localStorage.getItem("cookiesAccepted")) {
                 document.getElementById("cookieBanner").style.display = "flex";
@@ -222,170 +222,107 @@ async function downloadPDF() {
         let starNamePending = "";
         let paypalButtonsRendered = false;
 
-       function openPayment(packageName) {
-    let rawInput = document.getElementById('inputStarName').value;
-    starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
-    
-    if(starNamePending === "") { 
-        alert("Introduza um Nombre Oficial válido."); return; 
-    }
-    
-    checkoutPackage = packageName;
-    
-    const legalCheckbox = document.getElementById('legalConsent');
-    if (legalCheckbox) legalCheckbox.checked = false; 
-
-    const formEnvio = document.getElementById('shipping-form');
-    formEnvio.style.display = (packageName.includes("Herencia") || packageName.includes("Soberanía") || packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
-
-    document.getElementById('checkoutDesc').innerText = packageName;
-    document.getElementById('paymentModal').style.display = 'flex';
-
-    const oldAdminBtn = document.getElementById('admin-bypass-btn');
-    if (oldAdminBtn) oldAdminBtn.remove();
-
-    if (isAdminActive) {
-        const adminBtn = document.createElement('button');
-        adminBtn.id = 'admin-bypass-btn';
-        adminBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> REGISTRO GRATUITO (STAFF)';
-        adminBtn.style = "width:100%; background:#2ecc71; color:black; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:20px; font-size:1rem; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);";
-        
-        const paypalContainer = document.getElementById('paypal-button-container');
-        paypalContainer.parentNode.insertBefore(adminBtn, paypalContainer);
-
-        adminBtn.onclick = async () => {
-            if(!document.getElementById('legalConsent').checked) {
-                alert("Marque a caixa de Termos para autorizar o registro.");
-                return;
+        function openPayment(packageName) {
+            let rawInput = document.getElementById('inputStarName').value;
+            starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
+            
+            if(starNamePending === "") { 
+                alert("Introduzca un Nombre Oficial válido."); return; 
             }
-            if(confirm("Deseja registrar '" + starNamePending + "' com mitologia oficial?")) {
-                const overlay = document.getElementById('processingOverlay');
-                overlay.style.display = 'flex';
-                document.getElementById('paymentModal').style.display = 'none';
+            
+            checkoutPackage = packageName;
+            document.getElementById('legalConsent').checked = false; 
 
-                try {
-                    const randomNum = Math.floor(10000 + Math.random() * 90000);
-                    const newNovaCode = "NOVA-" + randomNum;
-                    const fechaActual = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+            const formEnvio = document.getElementById('shipping-form');
+            formEnvio.style.display = (packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
 
-                    // --- BIBLIOTECA DE MITOLOGIAS (LORE) ---
-                    const mitologias = [
-                        "Conocida como el faro eterno, esta estrella ha guiado a exploradores a través de los siglos, representando la luz constante en la oscuridad del firmamento.",
-                        "Una joya radiante en el tejido cósmico que simboliza la sabiduría y la inmortalidad en las leyendas de las antiguas civilizaciones estelares.",
-                        "Dice la leyenda que esta estrella nació del suspiro de una divinidad, destinada a brillar perpetuamente como guardiana de los sueños nocturnos.",
-                        "Situada en las coordenadas sagradas, esta estrella es el símbolo de la esperanza y la guía para aquellos que buscan su destino bajo el manto de la noche.",
-                        "Una gigante de luz pura cuya energía primordial ha moldeado el destino de las constelaciones que la rodean desde el inicio de los tiempos."
-                    ];
-                    // Escolhe uma mitologia aleatória da lista acima
-                    const loreAleatorio = mitologias[Math.floor(Math.random() * mitologias.length)];
+            document.getElementById('checkoutDesc').innerText = packageName;
+            document.getElementById('paymentModal').style.display = 'flex';
 
-                    const starData = {
-                        id: newNovaCode,
-                        name: starNamePending.toUpperCase(),
-                        date: fechaActual,
-                        package: checkoutPackage,
-                        official: "HD " + Math.floor(Math.random() * 200000) + " (Nova)",
-                        ra: Math.floor(Math.random() * 24) + "h " + Math.floor(Math.random() * 60) + "m",
-                        dec: "+" + Math.floor(Math.random() * 90) + "° " + Math.floor(Math.random() * 60) + "'",
-                        distance: Math.floor(Math.random() * 1500 + 10) + " A.L.",
-                        spectral: "A0 V",
-                        temp: Math.floor(Math.random() * 5000 + 4000) + " K",
-                        appMag: (Math.random() * 6 + 1).toFixed(2),
-                        lum: Math.floor(Math.random() * 100 + 1) + " Soles",
-                        lore: loreAleatorio, // <--- AQUI ESTÁ A MUDANÇA
-                        timestamp: new Date().getTime()
-                    };
-
-                    await db.collection("estrellas").doc(newNovaCode).set(starData);
-
-                    overlay.style.display = 'none';
-                    alert(`¡ALTA DE ADMIN COMPLETADA!\nCódigo: ${newNovaCode}`);
+            if (!paypalButtonsRendered) {
+                paypal.Buttons({
+                    style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
                     
-                    showSection('mystar');
-                    document.getElementById('myStarInput').value = newNovaCode;
-                    loadMyStar();
+                    // 1. Pedimos a NUESTRO servidor que cree la orden segura
+                    createOrder: async function(data, actions) { 
+                        if(!document.getElementById('legalConsent').checked) {
+                            alert("Por favor, marca la casilla de Términos de Venta para continuar.");
+                            return actions.reject();
+                        }
+                        if (document.getElementById('shipping-form').style.display === 'block') {
+                            const n = document.getElementById('shipName').value.trim();
+                            const a = document.getElementById('shipAddress').value.trim();
+                            const z = document.getElementById('shipZip').value.trim();
+                            if(!n || !a || !z) {
+                                alert("Rellene la dirección de envío.");
+                                return actions.reject(); 
+                            }
+                        }
 
-                } catch (e) {
-                    overlay.style.display = 'none';
-                    alert("Erro ao acessar a base de dados.");
-                }
+                        const respuesta = await fetch('/api/crear-orden', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ paqueteId: checkoutPackage })
+                        });
+                        const ordenSegura = await respuesta.json();
+                        
+                        if (!respuesta.ok) {
+                            alert("Error de seguridad en la pasarela.");
+                            throw new Error("Transacción bloqueada.");
+                        }
+                        return ordenSegura.id; 
+                    },
+                    
+                    // 2. El usuario paga y capturamos el dinero
+                    onApprove: async function(data, actions) {
+                        const details = await actions.order.capture();
+                        
+                        // 3. Mostramos la pantalla de carga
+                        const overlay = document.getElementById('processingOverlay');
+                        overlay.style.display = 'flex';
+                        closePaymentModal();
+
+                        let shippingData = null;
+                        if (document.getElementById('shipping-form').style.display === 'block') {
+                            shippingData = {
+                                name: document.getElementById('shipName').value.trim(),
+                                address: document.getElementById('shipAddress').value.trim(),
+                                city: document.getElementById('shipCity').value.trim(),
+                                zip: document.getElementById('shipZip').value.trim(),
+                                phone: document.getElementById('shipPhone').value.trim()
+                            };
+                        }
+
+                        // 4. Pedimos a NUESTRO servidor que guarde en Firebase
+                        const resFirebase = await fetch('/api/guardar-estrella', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                paqueteId: checkoutPackage,
+                                starName: starNamePending,
+                                payerName: details.payer.name.given_name,
+                                paypalTransactionId: details.id,
+                                shippingInfo: shippingData
+                            })
+                        });
+                        const resultado = await resFirebase.json();
+
+                        overlay.style.display = 'none';
+
+                        if(resultado.success) {
+                            alert(`¡COMPRA CONFIRMADA!\nCódigo: ${resultado.novaCode}\n\nGuarda este código NOVA para poder recuperar tu certificado.`);
+                            showSection('mystar');
+                            document.getElementById('myStarInput').value = resultado.novaCode;
+                            loadMyStar();
+                        } else {
+                            alert("Error al contactar con el Registro Central.");
+                        }
+                    },
+                    onError: function(err) { alert("Error al procesar PayPal."); }
+                }).render('#paypal-button-container');
+                paypalButtonsRendered = true;
             }
-        };
-    }
-
-    if (!paypalButtonsRendered) {
-        // ... (resto do seu código do PayPal permanece igual)
-        paypal.Buttons({ /* ... */ }).render('#paypal-button-container');
-        paypalButtonsRendered = true;
-    }
-}
-
-    // === FLUJO NORMAL DE PAYPAL ===
-    if (!paypalButtonsRendered) {
-        paypal.Buttons({
-            style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
-            createOrder: async function(data, actions) { 
-                if(!document.getElementById('legalConsent').checked) {
-                    alert("Por favor, marca la casilla de Términos de Venta para continuar.");
-                    return actions.reject();
-                }
-                const respuesta = await fetch('/api/crear-orden', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ paqueteId: checkoutPackage })
-                });
-                const ordenSegura = await respuesta.json();
-                if (!respuesta.ok) {
-                    alert("Error en la pasarela.");
-                    throw new Error("Transacción bloqueada.");
-                }
-                return ordenSegura.id; 
-            },
-            onApprove: async function(data, actions) {
-                const details = await actions.order.capture();
-                const overlay = document.getElementById('processingOverlay');
-                overlay.style.display = 'flex';
-                document.getElementById('paymentModal').style.display = 'none';
-
-                let shippingData = null;
-                if (document.getElementById('shipping-form').style.display === 'block') {
-                    shippingData = {
-                        name: document.getElementById('shipName').value,
-                        address: document.getElementById('shipAddress').value,
-                        city: document.getElementById('shipCity').value,
-                        zip: document.getElementById('shipZip').value,
-                        phone: document.getElementById('shipPhone').value
-                    };
-                }
-
-                const resFirebase = await fetch('/api/guardar-estrella', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        paqueteId: checkoutPackage,
-                        starName: starNamePending,
-                        payerName: details.payer.name.given_name,
-                        paypalTransactionId: details.id,
-                        shippingInfo: shippingData
-                    })
-                });
-                const resultado = await resFirebase.json();
-                overlay.style.display = 'none';
-
-                if(resultado.success) {
-                    alert(`¡COMPRA CONFIRMADA!\nCódigo: ${resultado.novaCode}`);
-                    showSection('mystar');
-                    document.getElementById('myStarInput').value = resultado.novaCode;
-                    loadMyStar();
-                } else {
-                    alert("Error al contactar con el Registro Central.");
-                }
-            },
-            onError: function(err) { alert("Error de pago."); }
-        }).render('#paypal-button-container');
-        paypalButtonsRendered = true;
-    }
-}
+        }
 
         function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
 
@@ -533,4 +470,3 @@ async function processTracking(input, lat, lon, outputArea) {
                 tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;">No hay ventas.</td></tr>';
             } catch (e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
         }
-    
