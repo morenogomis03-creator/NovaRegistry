@@ -416,6 +416,10 @@
                             </table>
 
                             <div class="cert-footer">
+                                <!-- CÓDIGO QR -->
+        <div class="qr-code-box">
+            <img id="certQR" src="" alt="QR Oficial" style="width: 70px; height: 70px; border: 2px solid #222; padding: 2px; background: #fff; display: none;">
+        </div>
                                 <div><div class="barcode-box"></div><div class="barcode-text" id="certBarcode">--</div></div>
                                 <div class="seal-official"><div class="seal-inner"><span>OFFICIAL<br>REGISTRY<br>SEAL</span></div></div>
                                 <div class="signature">
@@ -860,6 +864,11 @@
                     document.getElementById('certLum').innerText = star.lum || "--";
                     document.getElementById('certBarcode').innerText = `*${star.id.replace('-','')}*`;
                     document.getElementById('certLore').innerText = star.lore ? `"${star.lore}"` : "";
+                    // GENERADOR DE CÓDIGO QR DINÁMICO
+            const qrImage = document.getElementById('certQR');
+            const urlEstrella = "https://www.novaregistry.net/?verify=" + star.id;
+            qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(urlEstrella);
+            qrImage.style.display = "block";
                 } else { alert('Código no localizado en el registro oficial.'); }
             } catch (error) { alert("Fallo de conexión."); }
         }
