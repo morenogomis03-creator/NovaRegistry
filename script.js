@@ -189,7 +189,6 @@ async function downloadPDF() {
         btn.style.pointerEvents = 'auto';
     }
 }
-
         // --- SISTEMA VR / PARALLAX ---
         const canvas = document.getElementById('skyCanvas');
         const ctx = canvas.getContext('2d');
