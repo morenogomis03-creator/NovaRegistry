@@ -2,6 +2,7 @@
   "name": "novaregistry",
   "version": "1.0.0",
   "dependencies": {
-    "firebase-admin": "^12.0.0"
+    "firebase-admin": "^12.0.0",
+    "jspdf": "^2.5.1"
   }
 }
