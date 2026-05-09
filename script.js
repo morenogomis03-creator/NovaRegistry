@@ -222,83 +222,144 @@ async function downloadPDF() {
         let starNamePending = "";
         let paypalButtonsRendered = false;
 
-     function openPayment(packageName) {
-    let rawInput = document.getElementById('inputStarName').value;
-    starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
-    
-    if(starNamePending === "") { 
-        alert("Introduce un nombre para la estrella."); return; 
-    }
-    
-    checkoutPackage = packageName;
-    document.getElementById('legalConsent').checked = false; 
-    document.getElementById('checkoutDesc').innerText = "Pack: " + packageName;
-    document.getElementById('paymentModal').style.display = 'flex';
-
-    const oldAdminBtn = document.getElementById('admin-bypass-btn');
-    if (oldAdminBtn) oldAdminBtn.remove();
-
-    if (isAdminActive) {
-        const adminBtn = document.createElement('button');
-        adminBtn.id = 'admin-bypass-btn';
-        adminBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> REGISTRO GRATUITO (ADMIN)';
-        adminBtn.style = "width:100%; background:#2ecc71; color:black; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:20px; font-size:1rem;";
-        
-        const paypalContainer = document.getElementById('paypal-button-container');
-        paypalContainer.parentNode.insertBefore(adminBtn, paypalContainer);
-
-        adminBtn.onclick = async () => {
-            if(!document.getElementById('legalConsent').checked) { alert("Acepta los términos."); return; }
+        function openPayment(packageName) {
+            let rawInput = document.getElementById('inputStarName').value;
+            starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
             
-            const overlay = document.getElementById('processingOverlay');
-            overlay.style.display = 'flex';
-            document.getElementById('paymentModal').style.display = 'none';
+            if(starNamePending === "") { 
+                alert("Introduzca un Nombre Oficial válido."); return; 
+            }
+            
+            checkoutPackage = packageName;
+            document.getElementById('legalConsent').checked = false; 
+
+            const formEnvio = document.getElementById('shipping-form');
+            formEnvio.style.display = (packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
+
+            document.getElementById('checkoutDesc').innerText = packageName;
+            document.getElementById('paymentModal').style.display = 'flex';
+
+            if (!paypalButtonsRendered) {
+                paypal.Buttons({
+                    style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
+                    
+                    // 1. Pedimos a NUESTRO servidor que cree la orden segura
+                    createOrder: async function(data, actions) { 
+                        if(!document.getElementById('legalConsent').checked) {
+                            alert("Por favor, marca la casilla de Términos de Venta para continuar.");
+                            return actions.reject();
+                        }
+                        if (document.getElementById('shipping-form').style.display === 'block') {
+                            const n = document.getElementById('shipName').value.trim();
+                            const a = document.getElementById('shipAddress').value.trim();
+                            const z = document.getElementById('shipZip').value.trim();
+                            if(!n || !a || !z) {
+                                alert("Rellene la dirección de envío.");
+                                return actions.reject(); 
+                            }
+                        }
+
+                        const respuesta = await fetch('/api/crear-orden', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ paqueteId: checkoutPackage })
+                        });
+                        const ordenSegura = await respuesta.json();
+                        
+                        if (!respuesta.ok) {
+                            alert("Error de seguridad en la pasarela.");
+                            throw new Error("Transacción bloqueada.");
+                        }
+                        return ordenSegura.id; 
+                    },
+                    
+                    // 2. El usuario paga y capturamos el dinero
+                    onApprove: async function(data, actions) {
+                        const details = await actions.order.capture();
+                        
+                        // 3. Mostramos la pantalla de carga
+                        const overlay = document.getElementById('processingOverlay');
+                        overlay.style.display = 'flex';
+                        closePaymentModal();
+
+                        let shippingData = null;
+                        if (document.getElementById('shipping-form').style.display === 'block') {
+                            shippingData = {
+                                name: document.getElementById('shipName').value.trim(),
+                                address: document.getElementById('shipAddress').value.trim(),
+                                city: document.getElementById('shipCity').value.trim(),
+                                zip: document.getElementById('shipZip').value.trim(),
+                                phone: document.getElementById('shipPhone').value.trim()
+                            };
+                        }
+
+                        // 4. Pedimos a NUESTRO servidor que guarde en Firebase
+                        const resFirebase = await fetch('/api/guardar-estrella', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                paqueteId: checkoutPackage,
+                                starName: starNamePending,
+                                payerName: details.payer.name.given_name,
+                                paypalTransactionId: details.id,
+                                shippingInfo: shippingData
+                            })
+                        });
+                        const resultado = await resFirebase.json();
+
+                        overlay.style.display = 'none';
+
+                        if(resultado.success) {
+                            alert(`¡COMPRA CONFIRMADA!\nCódigo: ${resultado.novaCode}\n\nGuarda este código NOVA para poder recuperar tu certificado.`);
+                            showSection('mystar');
+                            document.getElementById('myStarInput').value = resultado.novaCode;
+                            loadMyStar();
+                        } else {
+                            alert("Error al contactar con el Registro Central.");
+                        }
+                    },
+                    onError: function(err) { alert("Error al procesar PayPal."); }
+                }).render('#paypal-button-container');
+                paypalButtonsRendered = true;
+            }
+        }
+
+        function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
+
+        async function loadMyStar() {
+            const input = document.getElementById('myStarInput').value.toUpperCase().replace(/\s+/g, '');
+            if(!input) return;
 
             try {
-                const newId = "NOVA-" + Math.floor(10000 + Math.random() * 90000);
-                const fecha = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
-                
-                const mitologias = [
-                    "Una joya radiante en el tejido cósmico que simboliza la sabiduría eterna.",
-                    "Dice la leyenda que esta estrella nació para guiar a los viajeros del tiempo.",
-                    "Protectora silenciosa de los sueños, brilla con luz propia en la inmensidad."
-                ];
+                const docRef = await db.collection("estrellas").doc(input).get();
+                if (docRef.exists) {
+                    const star = docRef.data();
+                    document.getElementById('loginStar').style.display = 'none';
+                    document.getElementById('certificatePanel').style.display = 'flex';
 
-                const starData = {
-                    id: newId,
-                    name: starNamePending.toUpperCase(),
-                    date: fecha,
-                    pack: checkoutPackage,
-                    official: "HD " + Math.floor(Math.random() * 200000),
-                    ra: "15h 34m 41s", dec: "+26° 42' 52\"", distance: "75 A.L.", 
-                    spectral: "A0 V", temp: "9750 K", appMag: "2.22", lum: "60 Soles",
-                    lore: mitologias[Math.floor(Math.random() * mitologias.length)],
-                    timestamp: new Date().getTime()
-                };
+                    document.getElementById('certId').innerText = star.id;
+                    document.getElementById('certOfficialCodeTop').innerText = star.official || "--"; 
+                    document.getElementById('certDate').innerText = star.date;
+                    document.getElementById('certName').innerText = star.name;
+                    document.getElementById('certOfficial').innerText = star.official || "--";
+                    document.getElementById('certRA').innerText = star.ra || "--";
+                    document.getElementById('certDEC').innerText = star.dec || "--";
+                    document.getElementById('certDist').innerText = star.distance || "--";
+                    document.getElementById('certClass').innerText = star.spectral || "--";
+                    document.getElementById('certTemp').innerText = star.temp || "--";
+                    document.getElementById('certAppMag').innerText = star.appMag || "--";
+                    document.getElementById('certLum').innerText = star.lum || "--";
+                    document.getElementById('certBarcode').innerText = `*${star.id.replace('-','')}*`;
+                    document.getElementById('certLore').innerText = star.lore ? `"${star.lore}"` : "";
+                    // GENERADOR DE CÓDIGO QR DINÁMICO
+            const qrImage = document.getElementById('certQR');
+            const urlEstrella = "https://www.novaregistry.net/?verify=" + star.id;
+            qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(urlEstrella);
+            qrImage.style.display = "block";
+                } else { alert('Código no localizado en el registro oficial.'); }
+            } catch (error) { alert("Fallo de conexión."); }
+        }
 
-                // ESTA ES LA LÍNEA QUE GUARDA EN LA BASE DE DATOS
-                await db.collection("estrellas").doc(newId).set(starData);
-
-                overlay.style.display = 'none';
-                alert("¡Guardado en base de datos! Código: " + newId);
-                
-                // Forzamos la búsqueda para ver el certificado
-                document.getElementById('myStarInput').value = newId;
-                loadMyStar(); 
-
-            } catch (e) {
-                overlay.style.display = 'none';
-                console.error("Error guardando:", e);
-                alert("Error de permisos en Firebase.");
-            }
-        };
-    }
-
-    if (!paypalButtonsRendered) {
-        // Aquí iría tu renderizado normal de PayPal si no eres admin
-        // renderPayPal(); 
-    }
-}
         // --- FUNCIONES IA TRACKER ---
         function parseCoordToDeg(coordStr, isRA) {
             let match;
@@ -409,57 +470,3 @@ async function processTracking(input, lat, lon, outputArea) {
                 tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;">No hay ventas.</td></tr>';
             } catch (e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
         }
-// === FUNCIÓN MAESTRA DE VERIFICACIÓN (IA TRACKER) ===
-async function loadMyStar() {
-    // 1. Capturamos el código que el usuario escribió
-    const inputField = document.getElementById('myStarInput');
-    if (!inputField) return;
-
-    const input = inputField.value.toUpperCase().replace(/\s+/g, '');
-    
-    if (!input) {
-        alert("Por favor, introduce un código de registro NOVA.");
-        return;
-    }
-
-    try {
-        // 2. Consultamos a la base de datos de Firebase
-        const docRef = await db.collection("estrellas").doc(input).get();
-
-        if (docRef.exists) {
-            const star = docRef.data();
-            
-            // 3. CAMBIO DE INTERFAZ: Ocultamos el buscador y mostramos el certificado
-            document.getElementById('loginStar').style.display = 'none';
-            document.getElementById('certificatePanel').style.display = 'flex';
-
-            // 4. RELLENAMOS LOS CAMPOS DEL DIPLOMA
-            document.getElementById('certId').innerText = star.id;
-            document.getElementById('certOfficialCodeTop').innerText = star.official || "--"; 
-            document.getElementById('certDate').innerText = star.date;
-            document.getElementById('certName').innerText = star.name;
-            document.getElementById('certOfficial').innerText = star.official || "--";
-            document.getElementById('certRA').innerText = star.ra || "--";
-            document.getElementById('certDEC').innerText = star.dec || "--";
-            document.getElementById('certDist').innerText = star.distance || "--";
-            document.getElementById('certClass').innerText = star.spectral || "--";
-            document.getElementById('certTemp').innerText = star.temp || "--";
-            document.getElementById('certAppMag').innerText = star.appMag || "--";
-            document.getElementById('certLum').innerText = star.lum || "--";
-            document.getElementById('certLore').innerText = star.lore || "";
-
-            // 5. ACTUALIZAMOS EL CÓDIGO QR
-            const qrImage = document.getElementById('certQR');
-            if (qrImage) {
-                const urlEstrella = "https://www.novaregistry.net/?verify=" + star.id;
-                qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(urlEstrella);
-            }
-
-        } else {
-            alert('El código ' + input + ' no consta en nuestros registros oficiales.');
-        }
-    } catch (error) {
-        console.error("Error en la base de datos:", error);
-        alert("Fallo de conexión. Revisa tu internet o la consola.");
-    }
-}
