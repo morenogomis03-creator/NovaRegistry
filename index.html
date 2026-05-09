@@ -981,7 +981,7 @@ async function processTracking(input, lat, lon, outputArea) {
                 } else { outputArea.innerHTML = '<span style="color: red;">> [ ERROR 404 ] Código no existe.</span>'; }
             } catch (error) { outputArea.innerHTML = '<span style="color: red;">> [ ERROR FATAL ] Servidor no responde.</span>'; }
         }
-        }
+        
 
         async function loadAdminDashboard() {
             if(!isAdminActive) return;
