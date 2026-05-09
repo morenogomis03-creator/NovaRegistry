@@ -83,43 +83,68 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-        // --- FIX PDF ---
-        function downloadPDF() {
-            const originalElement = document.getElementById('pdf-content');
-            const btn = document.getElementById('downloadPdfBtn');
-            const starCode = document.getElementById('certId').innerText || "Documento";
-            
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando alta resolución...';
-            btn.style.pointerEvents = 'none';
+      // === GENERADOR DE CERTIFICADOS DEFINITIVO (Sin Plantilla Externa) ===
+function downloadPDF() {
+    const originalElement = document.getElementById('pdf-content') || document.getElementById('certificatePanel');
+    const btn = document.getElementById('downloadPdfBtn');
+    
+    // 1. Efecto visual de carga
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Digitalizando...'; 
+    btn.style.pointerEvents = 'none';
+    
+    // 2. Creamos un CLON que forzamos a ser un folio A4 Vertical (Proporción perfecta)
+    const clone = originalElement.cloneNode(true);
+    const container = document.createElement('div');
+    
+    // Estilizamos el contenedor para que sea un folio A4 perfecto e invisible
+    container.style.position = 'fixed';
+    container.style.left = '-9999px';
+    container.style.top = '0';
+    container.style.width = '794px';  // Ancho exacto de un A4 a 96dpi
+    container.style.height = '1123px'; // Alto exacto de un A4 a 96dpi
+    container.style.backgroundColor = 'white';
+    container.style.zIndex = '-1';
+    
+    // Forzamos al clon a ocupar todo el espacio del contenedor A4
+    clone.style.width = '794px';
+    clone.style.height = '1123px';
+    clone.style.margin = '0';
+    clone.style.padding = '40px'; // Espaciado interno para los marcos
+    clone.style.boxSizing = 'border-box';
+    clone.style.display = 'block';
+    clone.style.transform = 'scale(1)'; // Evitamos deformaciones por zoom del navegador
 
-            const clone = originalElement.cloneNode(true);
-            clone.id = 'pdf-clone'; 
-            const wrapper = document.createElement('div');
-            wrapper.className = 'pdf-clone-wrapper';
-            wrapper.appendChild(clone);
-            document.body.appendChild(wrapper);
+    container.appendChild(clone);
+    document.body.appendChild(container);
 
-            setTimeout(() => {
-                const opt = {
-                    margin: 0,
-                    filename: `Certificado_NovaRegistry_${starCode}.pdf`,
-                    image: { type: 'jpeg', quality: 1.0 },
-                    html2canvas: { scale: 2, useCORS: true, windowWidth: 794, width: 794, height: 1123, scrollY: 0, scrollX: 0 },
-                    jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
-                };
-                html2pdf().set(opt).from(clone).save().then(() => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                }).catch(err => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                });
-            }, 150);
-        }
+    // 3. Pequeña pausa para que el navegador renderice el clon invisible
+    setTimeout(() => {
+        const options = {
+            margin: 0,
+            filename: `Certificado_NovaRegistry_${document.getElementById('certId').innerText}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { 
+                scale: 3, // Alta calidad para que no se pixele el mapa
+                useCORS: true,
+                logging: false,
+                width: 794,
+                height: 1123
+            },
+            jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' }
+        };
 
+        html2pdf().set(options).from(clone).save().then(() => {
+            // Limpieza
+            document.body.removeChild(container);
+            btn.innerHTML = '<i class="fa-solid fa-download"></i> Descargar PDF'; 
+            btn.style.pointerEvents = 'auto';
+        }).catch(err => {
+            console.error("Error en PDF:", err);
+            btn.innerHTML = 'Error';
+            btn.style.pointerEvents = 'auto';
+        });
+    }, 500);
+}
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
         function showSection(sectionId) {
             document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
