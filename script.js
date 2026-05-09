@@ -1,50 +1,30 @@
-// --- GESTIÓN DE COOKIES Y URL (ACTUALIZADO) ---
+// --- SISTEMA DE NOTIFICACIONES TOAST ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = 'fa-info-circle';
+            if (type === 'success') icon = 'fa-check-circle';
+            if (type === 'error') icon = 'fa-exclamation-circle';
+            if (type === 'warning') icon = 'fa-exclamation-triangle';
+
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400); 
+            }, 3500);
+        }
+
+        // --- GESTIÓN DE COOKIES ---
         document.addEventListener("DOMContentLoaded", () => {
             if (!localStorage.getItem("cookiesAccepted")) {
                 document.getElementById("cookieBanner").style.display = "flex";
-            }
-
-
-
-
-                // --- SISTEMA DE NOTIFICACIONES TOAST ---
-function showToast(message, type = 'success') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
-
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    
-    // Elegimos el icono según el tipo de aviso
-    let icon = 'fa-info-circle';
-    if (type === 'success') icon = 'fa-check-circle';
-    if (type === 'error') icon = 'fa-exclamation-circle';
-    if (type === 'warning') icon = 'fa-exclamation-triangle';
-
-    toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
-    container.appendChild(toast);
-
-    // Animación de entrada
-    setTimeout(() => toast.classList.add('show'), 10);
-
-    // Animación de salida y borrado tras 3.5 segundos
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400); 
-    }, 3500);
-}
-                
-            // --- NUEVA LÓGICA: DETECCIÓN DE QR AL CARGAR ---
-            const urlParams = new URLSearchParams(window.location.search);
-            const starIdFromUrl = urlParams.get('verify'); // Busca el ?verify=XXXXX
-            
-            if (starIdFromUrl) {
-                // Ponemos el ID en el input y ejecutamos la búsqueda automáticamente
-                const inputField = document.getElementById('myStarInput');
-                if (inputField) {
-                    inputField.value = starIdFromUrl;
-                    loadMyStar(); 
-                }
             }
         });
 
@@ -78,7 +58,11 @@ function showToast(message, type = 'success') {
             document.getElementById('legalModal').style.display = 'flex';
         }
 
-        // --- FIREBASE INICIALIZACIÓN (Solo lectura para Frontend) ---
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        // --- FIREBASE INICIALIZACIÓN ---
         const firebaseConfig = {
             apiKey: "AIzaSyD5F10FeOf1cAO_6j3v_OR8WHIxw-lQo6w",
             authDomain: "novagetristy.firebaseapp.com",
@@ -119,38 +103,35 @@ function showToast(message, type = 'success') {
             let p = document.getElementById('admP').value;
             auth.signInWithEmailAndPassword(e, p).then(() => {
                 isAdminActive = true;
-                alert("🚀 MODO ADMIN ACTIVADO.");
+                showToast("🚀 MODO ADMIN ACTIVADO.", "success");
                 document.getElementById('nav-admin').style.display = 'inline-block';
                 document.getElementById('adminLogin').remove();
                 loadAdminDashboard();
-            }).catch(() => alert("Acceso denegado."));
+            }).catch(() => showToast("Acceso denegado. Credenciales inválidas.", "error"));
         }
 
-      // --- GENERADOR DE PDF RECONSTRUIDO (100% ENCUADRADO) ---
+      // --- GENERADOR DE PDF ---
 async function downloadPDF() {
     const originalElement = document.getElementById('pdf-content');
     const btn = document.getElementById('downloadPdfBtn');
     const starCode = document.getElementById('certId').innerText || "Documento";
     
-    // 1. Bloqueo de botón y feedback
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i class="fa-solid fa-sync fa-spin"></i> Renderizando...';
     btn.style.pointerEvents = 'none';
 
     try {
-        // 2. Creamos un contenedor "Estudio Fotográfico" fuera de la pantalla
         const container = document.createElement('div');
         container.style.position = 'absolute';
         container.style.left = '-9999px';
         container.style.top = '0';
-        container.style.width = '794px'; // Ancho A4 exacto
+        container.style.width = '794px'; 
         
-        // 3. Clonamos y forzamos el estilo de "página única"
         const clone = originalElement.cloneNode(true);
         clone.style.width = '794px';
-        clone.style.height = '1123px'; // Alto A4 exacto
+        clone.style.height = '1123px'; 
         clone.style.margin = '0';
-        clone.style.padding = '40px'; // Margen interno de seguridad
+        clone.style.padding = '40px'; 
         clone.style.boxSizing = 'border-box';
         clone.style.display = 'flex';
         clone.style.flexDirection = 'column';
@@ -160,21 +141,19 @@ async function downloadPDF() {
         container.appendChild(clone);
         document.body.appendChild(container);
 
-        // 4. Esperamos a que las imágenes (QR, Mapa) se carguen en el clon
         await new Promise(resolve => setTimeout(resolve, 800));
 
-        // 5. Configuración de alta precisión para html2pdf
         const options = {
             margin: 0,
             filename: `Certificado_NovaRegistry_${starCode}.pdf`,
             image: { type: 'jpeg', quality: 1.0 },
             html2canvas: { 
-                scale: 2,           // Doble resolución
-                useCORS: true,      // Para cargar imágenes externas (QR)
+                scale: 2,           
+                useCORS: true,      
                 logging: false,
                 letterRendering: true,
-                scrollY: 0,         // Forzamos el inicio en el borde superior
-                windowWidth: 794    // Engañamos al navegador para que crea que mide 794px
+                scrollY: 0,         
+                windowWidth: 794    
             },
             jsPDF: { 
                 unit: 'px', 
@@ -184,16 +163,15 @@ async function downloadPDF() {
             }
         };
 
-        // 6. Generar y guardar
         await html2pdf().set(options).from(clone).save();
 
-        // 7. Limpieza
         document.body.removeChild(container);
         btn.innerHTML = originalText;
+        showToast("Certificado PDF descargado correctamente.", "success");
 
     } catch (error) {
         console.error("Error crítico en PDF:", error);
-        alert("Hubo un error al generar el archivo. Por favor, inténtelo de nuevo.");
+        showToast("Error al generar el archivo PDF. Inténtalo de nuevo.", "error");
         btn.innerHTML = "Reintentar";
     } finally {
         btn.style.pointerEvents = 'auto';
@@ -266,29 +244,25 @@ async function downloadPDF() {
         let paypalButtonsRendered = false;
 
      function openPayment(packageName) {
-    // 1. Validación del nombre
     let rawInput = document.getElementById('inputStarName').value;
     starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
     
     if(starNamePending === "") { 
-        alert("Por favor, introduce el nombre oficial para la estrella."); 
+        showToast("Por favor, introduce el nombre oficial para la estrella.", "warning"); 
         return; 
     }
     
     checkoutPackage = packageName;
 
-    // 2. Configuración del Modal
     const legalCheckbox = document.getElementById('legalConsent');
     if (legalCheckbox) legalCheckbox.checked = false; 
 
-    // Mostrar formulario de envío si el pack es físico/premium
     const formEnvio = document.getElementById('shipping-form');
     formEnvio.style.display = (packageName.includes("Herencia") || packageName.includes("Soberanía") || packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
 
     document.getElementById('checkoutDesc').innerText = "Registro: " + packageName;
     document.getElementById('paymentModal').style.display = 'flex';
 
-    // 3. LÓGICA DE ADMINISTRADOR (BOTÓN VERDE)
     const oldAdminBtn = document.getElementById('admin-bypass-btn');
     if (oldAdminBtn) oldAdminBtn.remove();
 
@@ -303,7 +277,7 @@ async function downloadPDF() {
 
         adminBtn.onclick = async () => {
             if(!document.getElementById('legalConsent').checked) {
-                alert("Debes marcar la casilla de términos para proceder con el registro interno.");
+                showToast("Debes aceptar los términos de venta para proceder.", "warning");
                 return;
             }
 
@@ -316,7 +290,6 @@ async function downloadPDF() {
                     const newId = "NOVA-" + Math.floor(10000 + Math.random() * 90000);
                     const fecha = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
 
-                    // Mitologías aleatorias
                     const mitologias = [
                         "Conocida como el faro eterno, esta estrella ha guiado a exploradores a través de los siglos, representando la luz constante en el cosmos.",
                         "Una joya radiante en el tejido cósmico que simboliza la sabiduría y la inmortalidad en las leyendas de antiguas civilizaciones.",
@@ -343,37 +316,29 @@ async function downloadPDF() {
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     };
 
-                    // GUARDADO DIRECTO
                     await db.collection("estrellas").doc(newId).set(starData);
 
                     overlay.style.display = 'none';
-                    alert("¡Estrella registrada con éxito! Código: " + newId);
+                    showToast("¡Estrella registrada con éxito! Código: " + newId, "success");
                     
-                    // Cargar el certificado automáticamente
                     document.getElementById('myStarInput').value = newId;
                     loadMyStar(); 
 
                 } catch (e) {
                     overlay.style.display = 'none';
                     console.error("Error al guardar:", e);
-                    alert("Error al conectar con la base de datos: " + e.message);
+                    showToast("Error al conectar con la base de datos.", "error");
                 }
             }
         };
     }
 
-             // --- CERRAR MODAL DE PAGO ---
-function closePaymentModal() {
-    document.getElementById('paymentModal').style.display = 'none';
-}
-
-    // 4. LÓGICA DE PAYPAL (FLUJO NORMAL)
     if (!paypalButtonsRendered) {
         paypal.Buttons({
             style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
             onClick: (data, actions) => {
                 if(!document.getElementById('legalConsent').checked) {
-                    alert("Por favor, acepta los términos de venta.");
+                    showToast("Por favor, acepta los términos de venta.", "warning");
                     return actions.reject();
                 }
                 return actions.resolve();
@@ -389,7 +354,7 @@ function closePaymentModal() {
                     if (!respuesta.ok) throw new Error("Error en servidor");
                     return orden.id; 
                 } catch (err) {
-                    alert("Error en la conexión con PayPal.");
+                    showToast("Error en la conexión con PayPal.", "error");
                 }
             },
             onApprove: async function(data, actions) {
@@ -411,6 +376,7 @@ function closePaymentModal() {
                 const resultado = await resFirebase.json();
                 overlay.style.display = 'none';
                 if(resultado.success) {
+                    showToast("Pago completado con éxito.", "success");
                     document.getElementById('myStarInput').value = resultado.novaCode;
                     loadMyStar();
                 }
@@ -421,13 +387,13 @@ function closePaymentModal() {
 }
 
 
-// === FUNCIÓN DEL BUSCADOR (IA TRACKER) ACTUALIZADO ===
+// === FUNCIÓN DEL BUSCADOR (IA TRACKER) ===
 async function loadMyStar() {
     const inputField = document.getElementById('myStarInput');
     if(!inputField) return;
     
     const input = inputField.value.toUpperCase().replace(/\s+/g, '');
-    if(!input) return alert("Introduce un código NOVA.");
+    if(!input) return showToast("Introduce un código NOVA.", "warning");
 
     try {
         const docRef = await db.collection("estrellas").doc(input).get();
@@ -435,12 +401,10 @@ async function loadMyStar() {
         if (docRef.exists) {
             const star = docRef.data();
             
-            // Mostrar panel y ocultar buscador
             showSection('mystar'); 
             document.getElementById('loginStar').style.display = 'none';
             document.getElementById('certificatePanel').style.display = 'flex';
 
-            // Rellenar certificado
             document.getElementById('certId').innerText = star.id;
             document.getElementById('certOfficialCodeTop').innerText = star.official || "--"; 
             document.getElementById('certDate').innerText = star.date;
@@ -455,47 +419,20 @@ async function loadMyStar() {
             document.getElementById('certLum').innerText = star.lum || "--";
             document.getElementById('certLore').innerText = star.lore || "";
 
-            // --- ACTUALIZACIÓN LÓGICA DEL QR ---
             const qrImage = document.getElementById('certQR');
-            if (qrImage) {
-                const currentDomain = window.location.origin; // Genera automáticamente el dominio base
-                const qrUrl = `${currentDomain}/?verify=${star.id}`; // URL dinámica para el QR
-                
-                qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrUrl)}`;
-                qrImage.style.display = 'block'; // Lo hacemos visible
-            }
+            qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent("https://novaregistry.net/?verify=" + star.id)}`;
+
+            showToast("Certificado cargado correctamente.", "success");
 
         } else {
-            alert('Código no encontrado.');
+            showToast('Código no encontrado en nuestros archivos.', "error");
         }
     } catch (error) {
         console.error("Error buscando estrella:", error);
-        alert("Fallo al conectar con la base de datos.");
+        showToast("Fallo al conectar con la base de datos.", "error");
     }
 }
       
-// --- FÓRMULA MATEMÁTICA PARA EL TRACKER IA ---
-function parseCoordToDeg(coordStr, isRA) {
-    if (!coordStr) return 0;
-    // Extrae los números de la coordenada (ej: "12h 30m" -> 12, 30)
-    let nums = coordStr.match(/-?\d+\.?\d*/g);
-    if (!nums || nums.length === 0) return 0;
-    
-    let deg = parseFloat(nums[0]);
-    let min = nums.length > 1 ? parseFloat(nums[1]) : 0;
-    let sec = nums.length > 2 ? parseFloat(nums[2]) : 0;
-    
-    let total = Math.abs(deg) + (min / 60) + (sec / 3600);
-    if (deg < 0 || coordStr.includes('-')) total = -total;
-    
-    // Si es Ascensión Recta (RA), hay que multiplicarlo por 15 para pasarlo a grados
-    if (isRA) {
-        return total * 15; 
-    }
-    return total;
-}
-
-
         function getAltAz(lat, lon, raDeg, decDeg) {
             let now = new Date();
             let d = Math.round((now.getTime() - new Date("2000-01-01T12:00:00Z").getTime()) / 86400000);
@@ -590,7 +527,3 @@ async function processTracking(input, lat, lon, outputArea) {
                 tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;">No hay ventas.</td></tr>';
             } catch (e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
         }
-// --- CERRAR MODALES ---
-function closePaymentModal() {
-    document.getElementById('paymentModal').style.display = 'none';
-}
