@@ -83,42 +83,56 @@
             }).catch(() => alert("Acceso denegado."));
         }
 
-        // --- FIX PDF ---
-        function downloadPDF() {
-            const originalElement = document.getElementById('pdf-content');
-            const btn = document.getElementById('downloadPdfBtn');
-            const starCode = document.getElementById('certId').innerText || "Documento";
-            
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando alta resolución...';
-            btn.style.pointerEvents = 'none';
+        // === GENERADOR DE CERTIFICADOS EN SERVIDOR (Backend) ===
+async function downloadPDF() {
+    const btn = document.getElementById('downloadPdfBtn');
+    const originalText = btn.innerHTML;
+    
+    // Cambiamos el botón para que el usuario sepa que está cargando
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Imprimiendo en Servidor...'; 
+    btn.style.pointerEvents = 'none';
 
-            const clone = originalElement.cloneNode(true);
-            clone.id = 'pdf-clone'; 
-            const wrapper = document.createElement('div');
-            wrapper.className = 'pdf-clone-wrapper';
-            wrapper.appendChild(clone);
-            document.body.appendChild(wrapper);
+    try {
+        // 1. Recogemos los datos que hay en la pantalla
+        const payload = {
+            id: document.getElementById('certId').innerText,
+            name: document.getElementById('certName').innerText,
+            date: document.getElementById('certDate').innerText,
+            starDetails: {
+                ra: document.getElementById('certRA') ? document.getElementById('certRA').innerText : "--",
+                dec: document.getElementById('certDEC') ? document.getElementById('certDEC').innerText : "--"
+            }
+        };
 
-            setTimeout(() => {
-                const opt = {
-                    margin: 0,
-                    filename: `Certificado_NovaRegistry_${starCode}.pdf`,
-                    image: { type: 'jpeg', quality: 1.0 },
-                    html2canvas: { scale: 2, useCORS: true, windowWidth: 794, width: 794, height: 1123, scrollY: 0, scrollX: 0 },
-                    jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' } 
-                };
-                html2pdf().set(opt).from(clone).save().then(() => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                }).catch(err => {
-                    if(document.body.contains(wrapper)) document.body.removeChild(wrapper);
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                });
-            }, 150);
-        }
+        // 2. Le pedimos a Vercel que fabrique el PDF
+        const response = await fetch('/api/generar-pdf', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error("Fallo en la comunicación con el servidor central.");
+
+        // 3. Recibimos el archivo digital y forzamos la descarga
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Certificado_NovaRegistry_${payload.id}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error(error);
+        alert("Aviso: Nuestros servidores están procesando mucha demanda. Inténtelo de nuevo en unos segundos.");
+    } finally {
+        // Restauramos el botón a su estado normal
+        btn.innerHTML = originalText;
+        btn.style.pointerEvents = 'auto';
+    }
+}
 
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
         function showSection(sectionId) {
