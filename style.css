@@ -1,4 +1,4 @@
- <style>
+
         :root {
             --bg-deep: #02040a;
             --bg-nebula: radial-gradient(circle at 50% 0%, #1a0b2e 0%, #02040a 60%);
@@ -247,4 +247,4 @@
             transition: transform 2s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
             border-radius: 2px 2px 0 0;
         }
-    </style>
+  
