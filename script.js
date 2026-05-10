@@ -24,7 +24,8 @@ function showToast(message, type = 'success') {
 // --- GESTIÓN DE COOKIES Y URL AUTOMÁTICA ---
 document.addEventListener("DOMContentLoaded", () => {
     if (!localStorage.getItem("cookiesAccepted")) {
-        document.getElementById("cookieBanner").style.display = "flex";
+        const banner = document.getElementById("cookieBanner");
+        if (banner) banner.style.display = "flex";
     }
 
     // Detector del QR
@@ -41,7 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function acceptCookies() {
     localStorage.setItem("cookiesAccepted", "true");
-    document.getElementById("cookieBanner").style.display = "none";
+    const banner = document.getElementById("cookieBanner");
+    if (banner) banner.style.display = "none";
 }
 
 const legalTexts = {
@@ -189,7 +191,7 @@ window.addEventListener('mousemove', (e) => {
 
 function initBackgroundSky() {
     canvas = document.getElementById('skyCanvas');
-    if (!canvas) return; // Si no encuentra el canvas aún, se detiene para no dar error
+    if (!canvas) return; 
     
     ctx = canvas.getContext('2d');
     canvasInitialized = true; 
@@ -245,7 +247,7 @@ function showSection(sectionId) {
     if(sectionId === 'home') document.getElementById('link-home').classList.add('active-link');
     if(sectionId === 'firmamento') {
         document.getElementById('link-firm').classList.add('active-link');
-        if(!canvasInitialized) initBackgroundSky(); // Aquí se inicializa seguro
+        if(!canvasInitialized) initBackgroundSky();
     }
     if(sectionId === 'mystar') document.getElementById('link-mystar').classList.add('active-link');
     if(sectionId === 'ia-locator') document.getElementById('link-ia').classList.add('active-link');
@@ -328,6 +330,7 @@ function openPayment(packageName) {
                     };
 
                     await db.collection("estrellas").doc(newId).set(starData);
+
                     overlay.style.display = 'none';
                     showToast("¡Estrella registrada con éxito! Código: " + newId, "success");
                     
@@ -336,6 +339,7 @@ function openPayment(packageName) {
 
                 } catch (e) {
                     overlay.style.display = 'none';
+                    console.error("Error al guardar:", e);
                     showToast("Error al conectar con la base de datos.", "error");
                 }
             }
@@ -544,4 +548,3 @@ async function loadAdminDashboard() {
         tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;">No hay ventas.</td></tr>';
     } catch (e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
 }
-        }
