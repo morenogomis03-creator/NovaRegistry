@@ -21,7 +21,8 @@
     <meta name="twitter:description" content="Inmortaliza tu legado. Registra una estrella oficial a tu nombre y obtén las coordenadas exactas.">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=1200">
 
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23d4af37' d='M256 0l54.8 153.2L464 168.5l-117.4 101 36.4 150-127-75.5-127 75.5 36.4-150L48 168.5l153.2-15.3L256 0z'/></svg>">
+    <link rel="icon" type="image/png" href="favicon.png">
+    
     <meta name="theme-color" content="#02040a">
 
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
@@ -35,17 +36,11 @@
     <script src="https://www.paypal.com/sdk/js?client-id=AYOZLNzAoAg4ce1rEOGAB3lPDZG7_yqRzTcL1oqlddSrIkwauGItQIHzSbUelBnEOe-ByRZFfnOLqsbn&currency=EUR"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
 </head>
 
-    <div id="toast-container" class="toast-container"></div>
-    
-    <script src="script.js"></script>
-    
-</body>
-</html>
-    
 <body>
+    <div id="toast-container" class="toast-container"></div>
+
     <nav>
         <div class="logo" onclick="handleLogoClick()"><i class="fa-solid fa-star"></i> NovaRegistry</div>
         <button class="mobile-menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
@@ -69,7 +64,7 @@
             </div>
         </section>
 
-       <section id="firmamento">
+        <section id="firmamento">
             <div class="registry-layout">
                 <canvas id="skyCanvas"></canvas>
                 
@@ -82,52 +77,50 @@
                         <input type="text" id="inputStarName" placeholder="Ej: Mi Legado Eterno" autocomplete="off">
                     </div>
 
-                   <div class="packages-grid">
-    <div class="pack-card">
-        <div class="pack-icon"><i class="fa-solid fa-cloud-moon"></i></div>
-        <div class="pack-title">Estrella Digital</div>
-        <div class="pack-price">20.00 €</div>
-        <ul class="pack-features">
-            <li><i class="fa-solid fa-star"></i> <strong>Soberanía Digital:</strong> Inscripción inmediata en el Registro Patrimonial Nova.</li>
-            <li><i class="fa-solid fa-certificate"></i> <strong>Título de Propiedad:</strong> Diploma oficial en alta resolución listo para imprimir.</li>
-            <li><i class="fa-solid fa-microchip"></i> <strong>IA Tracker:</strong> Acceso ilimitado a nuestra telemetría satelital para localizarla.</li>
-        </ul>
-        <button class="btn-solid" onclick="openPayment('Estrella Digital')">Reclamar mi Estrella</button>
-    </div>
-    
-    <div class="pack-card premium">
-        <div class="pack-badge">EL MÁS ETERNO</div>
-        <div class="pack-icon"><i class="fa-solid fa-scroll"></i></div>
-        <div class="pack-title">Paquete Físico Premium</div>
-        <div class="pack-price">40.00 €</div>
-        <ul class="pack-features">
-            <li><i class="fa-solid fa-check"></i> <strong>El Legado en tus Manos:</strong> Todo lo incluido en el Pack Digital.</li>
-            <li><i class="fa-solid fa-scroll"></i> <strong>Pergamino Ancestral:</strong> Diploma físico impreso en papel de alto gramaje con sello seco.</li>
-            <li><i class="fa-solid fa-envelope-open-text"></i> <strong>Carpeta de Gala:</strong> Estuche de presentación de lujo para su custodia.</li>
-        </ul>
-        <button class="btn-solid btn-gold" onclick="openPayment('Paquete Físico Premium')">Poseer la Eternidad</button>
-    </div>
-    
-    <div class="pack-card">
-        <div class="pack-icon"><i class="fa-solid fa-crown"></i></div>
-        <div class="pack-title">Pack Supernova VIP</div>
-        <div class="pack-price">60.00 €</div>
-        <ul class="pack-features">
-            <li><i class="fa-solid fa-check"></i> <strong>Consagración Total:</strong> La experiencia de registro estelar definitiva.</li>
-            <li><i class="fa-solid fa-gem"></i> <strong>Enmarcado Artesanal:</strong> Tu título presentado en marco de madera y cristal de galería.</li>
-            <li><i class="fa-solid fa-truck-fast"></i> <strong>Prioridad Galáctica:</strong> Envío exprés certificado y seguimiento satelital VIP.</li>
-        </ul>
-        <button class="btn-solid" onclick="openPayment('Pack Supernova VIP')">Consagrar Legado</button>
-    </div>
-</div>
+                    <div class="packages-grid">
+                        <div class="pack-card">
+                            <div class="pack-icon"><i class="fa-solid fa-cloud-moon"></i></div>
+                            <div class="pack-title">Estrella Digital</div>
+                            <div class="pack-price">20.00 €</div>
+                            <ul class="pack-features">
+                                <li><i class="fa-solid fa-star"></i> <strong>Soberanía Digital:</strong> Inscripción inmediata en el Registro Patrimonial Nova.</li>
+                                <li><i class="fa-solid fa-certificate"></i> <strong>Título de Propiedad:</strong> Diploma oficial en alta resolución listo para imprimir.</li>
+                                <li><i class="fa-solid fa-microchip"></i> <strong>IA Tracker:</strong> Acceso ilimitado a nuestra telemetría satelital para localizarla.</li>
+                            </ul>
+                            <button class="btn-solid" onclick="openPayment('Estrella Digital')">Reclamar mi Estrella</button>
+                        </div>
+                        
+                        <div class="pack-card premium">
+                            <div class="pack-badge">EL MÁS ETERNO</div>
+                            <div class="pack-icon"><i class="fa-solid fa-scroll"></i></div>
+                            <div class="pack-title">Paquete Físico Premium</div>
+                            <div class="pack-price">40.00 €</div>
+                            <ul class="pack-features">
+                                <li><i class="fa-solid fa-check"></i> <strong>El Legado en tus Manos:</strong> Todo lo incluido en el Pack Digital.</li>
+                                <li><i class="fa-solid fa-scroll"></i> <strong>Pergamino Ancestral:</strong> Diploma físico impreso en papel de alto gramaje con sello seco.</li>
+                                <li><i class="fa-solid fa-envelope-open-text"></i> <strong>Carpeta de Gala:</strong> Estuche de presentación de lujo para su custodia.</li>
+                            </ul>
+                            <button class="btn-solid btn-gold" onclick="openPayment('Paquete Físico Premium')">Poseer la Eternidad</button>
+                        </div>
+                        
+                        <div class="pack-card">
+                            <div class="pack-icon"><i class="fa-solid fa-crown"></i></div>
+                            <div class="pack-title">Pack Supernova VIP</div>
+                            <div class="pack-price">60.00 €</div>
+                            <ul class="pack-features">
+                                <li><i class="fa-solid fa-check"></i> <strong>Consagración Total:</strong> La experiencia de registro estelar definitiva.</li>
+                                <li><i class="fa-solid fa-gem"></i> <strong>Enmarcado Artesanal:</strong> Tu título presentado en marco de madera y cristal de galería.</li>
+                                <li><i class="fa-solid fa-truck-fast"></i> <strong>Prioridad Galáctica:</strong> Envío exprés certificado y seguimiento satelital VIP.</li>
+                            </ul>
+                            <button class="btn-solid" onclick="openPayment('Pack Supernova VIP')">Consagrar Legado</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <div class="social-proof">
             <div class="marquee">
-                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"María y Juan"</strong> registrada (Hace 2h)</span>
-                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Legado Familiar"</strong> registrada (Hace 5h)</span>
-                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Paquete Físico Premium asignado a <strong>"Madrid"</strong> (Hace 12h)</span>
-                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Mi Abuelo"</strong> registrada (Hace 14h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"María y Juan"</strong> registrada (Hace 2h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Legado Familiar"</strong> registrada (Hace 5h)</span>
                 <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Paquete Físico Premium asignado a <strong>"Madrid"</strong> (Hace 12h)</span>
@@ -315,6 +308,5 @@
     </div>
 
     <script src="script.js"></script>
-    
 </body>
 </html>
