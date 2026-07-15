@@ -70,7 +70,8 @@
                     <p>Registra una estrella real con un certificado oficial personalizado de alta calidad. Un detalle inolvidable y eterno.</p>
                     
                     <!-- Botón de Llamada a la Acción conectado a tu JS -->
-                    <button class="cta-button" style="border: none; cursor: pointer;" onclick="showSection('firmamento'); window.scrollTo(0, 0); setTimeout(() => { document.getElementById('inputStarName').focus(); }, 100);">Personalizar mi estrella</button>
+                   <!-- Botón de Llamada a la Acción con Auto-Scroll al centro de la pantalla -->
+<button class="cta-button" style="border: none; cursor: pointer;" onclick="showSection('firmamento'); setTimeout(() => { document.querySelector('.registry-content').scrollIntoView({behavior: 'smooth', block: 'center'}); document.getElementById('inputStarName').focus(); }, 150);">Personalizar mi estrella</button>
                     
                     <!-- Gatillos de Confianza Profesionales (FontAwesome en lugar de emojis) -->
                     <div class="trust-triggers">
