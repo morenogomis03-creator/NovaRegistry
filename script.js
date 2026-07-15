@@ -1,67 +1,88 @@
-// --- SISTEMA DE NOTIFICACIONES TOAST ---
-function showToast(message, type = 'success') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
-
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    
-    let icon = 'fa-info-circle';
-    if (type === 'success') icon = 'fa-check-circle';
-    if (type === 'error') icon = 'fa-exclamation-circle';
-    if (type === 'warning') icon = 'fa-exclamation-triangle';
-
-    toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
-    container.appendChild(toast);
-
-    setTimeout(() => toast.classList.add('show'), 10);
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400); 
-    }, 3500);
-}
-
-// --- GESTIÓN DE COOKIES Y URL AUTOMÁTICA ---
+// --- INICIALIZACIÓN, COOKIES Y FASE 1 (CRO) ---
 document.addEventListener("DOMContentLoaded", () => {
+    // 1. Gestión de Cookies
     if (!localStorage.getItem("cookiesAccepted")) {
-        const banner = document.getElementById("cookieBanner");
-        if (banner) banner.style.display = "flex";
+        document.getElementById("cookieBanner").style.display = "flex";
     }
 
-    // Detector del QR
-    const urlParams = new URLSearchParams(window.location.search);
-    const starIdFromUrl = urlParams.get('verify');
-    if (starIdFromUrl) {
-        const inputField = document.getElementById('myStarInput');
-        if (inputField) {
-            inputField.value = starIdFromUrl;
-            loadMyStar(); 
-        }
+    // 2. FASE 1: LÓGICA DEL BUSCADOR (Micro-compromiso)
+    const btnBuscar = document.getElementById('btn-buscar-estrella'); 
+    if (btnBuscar) {
+        btnBuscar.addEventListener('click', function(e) {
+            const inputNombre = document.getElementById('nombre-estrella') || document.getElementById('inputStarName'); 
+            
+            if(inputNombre && inputNombre.value.trim() === '') {
+                alert('Por favor, introduce el nombre del legado astronómico antes de continuar.');
+                return;
+            }
+
+            e.preventDefault(); 
+
+            const loader = document.getElementById('loader-estrella');
+            if(loader) {
+                this.style.display = 'none'; 
+                loader.style.display = 'block'; 
+
+                setTimeout(() => {
+                    loader.innerHTML = '<p style="color: #00ff66; font-weight: bold; font-family: \'Montserrat\', sans-serif;">✨ ¡Sector espacial localizado y reservado temporalmente! Elige tu método de consagración abajo.</p>';
+                }, 2500); 
+            }
+        });
+    }
+
+    // 3. FASE 1: PRUEBA SOCIAL (Notificaciones rotativas)
+    const comprasRecientes = [
+        "Estrella 'María y Juan' registrada (Hace 2h)",
+        "Paquete Físico Premium asignado a 'Madrid' (Hace 12h)",
+        "Estrella 'Legado Familiar' registrada (Hace 5h)",
+        "Pack Supernova VIP reservado (Hace 1h)",
+        "Estrella 'Abuelo Antonio' registrada (Hace 20 min)",
+        "Paquete Físico Premium asignado a 'Valencia' (Hace 3h)"
+    ];
+
+    const toast = document.getElementById('toast-notificacion');
+
+    function mostrarNotificacion() {
+        if(!toast) return;
+        const aleatorio = Math.floor(Math.random() * comprasRecientes.length);
+        toast.innerHTML = `<strong>🌟 Nuevo Registro:</strong><br>${comprasRecientes[aleatorio]}`;
+        
+        toast.classList.add('mostrar');
+        
+        setTimeout(() => {
+            toast.classList.remove('mostrar');
+        }, 4500);
+    }
+
+    if(toast) {
+        setTimeout(() => {
+            mostrarNotificacion();
+            setInterval(mostrarNotificacion, 28000);
+        }, 8000); 
     }
 });
 
 function acceptCookies() {
     localStorage.setItem("cookiesAccepted", "true");
-    const banner = document.getElementById("cookieBanner");
-    if (banner) banner.style.display = "none";
+    document.getElementById("cookieBanner").style.display = "none";
 }
 
 const legalTexts = {
     'Aviso Legal': `
         <strong style="color: var(--gold-main);">1. Datos Identificativos</strong><br>
-        En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE), le informamos que este sitio web es operado por TU NOMBRE/EMPRESA, con NIF/CIF TU_NIF, domicilio en TU_DIRECCIÓN.<br><br>
+        En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE), le informamos que este sitio web es operado por TU NOMBRE/EMPRESA, con NIF/CIF TU_NIF, domicilio en TU_DIRECCIÓN. Contacto: TU_EMAIL.<br><br>
         <strong style="color: var(--gold-main);">2. Naturaleza del Servicio</strong><br>
-        NovaRegistry ofrece un servicio de archivo astrométrico de carácter conmemorativo. Este servicio <strong>NO</strong> cuenta con reconocimiento oficial por parte de la Unión Astronómica Internacional (IAU).
+        NovaRegistry ofrece un servicio de archivo astrométrico de carácter conmemorativo. Los nombres asignados a los cuerpos celestes a través de nuestra plataforma se archivan en nuestra base de datos privada. Este servicio <strong>NO</strong> cuenta con reconocimiento oficial por parte de la Unión Astronómica Internacional (IAU).
     `,
     'Política de Privacidad': `
         <strong style="color: var(--gold-main);">1. Responsable del Tratamiento</strong><br>
-        En cumplimiento con el Reglamento (UE) 2016/679 (RGPD), protegemos sus datos.<br><br>
+        En cumplimiento con el Reglamento (UE) 2016/679 (RGPD), le informamos que TU NOMBRE/EMPRESA es el responsable del tratamiento.<br><br>
         <strong style="color: var(--gold-main);">2. Cookies y Análisis</strong><br>
         Utilizamos cookies de terceros (como PayPal) estrictamente necesarias para procesar pagos seguros en la plataforma.
     `,
     'Términos y Condiciones': `
         <strong style="color: var(--gold-main);">1. Objeto y Desistimiento</strong><br>
-        De acuerdo con el artículo 103 de la Ley General para la Defensa de los Consumidores y Usuarios, el derecho de desistimiento <strong>NO es aplicable</strong> a bienes confeccionados conforme a las especificaciones del consumidor.
+        De acuerdo con el artículo 103 de la Ley General para la Defensa de los Consumidores y Usuarios, el derecho de desistimiento <strong>NO es aplicable</strong> a bienes confeccionados conforme a las especificaciones del consumidor (artículos personalizados). No se admiten devoluciones una vez adjudicado el certificado.
     `
 };
 
@@ -69,10 +90,6 @@ function openLegalModal(type) {
     document.getElementById('legalTitle').innerText = type;
     document.getElementById('legalContent').innerHTML = legalTexts[type];
     document.getElementById('legalModal').style.display = 'flex';
-}
-
-function closePaymentModal() {
-    document.getElementById('paymentModal').style.display = 'none';
 }
 
 // --- FIREBASE INICIALIZACIÓN ---
@@ -116,11 +133,11 @@ function loginAdmin() {
     let p = document.getElementById('admP').value;
     auth.signInWithEmailAndPassword(e, p).then(() => {
         isAdminActive = true;
-        showToast("🚀 MODO ADMIN ACTIVADO.", "success");
+        alert("🚀 MODO ADMIN ACTIVADO.");
         document.getElementById('nav-admin').style.display = 'inline-block';
         document.getElementById('adminLogin').remove();
         loadAdminDashboard();
-    }).catch(() => showToast("Acceso denegado. Credenciales inválidas.", "error"));
+    }).catch(() => alert("Acceso denegado."));
 }
 
 // --- GENERADOR DE PDF ---
@@ -160,26 +177,55 @@ async function downloadPDF() {
             margin: 0,
             filename: `Certificado_NovaRegistry_${starCode}.pdf`,
             image: { type: 'jpeg', quality: 1.0 },
-            html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true, scrollY: 0, windowWidth: 794 },
-            jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait', hotfixes: ['px_scaling'] }
+            html2canvas: { 
+                scale: 2,           
+                useCORS: true,      
+                logging: false,
+                letterRendering: true,
+                scrollY: 0,         
+                windowWidth: 794    
+            },
+            jsPDF: { 
+                unit: 'px', 
+                format: [794, 1123], 
+                orientation: 'portrait',
+                hotfixes: ['px_scaling'] 
+            }
         };
 
         await html2pdf().set(options).from(clone).save();
         document.body.removeChild(container);
         btn.innerHTML = originalText;
-        showToast("Certificado PDF descargado correctamente.", "success");
 
     } catch (error) {
-        showToast("Error al generar el archivo PDF. Inténtalo de nuevo.", "error");
+        console.error("Error crítico en PDF:", error);
+        alert("Hubo un error al generar el archivo. Por favor, inténtelo de nuevo.");
         btn.innerHTML = "Reintentar";
     } finally {
         btn.style.pointerEvents = 'auto';
     }
 }
 
-// --- SISTEMA VR / PARALLAX BLINDADO ---
-let canvas;
-let ctx;
+function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
+function showSection(sectionId) {
+    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active-link'));
+    document.getElementById(sectionId).classList.add('active');
+    document.querySelector('.nav-links').classList.remove('active');
+    
+    if(sectionId === 'home') document.getElementById('link-home').classList.add('active-link');
+    if(sectionId === 'firmamento') {
+        document.getElementById('link-firm').classList.add('active-link');
+        if(!canvasInitialized) initBackgroundSky();
+    }
+    if(sectionId === 'mystar') document.getElementById('link-mystar').classList.add('active-link');
+    if(sectionId === 'ia-locator') document.getElementById('link-ia').classList.add('active-link');
+    if(sectionId === 'admin-panel' && document.getElementById('link-admin')) document.getElementById('link-admin').classList.add('active-link');
+}
+
+// --- SISTEMA VR / PARALLAX ---
+const canvas = document.getElementById('skyCanvas');
+const ctx = canvas.getContext('2d');
 let backgroundStars = [];
 let canvasInitialized = false;
 let rotAngle = 0, targetOffsetX = 0, targetOffsetY = 0, currentOffsetX = 0, currentOffsetY = 0;
@@ -190,33 +236,17 @@ window.addEventListener('mousemove', (e) => {
 });
 
 function initBackgroundSky() {
-    canvas = document.getElementById('skyCanvas');
-    if (!canvas) return; 
-    
-    ctx = canvas.getContext('2d');
-    canvasInitialized = true; 
-    resizeCanvas(); 
-    window.addEventListener('resize', resizeCanvas);
-    
+    canvasInitialized = true; resizeCanvas(); window.addEventListener('resize', resizeCanvas);
     const spectralColors = ['#9bb0ff', '#aabfff', '#ffffff', '#ffebca', '#ffcc6f', '#ff9632', '#ff2a00'];
-    backgroundStars = [];
     for(let i=0; i<800; i++) {
-        let size = Math.random() * 2 + 0.2; 
-        let color = spectralColors[Math.floor(Math.random() * spectralColors.length)];
+        let size = Math.random() * 2 + 0.2; let color = spectralColors[Math.floor(Math.random() * spectralColors.length)];
         backgroundStars.push({ x: Math.random() * 3000 - 1500, y: Math.random() * 3000 - 1500, z: Math.random() * 2 + 0.1, size: size, baseColor: color, alpha: Math.random() * 0.8 + 0.2 });
     }
     renderAmbientSky();
 }
 
-function resizeCanvas() { 
-    if(canvas && canvas.parentElement) { 
-        canvas.width = canvas.parentElement.clientWidth; 
-        canvas.height = canvas.parentElement.clientHeight; 
-    } 
-}
-
+function resizeCanvas() { if(canvas.parentElement) { canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight; } }
 function renderAmbientSky() {
-    if (!ctx || !canvas) return;
     ctx.fillStyle = 'rgba(1, 2, 5, 0.4)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
     const cx = canvas.width / 2; const cy = canvas.height / 2;
     rotAngle += 0.00015; const sinA = Math.sin(rotAngle); const cosA = Math.cos(rotAngle);
@@ -237,23 +267,6 @@ function renderAmbientSky() {
     requestAnimationFrame(renderAmbientSky);
 }
 
-function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
-function showSection(sectionId) {
-    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-    document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active-link'));
-    document.getElementById(sectionId).classList.add('active');
-    document.querySelector('.nav-links').classList.remove('active');
-    
-    if(sectionId === 'home') document.getElementById('link-home').classList.add('active-link');
-    if(sectionId === 'firmamento') {
-        document.getElementById('link-firm').classList.add('active-link');
-        if(!canvasInitialized) initBackgroundSky();
-    }
-    if(sectionId === 'mystar') document.getElementById('link-mystar').classList.add('active-link');
-    if(sectionId === 'ia-locator') document.getElementById('link-ia').classList.add('active-link');
-}
-
-// --- LÓGICA DE PAGOS ---
 let checkoutPackage = "";
 let starNamePending = "";
 let paypalButtonsRendered = false;
@@ -263,17 +276,16 @@ function openPayment(packageName) {
     starNamePending = rawInput.replace(/[^\w\s\u00C0-\u024F]/gu, '').trim();
     
     if(starNamePending === "") { 
-        showToast("Por favor, introduce el nombre oficial para la estrella.", "warning"); 
+        alert("Por favor, introduce el nombre oficial para la estrella."); 
         return; 
     }
     
     checkoutPackage = packageName;
-
     const legalCheckbox = document.getElementById('legalConsent');
     if (legalCheckbox) legalCheckbox.checked = false; 
 
     const formEnvio = document.getElementById('shipping-form');
-    formEnvio.style.display = (packageName.includes("Premium") || packageName.includes("VIP")) ? 'block' : 'none';
+    formEnvio.style.display = (packageName.includes("Herencia") || packageName.includes("Soberanía") || packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
 
     document.getElementById('checkoutDesc').innerText = "Registro: " + packageName;
     document.getElementById('paymentModal').style.display = 'flex';
@@ -285,127 +297,165 @@ function openPayment(packageName) {
         const adminBtn = document.createElement('button');
         adminBtn.id = 'admin-bypass-btn';
         adminBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> REGISTRO GRATUITO (ADMIN)';
-        adminBtn.style = "width:100%; background:#2ecc71; color:black; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:20px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);";
+        adminBtn.style = "width:100%; background:#2ecc71; color:black; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:20px; font-size:1rem; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);";
         
         const paypalContainer = document.getElementById('paypal-button-container');
         paypalContainer.parentNode.insertBefore(adminBtn, paypalContainer);
 
         adminBtn.onclick = async () => {
             if(!document.getElementById('legalConsent').checked) {
-                showToast("Debes aceptar los términos de venta para proceder.", "warning");
+                alert("Debes marcar la casilla de términos para proceder con el registro interno.");
                 return;
             }
-
             if(confirm("¿Confirmar alta directa para '" + starNamePending + "'?")) {
-                const overlay = document.getElementById('processingOverlay');
-                overlay.style.display = 'flex';
-                document.getElementById('paymentModal').style.display = 'none';
-
-                try {
-                    const newId = "NOVA-" + Math.floor(10000 + Math.random() * 90000);
-                    const fecha = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
-
-                    const mitologias = [
-                        "Conocida como el faro eterno, esta estrella ha guiado a exploradores a través de los siglos.",
-                        "Una joya radiante en el tejido cósmico que simboliza la sabiduría y la inmortalidad.",
-                        "Dice la leyenda que esta estrella nació de un suspiro divino, destinada a brillar perpetuamente."
-                    ];
-                    const loreSeleccionado = mitologias[Math.floor(Math.random() * mitologias.length)];
-
-                    const starData = {
-                        id: newId,
-                        name: starNamePending.toUpperCase(),
-                        date: fecha,
-                        pack: checkoutPackage,
-                        official: "HD " + Math.floor(Math.random() * 200000),
-                        ra: (Math.floor(Math.random() * 24)) + "h " + (Math.floor(Math.random() * 60)) + "m " + (Math.floor(Math.random() * 60)) + "s",
-                        dec: (Math.random() > 0.5 ? "+" : "-") + Math.floor(Math.random() * 90) + "° " + Math.floor(Math.random() * 60) + "'",
-                        distance: (Math.floor(Math.random() * 1000) + 10) + " A.L.",
-                        spectral: "A0 V",
-                        temp: (Math.floor(Math.random() * 5000) + 5000) + " K",
-                        appMag: (Math.random() * 5 + 1).toFixed(2),
-                        lum: Math.floor(Math.random() * 100) + " Soles",
-                        lore: loreSeleccionado,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    };
-
-                    await db.collection("estrellas").doc(newId).set(starData);
-
-                    overlay.style.display = 'none';
-                    showToast("¡Estrella registrada con éxito! Código: " + newId, "success");
-                    
-                    document.getElementById('myStarInput').value = newId;
-                    loadMyStar(); 
-
-                } catch (e) {
-                    overlay.style.display = 'none';
-                    console.error("Error al guardar:", e);
-                    showToast("Error al conectar con la base de datos.", "error");
-                }
+                ejecutarRegistro(null); // Llama a la nueva función centralizada de registro
             }
         };
     }
 
+    // --- INTEGRACIÓN NATIVA DE PAYPAL (CLIENT-SIDE) ---
     if (!paypalButtonsRendered) {
         paypal.Buttons({
             style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
+            
             onClick: (data, actions) => {
                 if(!document.getElementById('legalConsent').checked) {
-                    showToast("Por favor, acepta los términos de venta.", "warning");
+                    alert("Por favor, acepta los términos de venta.");
                     return actions.reject();
+                }
+
+                const formEnvio = document.getElementById('shipping-form');
+                if (formEnvio.style.display === 'block') {
+                    if (!document.getElementById('shipName').value.trim() || 
+                        !document.getElementById('shipAddress').value.trim()) {
+                        alert("Por favor, rellena los datos de envío completo.");
+                        return actions.reject();
+                    }
                 }
                 return actions.resolve();
             },
-            createOrder: async function(data, actions) { 
-                try {
-                    const respuesta = await fetch('/api/crear-orden', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ paqueteId: checkoutPackage })
-                    });
-                    const orden = await respuesta.json();
-                    if (!respuesta.ok) throw new Error("Error en servidor");
-                    return orden.id; 
-                } catch (err) {
-                    showToast("Error en la conexión con PayPal.", "error");
-                }
+
+            // Creamos la orden directamente en el navegador, sin necesidad de backend
+            createOrder: function(data, actions) { 
+                const precios = {
+                    'Estrella Digital': '20.00',
+                    'Paquete Físico Premium': '40.00',
+                    'Pack Supernova VIP': '60.00'
+                };
+                
+                const precioAsignado = precios[checkoutPackage] || '20.00';
+
+                return actions.order.create({
+                    purchase_units: [{
+                        description: `NovaRegistry - ${checkoutPackage}`,
+                        amount: {
+                            currency_code: 'EUR',
+                            value: precioAsignado
+                        }
+                    }]
+                });
             },
+            
+            // Cuando el pago se aprueba, guardamos directo en Firebase
             onApprove: async function(data, actions) {
                 const details = await actions.order.capture();
-                const overlay = document.getElementById('processingOverlay');
-                overlay.style.display = 'flex';
-                document.getElementById('paymentModal').style.display = 'none';
-
-                const resFirebase = await fetch('/api/guardar-estrella', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        paqueteId: checkoutPackage,
-                        starName: starNamePending,
-                        payerName: details.payer.name.given_name,
-                        paypalTransactionId: details.id
-                    })
-                });
-                const resultado = await resFirebase.json();
-                overlay.style.display = 'none';
-                if(resultado.success) {
-                    showToast("Pago completado con éxito.", "success");
-                    document.getElementById('myStarInput').value = resultado.novaCode;
-                    loadMyStar();
-                }
+                ejecutarRegistro(details); // Llama a la función centralizada
             }
         }).render('#paypal-button-container');
         paypalButtonsRendered = true;
     }
 }
 
-// === BUSCADOR (CERTIFICADO Y QR) ===
+// Función unificada para guardar en Firebase (sirve para Admin y PayPal)
+async function ejecutarRegistro(paypalDetails) {
+    const overlay = document.getElementById('processingOverlay');
+    overlay.style.display = 'flex';
+    document.getElementById('paymentModal').style.display = 'none';
+
+    try {
+        const newId = "NOVA-" + Math.floor(10000 + Math.random() * 90000);
+        const fecha = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+
+        const mitologias = [
+            "Conocida como el faro eterno, esta estrella ha guiado a exploradores a través de los siglos, representando la luz constante en el cosmos.",
+            "Una joya radiante en el tejido cósmico que simboliza la sabiduría y la inmortalidad en las leyendas de antiguas civilizaciones.",
+            "Dice la leyenda que esta estrella nació de un suspiro divino, destinada a brillar perpetuamente como guardiana de los sueños.",
+            "Situada en las coordenadas sagradas, es el símbolo de la esperanza para aquellos que buscan su destino bajo el manto de la noche.",
+            "Una gigante de luz pura cuya energía primordial ha moldeado el destino de las constelaciones desde el inicio de los tiempos."
+        ];
+        const loreSeleccionado = mitologias[Math.floor(Math.random() * mitologias.length)];
+
+        // Capturar datos de envío si es físico
+        const formEnvio = document.getElementById('shipping-form');
+        let datosEnvio = null;
+        if (formEnvio.style.display === 'block') {
+            datosEnvio = {
+                name: document.getElementById('shipName').value,
+                address: document.getElementById('shipAddress').value,
+                city: document.getElementById('shipCity').value,
+                zip: document.getElementById('shipZip').value,
+                phone: document.getElementById('shipPhone').value
+            };
+        }
+
+        const starData = {
+            id: newId,
+            name: starNamePending.toUpperCase(),
+            date: fecha,
+            pack: checkoutPackage,
+            official: "HD " + Math.floor(Math.random() * 200000),
+            ra: (Math.floor(Math.random() * 24)) + "h " + (Math.floor(Math.random() * 60)) + "m " + (Math.floor(Math.random() * 60)) + "s",
+            dec: (Math.random() > 0.5 ? "+" : "-") + Math.floor(Math.random() * 90) + "° " + Math.floor(Math.random() * 60) + "'",
+            distance: (Math.floor(Math.random() * 1000) + 10) + " A.L.",
+            spectral: "A0 V",
+            temp: (Math.floor(Math.random() * 5000) + 5000) + " K",
+            appMag: (Math.random() * 5 + 1).toFixed(2),
+            lum: Math.floor(Math.random() * 100) + " Soles",
+            lore: loreSeleccionado,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            shippingInfo: datosEnvio
+        };
+
+        // Si viene de PayPal, añadimos datos de la transacción
+        if (paypalDetails) {
+            starData.payerName = paypalDetails.payer.name.given_name;
+            starData.paypalTransactionId = paypalDetails.id;
+            starData.expectedAmount = paypalDetails.purchase_units[0].amount.value;
+        } else {
+            starData.payerName = "Admin";
+            starData.expectedAmount = "0.00";
+        }
+
+        // GUARDADO DIRECTO EN FIREBASE DESDE FRONTEND
+        await db.collection("estrellas").doc(newId).set(starData);
+
+        overlay.style.display = 'none';
+        
+        // Limpiar el formulario de envío por si hace otra compra
+        document.getElementById('shipName').value = '';
+        document.getElementById('shipAddress').value = '';
+        document.getElementById('shipCity').value = '';
+        document.getElementById('shipZip').value = '';
+        document.getElementById('shipPhone').value = '';
+
+        // Cargar el certificado
+        document.getElementById('myStarInput').value = newId;
+        loadMyStar(); 
+
+    } catch (e) {
+        overlay.style.display = 'none';
+        console.error("Error al guardar:", e);
+        alert("Error al conectar con la base de datos: " + e.message);
+    }
+}
+
+// === FUNCIÓN DEL BUSCADOR (IA TRACKER) ===
 async function loadMyStar() {
     const inputField = document.getElementById('myStarInput');
     if(!inputField) return;
     
     const input = inputField.value.toUpperCase().replace(/\s+/g, '');
-    if(!input) return showToast("Introduce un código NOVA.", "warning");
+    if(!input) return alert("Introduce un código NOVA.");
 
     try {
         const docRef = await db.collection("estrellas").doc(input).get();
@@ -432,36 +482,17 @@ async function loadMyStar() {
             document.getElementById('certLore').innerText = star.lore || "";
 
             const qrImage = document.getElementById('certQR');
-            if (qrImage) {
-                const currentDomain = window.location.origin;
-                const qrUrl = `${currentDomain}/?verify=${star.id}`;
-                qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrUrl)}`;
-                qrImage.style.display = 'block';
-            }
+            qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent("https://novaregistry.net/?verify=" + star.id)}`;
 
-            showToast("Certificado cargado correctamente.", "success");
         } else {
-            showToast('Código no encontrado en nuestros archivos.', "error");
+            alert('Código no encontrado.');
         }
     } catch (error) {
-        showToast("Fallo al conectar con la base de datos.", "error");
+        console.error("Error buscando estrella:", error);
+        alert("Fallo al conectar con la base de datos.");
     }
 }
-
-// === MATEMÁTICAS IA TRACKER ===
-function parseCoordToDeg(coordStr, isRA) {
-    if (!coordStr) return 0;
-    let nums = coordStr.match(/-?\d+\.?\d*/g);
-    if (!nums || nums.length === 0) return 0;
-    let deg = parseFloat(nums[0]);
-    let min = nums.length > 1 ? parseFloat(nums[1]) : 0;
-    let sec = nums.length > 2 ? parseFloat(nums[2]) : 0;
-    let total = Math.abs(deg) + (min / 60) + (sec / 3600);
-    if (deg < 0 || coordStr.includes('-')) total = -total;
-    if (isRA) return total * 15; 
-    return total;
-}
-
+      
 function getAltAz(lat, lon, raDeg, decDeg) {
     let now = new Date();
     let d = Math.round((now.getTime() - new Date("2000-01-01T12:00:00Z").getTime()) / 86400000);
@@ -486,15 +517,14 @@ function getCardinalPoint(az) {
 async function triggerAILocator() {
     const input = document.getElementById('aiInput').value.toUpperCase().replace(/\s+/g, '');
     const outputArea = document.getElementById('aiOutput');
-    if(!input) { showToast("Ingrese un código de folio", "warning"); return; }
-    
-    outputArea.innerHTML = '<span class="ai-typing">> Obteniendo telemetría astrométrica...</span><br><span class="ai-typing">> Solicitando triangulación GPS...</span>';
+    if(!input) { outputArea.innerHTML = '<span style="color: red;">> ERROR: Ingrese un código de folio.</span>'; return; }
+    outputArea.innerHTML = '<span class="ai-typing">> Obteniendo telemetría astrométrica...</span><br><span class="ai-typing">> Solicitando triangulación GPS al dispositivo...</span>';
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => processTracking(input, position.coords.latitude, position.coords.longitude, outputArea),
             () => {
-                outputArea.innerHTML += '<br><span style="color: #ff9900;">> Ubicación denegada. Usando observatorio base...</span>';
+                outputArea.innerHTML += '<br><span style="color: #ff9900;">> Ubicación denegada. Usando observatorio base (Lat: 40.41, Lon: -3.70)...</span>';
                 processTracking(input, 40.4168, -3.7038, outputArea); 
             }
         );
@@ -509,21 +539,28 @@ async function processTracking(input, lat, lon, outputArea) {
             const raDeg = star.ra ? parseCoordToDeg(star.ra, true) : 0; 
             const decDeg = star.dec ? parseCoordToDeg(star.dec, false) : 0;
             const coords = getAltAz(lat, lon, raDeg, decDeg);
-            let visibilityStr = coords.alt > 0 ? `<span style="color: #00ff66;">Visible sobre horizonte (${coords.alt}°)</span>` : `<span style="color: #ff3366;">Bajo el horizonte (${coords.alt}°)</span>`;
+            let visibilityStr = coords.alt > 0 ? `<span style="color: #00ff66;">Visible sobre el horizonte (${coords.alt}°)</span>` : `<span style="color: #ff3366;">Bajo el horizonte (${coords.alt}°)</span>`;
             let cardinal = getCardinalPoint(coords.az);
 
             outputArea.innerHTML = `
-                <div style="color: #00ff66; margin-bottom: 15px; font-size: 1.1em;">> [ ÉXITO ] SEÑAL FIJADA</div>
-                <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                    <div style="margin-bottom: 5px;"><strong>Objetivo:</strong> <span style="color: #fff;">${star.name}</span></div>
-                    <div style="margin-bottom: 10px;"><strong>Observador:</strong> Lat ${lat.toFixed(2)}, Lon ${lon.toFixed(2)}</div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                <div style="color: #00ff66; margin-bottom: 15px; font-size: 1.1em;">> [ ÉXITO ] SEÑAL TELEMÉTRICA FIJADA</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                    <div style="margin-bottom: 5px;"><strong>Estrella Objetivo:</strong> <span style="color: #fff;">${star.name}</span></div>
+                    <div style="margin-bottom: 10px;"><strong>Observador Local:</strong> Lat ${lat.toFixed(2)}, Lon ${lon.toFixed(2)}</div>
+                    <div style="color: var(--gold-main);"><strong>Datos en Tiempo Real:</strong></div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; margin-bottom: 15px;">
                         <div>Elevación:<br><strong>${visibilityStr}</strong></div>
                         <div>Azimut Brújula:<br><strong>${coords.az}° (${cardinal})</strong></div>
                     </div>
+                    
                     <div class="radar-compass">
                         <div class="radar-needle" style="transform: translateX(-50%) rotate(${coords.az}deg);"></div>
                     </div>
+                    
+                </div>
+                <div style="color: var(--accent-blue); margin-top: 15px; font-size: 0.9em;">
+                    <strong>> 🛰️ ASISTENTE DE AVISTAMIENTO:</strong><br> 
+                    ${coords.alt > 0 ? `Abre la brújula de tu móvil y apunta hacia el <strong>${cardinal} (${coords.az}°)</strong>.` : `Tu estrella se encuentra oculta bajo la Tierra en este momento debido a la rotación.`}
                 </div>
             `;
         } else { outputArea.innerHTML = '<span style="color: red;">> [ ERROR 404 ] Código no existe.</span>'; }
@@ -540,11 +577,30 @@ async function loadAdminDashboard() {
         let rows = '';
         let docsArray = snapshot.docs.map(doc => doc.data()).reverse(); 
         docsArray.forEach(data => {
-            let ship = data.shipping ? `<strong style="color:#fff">${data.shipping.name}</strong><br>${data.shipping.city}` : "<span style='color: var(--text-muted);'>Digital</span>";
+            let ship = data.shippingInfo ? `<strong style="color:#fff">${data.shippingInfo.name}</strong><br>${data.shippingInfo.city}` : "<span style='color: var(--text-muted);'>Digital</span>";
             let priceTag = data.expectedAmount ? `<span style="color: #00ff66;">${data.expectedAmount} €</span>` : "-";
             let payPalTag = data.paypalTransactionId ? `<span style="font-family: monospace; font-size: 0.8rem; color: #aabfff;">${data.paypalTransactionId}</span>` : "-";
+            
             rows += `<tr><td>${data.date}</td><td style="color: var(--accent-blue); font-weight: bold;">${data.id}</td><td><strong>${priceTag}</strong></td><td>${payPalTag}</td><td>${data.payerName || "S/N"}</td><td><strong>${data.name}</strong><br><span style="font-size:0.75rem; color:#888;">${data.pack}</span></td><td>${ship}</td></tr>`;
         });
         tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;">No hay ventas.</td></tr>';
     } catch (e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
 }
+
+/* =========================================
+   FASE 2: TRÁFICO VIRAL (Lector de QR por URL)
+========================================= */
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const verifyCode = urlParams.get('verify');
+    
+    if (verifyCode) {
+        showSection('mystar');
+        const inputVerificar = document.getElementById('myStarInput');
+        if (inputVerificar) {
+            inputVerificar.value = verifyCode;
+            setTimeout(() => { loadMyStar(); }, 600);
+        }
+        window.history.replaceState({}, document.title, "/");
+    }
+});
