@@ -52,7 +52,6 @@
         <button class="mobile-menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
         <ul class="nav-links">
             <li><a href="#" id="link-home" class="active-link" onclick="showSection('home')">Inicio</a></li>
-            <li><a href="#" id="link-firm" onclick="showSection('firmamento')">Asignación Estelar</a></li>
             <li><a href="#" id="link-mystar" class="btn-gold-outline" onclick="showSection('mystar')"><i class="fa-solid fa-search"></i> Verificar Título</a></li>
             <li><a href="#" id="link-ia" class="btn-ai-outline" onclick="showSection('ia-locator')"><i class="fa-solid fa-microchip"></i> IA Tracker</a></li>
             <li id="nav-admin" style="display:none;"><a href="#" id="link-admin" class="btn-ai-outline" onclick="loadAdminDashboard()" style="border-color: #ff3366; color: #ff3366 !important;"><i class="fa-solid fa-gear"></i> Admin</a></li>
@@ -60,15 +59,44 @@
     </nav>
 
     <main>
-        <section id="home" class="active">
-            <div class="section-header" style="margin-top: 5vh;">
-                <h2 style="font-weight: 600;"><span style="color: var(--gold-main);">Inmortaliza</span> Tu Legado</h2>
-                <p>El registro privado más prestigioso para la catalogación de cuerpos celestes. Seleccione una estrella, regístrela oficialmente a su nombre y reciba la carta astrométrica profesional con su ubicación exacta en el cosmos.</p>
-                <div style="margin-top: 40px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px;">
-                    <button class="btn-solid" style="width: auto; padding: 18px 40px; border-radius: 50px;" onclick="showSection('firmamento')">Comenzar Registro</button>
+        <!-- === NUEVA SECCIÓN HÉROE OPTIMIZADA PARA CONVERSIÓN === -->
+        <section id="home" class="active hero-section">
+            <div class="hero-container">
+                
+                <!-- BLOQUE IZQUIERDO: TEXTO, CTA Y GATILLOS -->
+                <div class="hero-content">
+                    <span class="hero-badge">El regalo perfecto</span>
+                    <h1>Inmortaliza un nombre en el cosmos</h1>
+                    <p>Registra una estrella real con un certificado oficial personalizado de alta calidad. Un detalle inolvidable y eterno.</p>
+                    
+                    <!-- Botón de Llamada a la Acción conectado a tu JS -->
+                    <button class="cta-button" style="border: none; cursor: pointer;" onclick="showSection('firmamento')">Personalizar mi estrella</button>
+                    
+                    <!-- Gatillos de Confianza Profesionales (FontAwesome en lugar de emojis) -->
+                    <div class="trust-triggers">
+                        <div class="trigger-item">
+                            <span class="trigger-icon" style="color: #28a745;"><i class="fa-solid fa-shield-halved"></i></span>
+                            <span class="trigger-text">Pago Seguro</span>
+                        </div>
+                        <div class="trigger-item">
+                            <span class="trigger-icon" style="color: #c5a059;"><i class="fa-solid fa-bolt"></i></span>
+                            <span class="trigger-text">Entrega Inmediata</span>
+                        </div>
+                        <div class="trigger-item">
+                            <span class="trigger-icon" style="color: #a0aec0;"><i class="fa-solid fa-certificate"></i></span>
+                            <span class="trigger-text">Registro Oficial</span>
+                        </div>
+                    </div>
                 </div>
+                
+                <!-- BLOQUE DERECHO: LA IMAGEN PREMIUM -->
+                <div class="hero-image-wrapper">
+                    <img src="hero.jpg" alt="Certificado oficial NovaRegistry enmarcado" class="hero-image">
+                </div>
+                
             </div>
         </section>
+        <!-- ======================================================== -->
 
        <section id="firmamento">
             <div class="registry-layout">
