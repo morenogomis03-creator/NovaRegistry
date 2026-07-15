@@ -1,5 +1,4 @@
-
-        :root {
+:root {
             --bg-deep: #02040a;
             --bg-nebula: radial-gradient(circle at 50% 0%, #1a0b2e 0%, #02040a 60%);
             --panel-glass: rgba(13, 15, 20, 0.7);
@@ -76,8 +75,34 @@
 
         .packages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin-top: 30px; }
         .pack-card { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 35px 20px; border-radius: 12px; transition: transform 0.3s, border-color 0.3s; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
-        .pack-card:hover { border-color: var(--accent-blue); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,229,255,0.1); }
-        .pack-card.premium { border-color: var(--gold-main); background: linear-gradient(180deg, rgba(30, 25, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%); }
+        
+/* FASE 1: EFECTO SEÑUELO (DECOY EFFECT) */
+.pack-card.premium { 
+    border-color: var(--gold-main); 
+    background: linear-gradient(180deg, rgba(30, 25, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%); 
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15);
+    overflow: visible !important; /* <--- ESTO ARREGLA QUE SE CORTE LA ETIQUETA */
+}
+
+.etiqueta-popular {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--gold-main);
+    color: #111;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem; /* Un poco más pequeño para que sea elegante */
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    z-index: 11;
+    white-space: nowrap;
+}
         .pack-badge { position: absolute; top: 12px; right: -35px; background: var(--gold-main); color: #000; font-size: 0.65rem; font-weight: bold; padding: 5px 40px; transform: rotate(45deg); letter-spacing: 1px; }
         .pack-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--text-muted); }
         .pack-card.premium .pack-icon { color: var(--gold-main); }
@@ -200,6 +225,7 @@
             .cookie-banner { flex-direction: column; text-align: center; }
             .cookie-text { text-align: center; }
         }
+        
         /* --- MEJORAS VISUALES DE PAQUETES (Fase 1 - Paso 2) --- */
         .pack-card {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
@@ -210,11 +236,15 @@
             border-color: var(--accent-blue) !important;
             background: rgba(10, 15, 25, 0.9) !important;
         }
+        
+        /* FASE 1: Efecto Hover para el Señuelo - Asegura que no pierda su tamaño */
         .pack-card.premium:hover {
             box-shadow: 0 20px 50px rgba(212, 175, 55, 0.35) !important;
             border-color: var(--gold-main) !important;
             background: linear-gradient(180deg, rgba(40, 35, 5, 0.95) 0%, rgba(5, 5, 5, 0.9) 100%) !important;
+            transform: translateY(-12px) scale(1.08) !important; /* Mantiene la ventaja de escala */
         }
+        
         .pack-icon {
             transition: transform 0.5s ease, text-shadow 0.5s ease !important;
         }
@@ -222,12 +252,14 @@
             transform: scale(1.15) rotate(-5deg) !important;
             text-shadow: 0 0 20px currentColor !important;
         }
-        /* --- PRUEBA SOCIAL (Fase 1 - Paso 3) --- */
+        
+        /* --- PRUEBA SOCIAL --- */
         .social-proof { width: 100vw; margin-left: -5vw; margin-top: 50px; background: rgba(212,175,55,0.05); padding: 15px 0; border-top: 1px solid rgba(212,175,55,0.2); border-bottom: 1px solid rgba(212,175,55,0.2); overflow: hidden; position: relative; }
         .marquee { display: flex; width: max-content; animation: scroll 25s linear infinite; }
         .marquee span { color: #888; font-size: 0.85rem; margin-right: 50px; }
         .marquee span strong { color: var(--gold-main); }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        
         /* --- RADAR IA TRACKER (Fase 3) --- */
         .radar-compass { 
             width: 140px; height: 140px; border: 2px solid var(--accent-blue); 
@@ -248,43 +280,31 @@
             border-radius: 2px 2px 0 0;
         }
 
-/* --- SISTEMA DE NOTIFICACIONES (TOAST) --- */
-.toast-container {
-    position: fixed;
-    bottom: 30px;
-    right: 20px;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    pointer-events: none;
-}
-
-.toast {
-    background: rgba(10, 15, 25, 0.95);
-    border-left: 4px solid var(--accent-blue);
-    color: #fff;
-    padding: 15px 20px;
-    border-radius: 6px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    min-width: 250px;
-    max-width: 350px;
-    transform: translateX(120%);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.toast.show { transform: translateX(0); opacity: 1; }
-.toast.success { border-left-color: #00ff66; }
-.toast.success i { color: #00ff66; font-size: 1.2rem; }
-.toast.error { border-left-color: #ff3366; }
-.toast.error i { color: #ff3366; font-size: 1.2rem; }
-.toast.warning { border-left-color: var(--gold-main); }
-.toast.warning i { color: var(--gold-main); font-size: 1.2rem; }
+        /* --- FASE 1: NOTIFICACIONES DE PRUEBA SOCIAL (TOAST DINÁMICO) --- */
+        #toast-notificacion {
+            position: fixed;
+            bottom: 20px;
+            left: -350px; /* Oculto fuera de la pantalla por defecto */
+            background: rgba(13, 15, 20, 0.95);
+            border-left: 4px solid var(--accent-blue);
+            color: var(--text-main);
+            padding: 15px 20px;
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 15px rgba(0, 229, 255, 0.1);
+            transition: left 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 9999;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            max-width: 300px;
+            line-height: 1.4;
+        }
+        #toast-notificacion strong {
+            color: var(--accent-blue);
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+            font-size: 0.95rem;
+        }
+        #toast-notificacion.mostrar {
+            left: 20px; /* Entra en pantalla con un efecto fluido y de rebote */
+        }
