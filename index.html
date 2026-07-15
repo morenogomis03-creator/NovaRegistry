@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- === METAETIQUETAS SEO Y REDES SOCIALES === -->
     <title>NovaRegistry | Registro Internacional de Estrellas</title>
     <meta name="description" content="Inmortaliza tu legado. Registra una estrella oficial a tu nombre, obtén las coordenadas astrométricas exactas y recíbelo en formato físico o digital.">
     <meta name="keywords" content="comprar estrella, registrar estrella, regalo estrella, NovaRegistry, certificado estelar, regalo original">
     <meta name="author" content="NovaRegistry">
     
+    <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="NovaRegistry | Bautiza una Estrella Oficial">
     <meta property="og:description" content="El regalo más exclusivo del universo. Registra un cuerpo celeste, obtén sus coordenadas y rastréalo en el cielo nocturno con nuestra IA.">
@@ -16,31 +18,35 @@
     <meta property="og:url" content="https://www.novaregistry.net">
     <meta property="og:site_name" content="NovaRegistry">
     
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="NovaRegistry | Bautiza una Estrella Oficial">
     <meta name="twitter:description" content="Inmortaliza tu legado. Registra una estrella oficial a tu nombre y obtén las coordenadas exactas.">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=1200">
 
-    <link rel="icon" type="image/png" href="favicon.png">
-    
+    <!-- Icono y Color de Tema -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23d4af37' d='M256 0l54.8 153.2L464 168.5l-117.4 101 36.4 150-127-75.5-127 75.5 36.4-150L48 168.5l153.2-15.3L256 0z'/></svg>">
     <meta name="theme-color" content="#02040a">
 
+    <!-- Fuentes y Estilos -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 
+    <!-- === LIBRERÍAS EXTERNAS === -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
+    <!-- PayPal -->
     <script src="https://www.paypal.com/sdk/js?client-id=AYOZLNzAoAg4ce1rEOGAB3lPDZG7_yqRzTcL1oqlddSrIkwauGItQIHzSbUelBnEOe-ByRZFfnOLqsbn&currency=EUR"></script>
 
+    <!-- PASO 3: Nueva Librería Profesional para PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
 </head>
-
 <body>
-    <div id="toast-container" class="toast-container"></div>
-
     <nav>
         <div class="logo" onclick="handleLogoClick()"><i class="fa-solid fa-star"></i> NovaRegistry</div>
         <button class="mobile-menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
@@ -64,7 +70,7 @@
             </div>
         </section>
 
-        <section id="firmamento">
+       <section id="firmamento">
             <div class="registry-layout">
                 <canvas id="skyCanvas"></canvas>
                 
@@ -72,33 +78,43 @@
                     <h3 class="serif">Buscador Astrométrico</h3>
                     <p style="margin-bottom: 30px; font-size: 0.9rem;">Introduzca el nombre del legado que desea inscribir en el firmamento.</p>
                     
-                    <div class="name-input-group">
+                    <div class="name-input-group" style="margin-bottom: 15px;">
                         <label>Nombre a Registrar</label>
                         <input type="text" id="inputStarName" placeholder="Ej: Mi Legado Eterno" autocomplete="off">
                     </div>
 
-                    <div class="packages-grid">
+                    <button id="btn-buscar-estrella" class="btn-solid" style="margin-bottom: 30px; padding: 12px; font-size: 0.85rem;"><i class="fa-solid fa-satellite-dish"></i> Buscar Coordenadas Disponibles</button>
+                    
+                    <div id="loader-estrella" style="display: none; text-align: center; margin-bottom: 30px;">
+                        <div class="spinner" style="margin: 0 auto 15px auto; width: 40px; height: 40px;"></div>
+                        <p style="color: var(--accent-blue); font-weight: bold; font-family: 'Space Mono', monospace; font-size: 0.9rem;">
+                            🌌 Calibrando coordenadas en la bóveda celeste...
+                        </p>
+                    </div>
+
+                    <div class="packages-grid" id="seccion-precios">
                         <div class="pack-card">
                             <div class="pack-icon"><i class="fa-solid fa-cloud-moon"></i></div>
                             <div class="pack-title">Estrella Digital</div>
                             <div class="pack-price">20.00 €</div>
                             <ul class="pack-features">
-                                <li><i class="fa-solid fa-star"></i> <strong>Soberanía Digital:</strong> Inscripción inmediata en el Registro Patrimonial Nova.</li>
-                                <li><i class="fa-solid fa-certificate"></i> <strong>Título de Propiedad:</strong> Diploma oficial en alta resolución listo para imprimir.</li>
-                                <li><i class="fa-solid fa-microchip"></i> <strong>IA Tracker:</strong> Acceso ilimitado a nuestra telemetría satelital para localizarla.</li>
+                                <li><i class="fa-solid fa-star"></i> Soberanía Digital: Inscripción inmediata.</li>
+                                <li><i class="fa-solid fa-eye"></i> Título de Propiedad: Diploma oficial.</li>
+                                <li><i class="fa-solid fa-infinity"></i> IA Tracker: Acceso ilimitado.</li>
                             </ul>
                             <button class="btn-solid" onclick="openPayment('Estrella Digital')">Reclamar mi Estrella</button>
                         </div>
                         
                         <div class="pack-card premium">
-                            <div class="pack-badge">EL MÁS ETERNO</div>
+                            <div class="etiqueta-popular">El Más Elegido</div>
+                            
                             <div class="pack-icon"><i class="fa-solid fa-scroll"></i></div>
                             <div class="pack-title">Paquete Físico Premium</div>
                             <div class="pack-price">40.00 €</div>
                             <ul class="pack-features">
-                                <li><i class="fa-solid fa-check"></i> <strong>El Legado en tus Manos:</strong> Todo lo incluido en el Pack Digital.</li>
-                                <li><i class="fa-solid fa-scroll"></i> <strong>Pergamino Ancestral:</strong> Diploma físico impreso en papel de alto gramaje con sello seco.</li>
-                                <li><i class="fa-solid fa-envelope-open-text"></i> <strong>Carpeta de Gala:</strong> Estuche de presentación de lujo para su custodia.</li>
+                                <li><i class="fa-solid fa-check"></i> <strong>El Legado en tus Manos:</strong> Todo lo digital.</li>
+                                <li><i class="fa-solid fa-check"></i> Pergamino Ancestral impreso.</li>
+                                <li><i class="fa-solid fa-check"></i> Carpeta de Gala de presentación.</li>
                             </ul>
                             <button class="btn-solid btn-gold" onclick="openPayment('Paquete Físico Premium')">Poseer la Eternidad</button>
                         </div>
@@ -108,9 +124,9 @@
                             <div class="pack-title">Pack Supernova VIP</div>
                             <div class="pack-price">60.00 €</div>
                             <ul class="pack-features">
-                                <li><i class="fa-solid fa-check"></i> <strong>Consagración Total:</strong> La experiencia de registro estelar definitiva.</li>
-                                <li><i class="fa-solid fa-gem"></i> <strong>Enmarcado Artesanal:</strong> Tu título presentado en marco de madera y cristal de galería.</li>
-                                <li><i class="fa-solid fa-truck-fast"></i> <strong>Prioridad Galáctica:</strong> Envío exprés certificado y seguimiento satelital VIP.</li>
+                                <li><i class="fa-solid fa-check"></i> <strong>Consagración Total:</strong></li>
+                                <li><i class="fa-solid fa-check"></i> Enmarcado Artesanal de galería.</li>
+                                <li><i class="fa-solid fa-check"></i> Prioridad en Red Satelital.</li>
                             </ul>
                             <button class="btn-solid" onclick="openPayment('Pack Supernova VIP')">Consagrar Legado</button>
                         </div>
@@ -118,15 +134,6 @@
                 </div>
             </div>
         </section>
-
-        <div class="social-proof">
-            <div class="marquee">
-                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"María y Juan"</strong> registrada (Hace 2h)</span>
-                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Legado Familiar"</strong> registrada (Hace 5h)</span>
-                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Paquete Físico Premium asignado a <strong>"Madrid"</strong> (Hace 12h)</span>
-                <span><i class="fa-solid fa-check-circle" style="color:var(--gold-main)"></i> Estrella <strong>"Mi Abuelo"</strong> registrada (Hace 14h)</span>
-            </div>
-        </div>
 
         <section id="mystar">
             <div id="loginStar">
@@ -173,26 +180,18 @@
                             </table>
 
                             <div class="cert-footer">
-                                <div class="qr-container" style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
-                                    <img id="certQR" src="" alt="Código QR de Verificación" style="display: none; width: 90px; height: 90px; padding: 2px; border: 1px solid #222;">
-                                    <div style="font-size: 0.5rem; color: #333; margin-top: 5px; font-weight: bold; font-family: 'Montserrat', sans-serif; text-transform: uppercase;">Verificación Digital</div>
+                                <div class="qr-container">
+                                    <img id="certQR" src="" alt="Código QR de Verificación" style="display: none; width: 120px; height: 120px;">
                                 </div>
-                                
-                                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
-                                    <div class="barcode-box"></div>
-                                    <div class="barcode-text" id="certBarcode">--</div>
-                                </div>
-                                
-                                <div style="flex: 1; display: flex; justify-content: flex-end; align-items: flex-end; gap: 10px;">
-                                    <div class="seal-official"><div class="seal-inner"><span>OFFICIAL<br>REGISTRY<br>SEAL</span></div></div>
-                                    <div class="signature" style="text-align: right; width: auto;">
-                                        <div class="sig-font">Nova Registry</div>
-                                        <div class="sig-line" style="margin-left: auto; width: 100%;"></div>
-                                        <div class="sig-title">Dirección<br>General de Archivos</div>
-                                    </div>
+                                <div><div class="barcode-box"></div><div class="barcode-text" id="certBarcode">--</div></div>
+                                <div class="seal-official"><div class="seal-inner"><span>OFFICIAL<br>REGISTRY<br>SEAL</span></div></div>
+                                <div class="signature">
+                                    <div class="sig-font">Nova Registry</div>
+                                    <div class="sig-line"></div>
+                                    <div class="sig-title">Dirección General de Archivos Estelares</div>
                                 </div>
                             </div>
-                            </div></div></div>
+                        </div></div></div>
                     </div>
                 </div>
                 <button id="downloadPdfBtn" class="btn-solid print-btn" onclick="downloadPDF()" style="margin-top: 30px; width: auto; background: rgba(255,255,255,0.1); border: 1px solid var(--border-glow); color: var(--accent-blue); backdrop-filter: blur(5px);">
@@ -261,9 +260,10 @@
         </div>
     </div>
 
+    <!-- Modal de Pago -->
     <div id="paymentModal" class="modal-overlay">
         <div class="modal-box">
-            <button class="close-btn" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
+            <button class="close-btn" onclick="document.getElementById('paymentModal').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-header"><h3 class="serif">Pasarela de Adjudicación</h3></div>
             <div class="payment-desc" id="checkoutDesc" style="color: #aaa; margin-bottom: 5px;">-</div>
             
@@ -286,7 +286,17 @@
             </div>
 
             <div id="paypal-button-container" style="min-height: 150px;"></div>
-            <div style="font-size: 0.65rem; color: #666; text-align: center; margin-top: 15px; line-height: 1.4;">
+            
+            <div style="text-align: center; margin-top: 5px; margin-bottom: 15px; color: #888; font-size: 0.75rem;">
+                <i class="fa-solid fa-lock" style="color: #28a745;"></i> Pago 100% Seguro y Encriptado
+                <div style="margin-top: 8px; font-size: 1.5rem;">
+                    <i class="fa-brands fa-cc-paypal" style="color: #00457C; margin: 0 5px;"></i>
+                    <i class="fa-brands fa-cc-visa" style="color: #1434CB; margin: 0 5px;"></i>
+                    <i class="fa-brands fa-cc-mastercard" style="color: #EB001B; margin: 0 5px;"></i>
+                </div>
+            </div>
+
+            <div style="font-size: 0.65rem; color: #555; text-align: center; line-height: 1.4;">
                 *Servicio de carácter conmemorativo y simbólico. Esta plataforma opera un registro patrimonial privado, independiente y no vinculado científicamente a la Unión Astronómica Internacional (IAU).
             </div>
         </div>
@@ -307,6 +317,9 @@
         <h3 class="serif" style="color: var(--gold-main); letter-spacing: 2px;">Asegurando Coordenadas...</h3>
     </div>
 
+    <div id="toast-notificacion"></div>
+
     <script src="script.js"></script>
+    
 </body>
 </html>
