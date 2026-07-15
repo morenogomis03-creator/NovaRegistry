@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- === METAETIQUETAS SEO Y REDES SOCIALES === -->
     <title>NovaRegistry | Registro Internacional de Estrellas</title>
     <meta name="description" content="Inmortaliza tu legado. Registra una estrella oficial a tu nombre, obtén las coordenadas astrométricas exactas y recíbelo en formato físico o digital.">
     <meta name="keywords" content="comprar estrella, registrar estrella, regalo estrella, NovaRegistry, certificado estelar, regalo original">
     <meta name="author" content="NovaRegistry">
     
-    <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="NovaRegistry | Bautiza una Estrella Oficial">
     <meta property="og:description" content="El regalo más exclusivo del universo. Registra un cuerpo celeste, obtén sus coordenadas y rastréalo en el cielo nocturno con nuestra IA.">
@@ -18,31 +16,24 @@
     <meta property="og:url" content="https://www.novaregistry.net">
     <meta property="og:site_name" content="NovaRegistry">
     
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="NovaRegistry | Bautiza una Estrella Oficial">
     <meta name="twitter:description" content="Inmortaliza tu legado. Registra una estrella oficial a tu nombre y obtén las coordenadas exactas.">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=1200">
 
-    <!-- Icono y Color de Tema -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23d4af37' d='M256 0l54.8 153.2L464 168.5l-117.4 101 36.4 150-127-75.5-127 75.5 36.4-150L48 168.5l153.2-15.3L256 0z'/></svg>">
     <meta name="theme-color" content="#02040a">
 
-    <!-- Fuentes y Estilos -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 
-    <!-- === LIBRERÍAS EXTERNAS === -->
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
-    <!-- PayPal -->
     <script src="https://www.paypal.com/sdk/js?client-id=AYOZLNzAoAg4ce1rEOGAB3lPDZG7_yqRzTcL1oqlddSrIkwauGItQIHzSbUelBnEOe-ByRZFfnOLqsbn&currency=EUR"></script>
 
-    <!-- PASO 3: Nueva Librería Profesional para PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
 </head>
@@ -52,6 +43,9 @@
         <button class="mobile-menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
         <ul class="nav-links">
             <li><a href="#" id="link-home" class="active-link" onclick="showSection('home')">Inicio</a></li>
+            
+            <li style="display: none;"><a href="#" id="link-firm" onclick="showSection('firmamento')"></a></li>
+            
             <li><a href="#" id="link-mystar" class="btn-gold-outline" onclick="showSection('mystar')"><i class="fa-solid fa-search"></i> Verificar Título</a></li>
             <li><a href="#" id="link-ia" class="btn-ai-outline" onclick="showSection('ia-locator')"><i class="fa-solid fa-microchip"></i> IA Tracker</a></li>
             <li id="nav-admin" style="display:none;"><a href="#" id="link-admin" class="btn-ai-outline" onclick="loadAdminDashboard()" style="border-color: #ff3366; color: #ff3366 !important;"><i class="fa-solid fa-gear"></i> Admin</a></li>
@@ -59,21 +53,16 @@
     </nav>
 
     <main>
-        <!-- === NUEVA SECCIÓN HÉROE OPTIMIZADA PARA CONVERSIÓN === -->
         <section id="home" class="active hero-section">
             <div class="hero-container">
                 
-                <!-- BLOQUE IZQUIERDO: TEXTO, CTA Y GATILLOS -->
                 <div class="hero-content">
                     <span class="hero-badge">El regalo perfecto</span>
                     <h1>Inmortaliza un nombre en el cosmos</h1>
                     <p>Registra una estrella real con un certificado oficial personalizado de alta calidad. Un detalle inolvidable y eterno.</p>
                     
-                    <!-- Botón de Llamada a la Acción conectado a tu JS -->
-                   <!-- Botón de Llamada a la Acción con Auto-Scroll al centro de la pantalla -->
-<button class="cta-button" style="border: none; cursor: pointer;" onclick="showSection('firmamento'); setTimeout(() => { document.querySelector('.registry-content').scrollIntoView({behavior: 'smooth', block: 'center'}); document.getElementById('inputStarName').focus(); }, 150);">Personalizar mi estrella</button>
+                    <button class="cta-button" style="border: none; cursor: pointer;" onclick="ejecutarRegistro()">Personalizar mi estrella</button>
                     
-                    <!-- Gatillos de Confianza Profesionales (FontAwesome en lugar de emojis) -->
                     <div class="trust-triggers">
                         <div class="trigger-item">
                             <span class="trigger-icon" style="color: #28a745;"><i class="fa-solid fa-shield-halved"></i></span>
@@ -90,16 +79,13 @@
                     </div>
                 </div>
                 
-                <!-- BLOQUE DERECHO: LA IMAGEN PREMIUM -->
                 <div class="hero-image-wrapper">
                     <img src="hero.jpg" alt="Certificado oficial NovaRegistry enmarcado" class="hero-image">
                 </div>
                 
             </div>
         </section>
-        <!-- ======================================================== -->
-
-       <section id="firmamento">
+        <section id="firmamento">
             <div class="registry-layout">
                 <canvas id="skyCanvas"></canvas>
                 
@@ -289,7 +275,6 @@
         </div>
     </div>
 
-    <!-- Modal de Pago -->
     <div id="paymentModal" class="modal-overlay">
         <div class="modal-box">
             <button class="close-btn" onclick="document.getElementById('paymentModal').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
@@ -350,5 +335,26 @@
 
     <script src="script.js"></script>
     
+    <script>
+    function ejecutarRegistro() {
+        // 1. Cambia de sección de manera segura
+        if (typeof showSection === 'function') {
+            showSection('firmamento');
+        }
+        
+        // 2. Desplaza la pantalla hasta dejar el buscador perfectamente centrado y hace focus
+        setTimeout(() => {
+            const buscador = document.querySelector('.registry-content');
+            if (buscador) {
+                buscador.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            const input = document.getElementById('inputStarName');
+            if (input) {
+                input.focus();
+            }
+        }, 120); // Retraso de seguridad para asegurar la renderización en móviles
+    }
+    </script>
 </body>
 </html>
