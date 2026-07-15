@@ -439,25 +439,25 @@
             .sig-font { font-size: 2.2rem; }
         }
 
-        @media (max-width: 992px) {
-            .hero-container {
-                flex-direction: column-reverse;
-                text-align: center;
-                gap: 40px;
-                padding-top: 20px;
-            }
-            .hero-content {
-                text-align: center;
-            }
-            .trust-triggers {
-                justify-content: center;
-                border-top: none;
-                padding-top: 15px;
-            }
-            .hero-badge {
-                margin: 0 auto 20px auto;
-            }
-        }
+    @media (max-width: 992px) {
+    .hero-container {
+        flex-direction: column; /* <--- Cambiado aquí de column-reverse a column */
+        text-align: center;
+        gap: 40px;
+        padding-top: 20px;
+    }
+    .hero-content {
+        text-align: center;
+    }
+    .trust-triggers {
+        justify-content: center;
+        border-top: none;
+        padding-top: 15px;
+    }
+    .hero-badge {
+        margin: 0 auto 20px auto;
+    }
+}
 
        @media (max-width: 768px) {
     .mobile-menu-btn { display: block; }
