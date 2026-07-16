@@ -83,7 +83,7 @@
     transform: scale(1.05);
     z-index: 10;
     box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15);
-    overflow: visible !important; /* <--- ESTO ARREGLA QUE SE CORTE LA ETIQUETA */
+    overflow: visible !important; 
 }
 
 .etiqueta-popular {
@@ -95,7 +95,7 @@
     color: #111;
     padding: 5px 15px;
     border-radius: 20px;
-    font-size: 0.75rem; /* Un poco más pequeño para que sea elegante */
+    font-size: 0.75rem; 
     font-weight: bold;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -441,7 +441,7 @@
 
     @media (max-width: 992px) {
     .hero-container {
-        flex-direction: column; /* <--- Cambiado aquí de column-reverse a column */
+        flex-direction: column;
         text-align: center;
         gap: 40px;
         padding-top: 20px;
@@ -473,7 +473,7 @@
     .cookie-text { text-align: center; }
     
     /* --- NUEVAS REGLAS PARA LA PORTADA EN MÓVIL (SIN SCROLL CONTINUO) --- */
-    .hero-section {
+    section.hero-section.active {
         display: flex;
         flex-direction: column;
         justify-content: center;
