@@ -79,8 +79,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
-    <script src="https://www.paypal.com/sdk/js?client-id=AYOZLNzAoAg4ce1rEOGAB3lPDZG7_yqRzTcL1oqlddSrIkwauGItQIHzSbUelBnEOe-ByRZFfnOLqsbn&currency=EUR"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
 </head>
@@ -316,7 +314,7 @@
 
     <div id="cookieBanner" class="cookie-banner">
         <div class="cookie-text">
-            Utilizamos cookies propias y de terceros para asegurar el funcionamiento de la pasarela de pago segura (PayPal), analizar el tráfico y ofrecerle nuestra plataforma de registro estelar. Al hacer clic en "Aceptar", consiente su uso según nuestra <a href="#" onclick="openLegalModal('Política de Privacidad')">Política de Privacidad</a>.
+            Utilizamos cookies propias y de terceros para asegurar el funcionamiento de la pasarela de pago segura (Stripe), analizar el tráfico y ofrecerle nuestra plataforma de registro estelar. Al hacer clic en "Aceptar", consiente su uso según nuestra <a href="#" onclick="openLegalModal('Política de Privacidad')">Política de Privacidad</a>.
         </div>
         <div class="cookie-buttons">
             <button class="btn-solid" style="padding: 10px 20px; border-radius: 4px; width: auto;" onclick="acceptCookies()">Aceptar Cookies</button>
@@ -347,12 +345,14 @@
                 </label>
             </div>
 
-            <div id="paypal-button-container" style="min-height: 150px;"></div>
+            <button id="btn-proceder-pago" class="btn-solid btn-gold" style="margin-top: 10px; margin-bottom: 20px; width: 100%; padding: 15px; font-size: 1rem; display: block;">
+                <i class="fas fa-lock"></i> Proceder al Pago Seguro
+            </button>
             
             <div style="text-align: center; margin-top: 5px; margin-bottom: 15px; color: #888; font-size: 0.75rem;">
                 <i class="fa-solid fa-lock" style="color: #28a745;"></i> Pago 100% Seguro y Encriptado
                 <div style="margin-top: 8px; font-size: 1.5rem;">
-                    <i class="fa-brands fa-cc-paypal" style="color: #00457C; margin: 0 5px;"></i>
+                    <i class="fa-brands fa-cc-stripe" style="color: #635bff; margin: 0 5px;"></i>
                     <i class="fa-brands fa-cc-visa" style="color: #1434CB; margin: 0 5px;"></i>
                     <i class="fa-brands fa-cc-mastercard" style="color: #EB001B; margin: 0 5px;"></i>
                 </div>
