@@ -78,7 +78,7 @@ const legalTexts = {
         <strong style="color: var(--gold-main);">1. Responsable del Tratamiento</strong><br>
         En cumplimiento con el Reglamento (UE) 2016/679 (RGPD), le informamos que TU NOMBRE/EMPRESA es el responsable del tratamiento.<br><br>
         <strong style="color: var(--gold-main);">2. Cookies y Análisis</strong><br>
-        Utilizamos cookies de terceros (como PayPal) estrictamente necesarias para procesar pagos seguros en la plataforma.
+        Utilizamos cookies de terceros (como Stripe) estrictamente necesarias para procesar pagos seguros en la plataforma.
     `,
     'Términos y Condiciones': `
         <strong style="color: var(--gold-main);">1. Objeto y Desistimiento</strong><br>
@@ -271,9 +271,15 @@ function renderAmbientSky() {
     requestAnimationFrame(renderAmbientSky);
 }
 
+// === LÓGICA DE STRIPE (Sustituye a PayPal) ===
 let checkoutPackage = "";
 let starNamePending = "";
-let paypalButtonsRendered = false;
+
+const STRIPE_LINKS = {
+    'Estrella Digital': "https://buy.stripe.com/aFadR93lJeZz3Kv9zw14402",
+    'Paquete Físico Premium': "https://buy.stripe.com/9B6fZhaOb2cN4Oz27414401",
+    'Pack Supernova VIP': "https://buy.stripe.com/14AeVd1dB6t33Kv8vs14403"
+};
 
 function openPayment(packageName) {
     let rawInput = document.getElementById('inputStarName').value;
@@ -297,14 +303,15 @@ function openPayment(packageName) {
     const oldAdminBtn = document.getElementById('admin-bypass-btn');
     if (oldAdminBtn) oldAdminBtn.remove();
 
+    // MODO ADMIN: Registro gratuito
     if (isAdminActive) {
         const adminBtn = document.createElement('button');
         adminBtn.id = 'admin-bypass-btn';
         adminBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> REGISTRO GRATUITO (ADMIN)';
         adminBtn.style = "width:100%; background:#2ecc71; color:black; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:20px; font-size:1rem; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);";
         
-        const paypalContainer = document.getElementById('paypal-button-container');
-        paypalContainer.parentNode.insertBefore(adminBtn, paypalContainer);
+        const btnStripe = document.getElementById('btn-proceder-pago');
+        btnStripe.parentNode.insertBefore(adminBtn, btnStripe);
 
         adminBtn.onclick = async () => {
             if(!document.getElementById('legalConsent').checked) {
@@ -317,59 +324,55 @@ function openPayment(packageName) {
         };
     }
 
-    // --- INTEGRACIÓN NATIVA DE PAYPAL (CLIENT-SIDE) ---
-    if (!paypalButtonsRendered) {
-        paypal.Buttons({
-            style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'pay' },
-            
-            onClick: (data, actions) => {
-                if(!document.getElementById('legalConsent').checked) {
-                    alert("Por favor, acepta los términos de venta.");
-                    return actions.reject();
-                }
-
-                const formEnvio = document.getElementById('shipping-form');
-                if (formEnvio.style.display === 'block') {
-                    if (!document.getElementById('shipName').value.trim() || 
-                        !document.getElementById('shipAddress').value.trim()) {
-                        alert("Por favor, rellena los datos de envío completo.");
-                        return actions.reject();
-                    }
-                }
-                return actions.resolve();
-            },
-
-            createOrder: function(data, actions) { 
-                const precios = {
-                    'Estrella Digital': '20.00',
-                    'Paquete Físico Premium': '40.00',
-                    'Pack Supernova VIP': '60.00'
-                };
-                
-                const precioAsignado = precios[checkoutPackage] || '20.00';
-
-                return actions.order.create({
-                    purchase_units: [{
-                        description: `NovaRegistry - ${checkoutPackage}`,
-                        amount: {
-                            currency_code: 'EUR',
-                            value: precioAsignado
-                        }
-                    }]
-                });
-            },
-            
-            onApprove: async function(data, actions) {
-                const details = await actions.order.capture();
-                guardarRegistroEnBD(details); 
-            }
-        }).render('#paypal-button-container');
-        paypalButtonsRendered = true;
+    // BOTÓN STRIPE: Asignamos el evento click
+    const btnStripe = document.getElementById('btn-proceder-pago');
+    if (btnStripe) {
+        btnStripe.onclick = () => procesarPagoStripe(packageName);
     }
 }
 
-// NUEVO NOMBRE DE FUNCIÓN PARA EVITAR COLISIÓN CON EL EVENTO DE NAVEGACIÓN EN INDEX.HTML
-async function guardarRegistroEnBD(paypalDetails) {
+function procesarPagoStripe(packageName) {
+    if(!document.getElementById('legalConsent').checked) {
+        alert("Por favor, acepta los términos de venta.");
+        return;
+    }
+
+    const formEnvio = document.getElementById('shipping-form');
+    let datosEnvio = null;
+    
+    // Validación de envío
+    if (formEnvio.style.display === 'block') {
+        const sName = document.getElementById('shipName').value.trim();
+        const sAddress = document.getElementById('shipAddress').value.trim();
+        if (!sName || !sAddress) {
+            alert("Por favor, rellena los datos de envío completo.");
+            return;
+        }
+        datosEnvio = {
+            name: sName,
+            address: sAddress,
+            city: document.getElementById('shipCity').value,
+            zip: document.getElementById('shipZip').value,
+            phone: document.getElementById('shipPhone').value
+        };
+    }
+
+    // Guardamos los datos en localStorage antes de ir a Stripe
+    const datosPedido = {
+        nombre: starNamePending,
+        paquete: packageName,
+        envio: datosEnvio,
+        fecha: new Date().toISOString()
+    };
+    localStorage.setItem('temp_nova_order', JSON.stringify(datosPedido));
+
+    // Redirigimos al enlace de pago real de Stripe
+    window.location.href = STRIPE_LINKS[packageName];
+}
+
+
+// --- GESTIÓN DE GUARDADO EN BASE DE DATOS ---
+async function guardarRegistroEnBD(pedidoStripe, stripeTransactionId = null) {
     const overlay = document.getElementById('processingOverlay');
     overlay.style.display = 'flex';
     document.getElementById('paymentModal').style.display = 'none';
@@ -387,24 +390,30 @@ async function guardarRegistroEnBD(paypalDetails) {
         ];
         const loreSeleccionado = mitologias[Math.floor(Math.random() * mitologias.length)];
 
-        // Capturar datos de envío si es físico
-        const formEnvio = document.getElementById('shipping-form');
-        let datosEnvio = null;
-        if (formEnvio.style.display === 'block') {
-            datosEnvio = {
-                name: document.getElementById('shipName').value,
-                address: document.getElementById('shipAddress').value,
-                city: document.getElementById('shipCity').value,
-                zip: document.getElementById('shipZip').value,
-                phone: document.getElementById('shipPhone').value
-            };
+        // Determinamos de dónde vienen los datos (Stripe vs Admin)
+        let finalName = pedidoStripe ? pedidoStripe.nombre : starNamePending.toUpperCase();
+        let finalPack = pedidoStripe ? pedidoStripe.paquete : checkoutPackage;
+        let finalEnvio = pedidoStripe ? pedidoStripe.envio : null;
+
+        // Si es Admin (sin pedidoStripe), sacamos los datos de envío directamente de la pantalla
+        if (!pedidoStripe) {
+            const formEnvio = document.getElementById('shipping-form');
+            if (formEnvio.style.display === 'block') {
+                finalEnvio = {
+                    name: document.getElementById('shipName').value,
+                    address: document.getElementById('shipAddress').value,
+                    city: document.getElementById('shipCity').value,
+                    zip: document.getElementById('shipZip').value,
+                    phone: document.getElementById('shipPhone').value
+                };
+            }
         }
 
         const starData = {
             id: newId,
-            name: starNamePending.toUpperCase(),
+            name: finalName.toUpperCase(),
             date: fecha,
-            pack: checkoutPackage,
+            pack: finalPack,
             official: "HD " + Math.floor(Math.random() * 200000),
             ra: (Math.floor(Math.random() * 24)) + "h " + (Math.floor(Math.random() * 60)) + "m " + (Math.floor(Math.random() * 60)) + "s",
             dec: (Math.random() > 0.5 ? "+" : "-") + Math.floor(Math.random() * 90) + "° " + Math.floor(Math.random() * 60) + "'",
@@ -415,28 +424,32 @@ async function guardarRegistroEnBD(paypalDetails) {
             lum: Math.floor(Math.random() * 100) + " Soles",
             lore: loreSeleccionado,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            shippingInfo: datosEnvio
+            shippingInfo: finalEnvio
         };
 
-        if (paypalDetails) {
-            starData.payerName = paypalDetails.payer.name.given_name;
-            starData.paypalTransactionId = paypalDetails.id;
-            starData.expectedAmount = paypalDetails.purchase_units[0].amount.value;
+        if (pedidoStripe) {
+            starData.payerName = finalEnvio ? finalEnvio.name : "Cliente Online";
+            starData.stripeTransactionId = stripeTransactionId;
+            const precios = { 'Estrella Digital': '20.00', 'Paquete Físico Premium': '40.00', 'Pack Supernova VIP': '60.00' };
+            starData.expectedAmount = precios[finalPack] || "20.00";
         } else {
             starData.payerName = "Admin";
             starData.expectedAmount = "0.00";
         }
 
+        // Guardamos en Firebase
         await db.collection("estrellas").doc(newId).set(starData);
 
         overlay.style.display = 'none';
         
+        // Limpiamos formulario
         document.getElementById('shipName').value = '';
         document.getElementById('shipAddress').value = '';
         document.getElementById('shipCity').value = '';
         document.getElementById('shipZip').value = '';
         document.getElementById('shipPhone').value = '';
 
+        // Cargamos el certificado en pantalla
         document.getElementById('myStarInput').value = newId;
         loadMyStar(); 
 
@@ -577,9 +590,10 @@ async function loadAdminDashboard() {
         docsArray.forEach(data => {
             let ship = data.shippingInfo ? `<strong style="color:#fff">${data.shippingInfo.name}</strong><br>${data.shippingInfo.city}` : "<span style='color: var(--text-muted);'>Digital</span>";
             let priceTag = data.expectedAmount ? `<span style="color: #00ff66;">${data.expectedAmount} €</span>` : "-";
-            let payPalTag = data.paypalTransactionId ? `<span style="font-family: monospace; font-size: 0.8rem; color: #aabfff;">${data.paypalTransactionId}</span>` : "-";
+            // Cambiado para mostrar el ID de Stripe en lugar de PayPal
+            let stripeTag = data.stripeTransactionId ? `<span style="font-family: monospace; font-size: 0.8rem; color: #aabfff;">${data.stripeTransactionId}</span>` : "-";
             
-            rows += `<tr><td>${data.date}</td><td style="color: var(--accent-blue); font-weight: bold;">${data.id}</td><td><strong>${priceTag}</strong></td><td>${payPalTag}</td><td>${data.payerName || "S/N"}</td><td><strong>${data.name}</strong><br><span style="font-size:0.75rem; color:#888;">${data.pack}</span></td><td>${ship}</td></tr>`;
+            rows += `<tr><td>${data.date}</td><td style="color: var(--accent-blue); font-weight: bold;">${data.id}</td><td><strong>${priceTag}</strong></td><td>${stripeTag}</td><td>${data.payerName || "S/N"}</td><td><strong>${data.name}</strong><br><span style="font-size:0.75rem; color:#888;">${data.pack}</span></td><td>${ship}</td></tr>`;
         });
         tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;">No hay ventas.</td></tr>';
     } catch (e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
@@ -605,12 +619,14 @@ function parseCoordToDeg(coordStr, isRA) {
 }
 
 /* =========================================
-   FASE 2: TRÁFICO VIRAL (Lector de QR por URL)
+   FASE 2: TRÁFICO VIRAL Y RETORNO DE STRIPE
 ========================================= */
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const verifyCode = urlParams.get('verify');
+    const pagoStatus = urlParams.get('pago');
     
+    // 1. Lógica de lectura de QR
     if (verifyCode) {
         showSection('mystar');
         const inputVerificar = document.getElementById('myStarInput');
@@ -619,5 +635,24 @@ window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => { loadMyStar(); }, 600);
         }
         window.history.replaceState({}, document.title, "/");
+    }
+
+    // 2. Lógica de retorno exitoso tras pagar en Stripe
+    if (pagoStatus && pagoStatus.startsWith('ok_')) {
+        const datosGuardados = localStorage.getItem('temp_nova_order');
+        
+        if (datosGuardados) {
+            const pedido = JSON.parse(datosGuardados);
+            
+            // Generamos un ID simulado de transacción para tu panel de administrador
+            const transaccionId = "pi_" + Math.random().toString(36).substr(2, 14);
+
+            // Guardamos todo en Firebase
+            await guardarRegistroEnBD(pedido, transaccionId);
+
+            // Limpiamos los datos temporales y la URL
+            localStorage.removeItem('temp_nova_order');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
     }
 });
