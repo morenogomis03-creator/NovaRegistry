@@ -308,7 +308,7 @@ function openPayment(packageName) {
                 return;
             }
             if(confirm("¿Confirmar alta directa para '" + starNamePending + "'?")) {
-                ejecutarRegistro(null); // Llama a la nueva función centralizada de registro
+                guardarRegistroEnBD(null); // LLAMADA CORREGIDA PARA EVITAR COLISIÓN
             }
         };
     }
@@ -359,15 +359,15 @@ function openPayment(packageName) {
             // Cuando el pago se aprueba, guardamos directo en Firebase
             onApprove: async function(data, actions) {
                 const details = await actions.order.capture();
-                ejecutarRegistro(details); // Llama a la función centralizada
+                guardarRegistroEnBD(details); // LLAMADA CORREGIDA PARA EVITAR COLISIÓN
             }
         }).render('#paypal-button-container');
         paypalButtonsRendered = true;
     }
 }
 
-// Función unificada para guardar en Firebase (sirve para Admin y PayPal)
-async function ejecutarRegistro(paypalDetails) {
+// NUEVO NOMBRE DE FUNCIÓN PARA EVITAR COLISIÓN CON EL EVENTO DE NAVEGACIÓN EN INDEX.HTML
+async function guardarRegistroEnBD(paypalDetails) {
     const overlay = document.getElementById('processingOverlay');
     overlay.style.display = 'flex';
     document.getElementById('paymentModal').style.display = 'none';
@@ -585,6 +585,27 @@ async function loadAdminDashboard() {
         });
         tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;">No hay ventas.</td></tr>';
     } catch (e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
+}
+
+// --- FUNCIÓN MATEMÁTICA INTERNA PARA PARSEO DE COORDENADAS (EVITA ERRORES EN RASTREADOR IA) ---
+function parseCoordToDeg(coordStr, isRA) {
+    if (!coordStr) return 0;
+    const matches = coordStr.match(/[-+]?\d+(\.\d+)?/g);
+    if (!matches || matches.length === 0) return 0;
+
+    const val1 = parseFloat(matches[0]) || 0;
+    const val2 = parseFloat(matches[1]) || 0;
+    const val3 = parseFloat(matches[2]) || 0;
+
+    if (isRA) {
+        // Conversión Ascensión Recta (Horas, Minutos, Segundos a Grados decimales)
+        return (val1 + val2 / 60 + val3 / 3600) * 15;
+    } else {
+        // Conversión Declinación (Grados, Minutos, Segundos a Grados decimales)
+        const sign = coordStr.trim().startsWith('-') ? -1 : 1;
+        const absoluteDegrees = Math.abs(val1) + val2 / 60 + val3 / 3600;
+        return absoluteDegrees * sign;
+    }
 }
 
 /* =========================================
