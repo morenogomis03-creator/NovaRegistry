@@ -619,7 +619,7 @@ function parseCoordToDeg(coordStr, isRA) {
 }
 
 /* =========================================
-   FASE 2: TRÁFICO VIRAL Y RETORNO DE STRIPE
+   FASE 2: TRÁFICO VIRAL Y RETORNO DE STRIPE (BLINDADO)
 ========================================= */
 window.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -634,8 +634,60 @@ window.addEventListener('DOMContentLoaded', async () => {
             inputVerificar.value = verifyCode;
             setTimeout(() => { loadMyStar(); }, 600);
         }
-        window.history.replaceState({}, document.title, "/");
+        window.history.replaceState({}, document.title, window.location.pathname);
     }
+
+    // 2. Lógica de retorno exitoso tras pagar en Stripe
+    if (pagoStatus && pagoStatus.startsWith('ok_')) {
+        
+        // Forzamos que se muestre la pantalla de carga para que el cliente sepa que el pago ha ido bien y estamos procesando
+        const overlay = document.getElementById('processingOverlay');
+        if(overlay) overlay.style.display = 'flex';
+
+        const datosGuardados = localStorage.getItem('temp_nova_order');
+        const transaccionId = "pi_" + Math.random().toString(36).substr(2, 14);
+        
+        if (datosGuardados) {
+            // FLUJO NORMAL: Los dominios coinciden y la memoria está intacta
+            const pedido = JSON.parse(datosGuardados);
+            await guardarRegistroEnBD(pedido, transaccionId);
+            
+            localStorage.removeItem('temp_nova_order');
+            window.history.replaceState({}, document.title, window.location.pathname);
+            
+        } else {
+            // FLUJO DE RESCATE: La memoria se ha borrado por cambio de dominio (www a sin www). ¡Salvamos la venta!
+            if(overlay) overlay.style.display = 'none';
+            
+            let paqueteRecuperado = "Estrella Digital";
+            if(pagoStatus === "ok_premium") paqueteRecuperado = "Paquete Físico Premium";
+            if(pagoStatus === "ok_vip") paqueteRecuperado = "Pack Supernova VIP";
+
+            alert("¡Pago confirmado con éxito! 🎉\n\nTu transacción se ha procesado correctamente. Sin embargo, por un salto de seguridad del navegador, necesitamos confirmar el nombre de tu estrella.");
+            
+            // Le pedimos el nombre directamente
+            let nombreManual = prompt("Por favor, introduce de nuevo el nombre exacto de la estrella que quieres registrar para generar tu certificado ahora mismo:");
+            
+            if(nombreManual && nombreManual.trim() !== "") {
+                if(overlay) overlay.style.display = 'flex';
+                
+                const pedidoRescate = {
+                    nombre: nombreManual.trim(),
+                    paquete: paqueteRecuperado,
+                    envio: null, // Si es físico, lo verás en Stripe y le puedes contactar
+                    fecha: new Date().toISOString()
+                };
+                
+                await guardarRegistroEnBD(pedidoRescate, transaccionId);
+                window.history.replaceState({}, document.title, window.location.pathname);
+                
+            } else {
+                alert("No has introducido el nombre. Tu pago está a salvo, por favor contacta con soporte para que te enviemos el certificado manualmente.");
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+    }
+});
 
     // 2. Lógica de retorno exitoso tras pagar en Stripe
     if (pagoStatus && pagoStatus.startsWith('ok_')) {
