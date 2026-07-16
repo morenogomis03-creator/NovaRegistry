@@ -31,8 +31,12 @@
         .mobile-menu-btn { display: none; color: var(--text-main); font-size: 1.8rem; cursor: pointer; border: none; background: transparent; }
 
         main { padding: 40px 5%; flex: 1; max-width: 1400px; margin: 0 auto; width: 100%; position: relative; z-index: 10; }
+        
+        /* REGLA CRÍTICA: Oculta de forma absoluta cualquier sección no activa */
         section { display: none; animation: fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        section:not(.active) { display: none !important; }
         section.active { display: block; }
+        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         .section-header { text-align: center; margin-bottom: 40px; }
@@ -472,7 +476,7 @@
     .cookie-banner { flex-direction: column; text-align: center; }
     .cookie-text { text-align: center; }
     
-    /* --- NUEVAS REGLAS PARA LA PORTADA EN MÓVIL (SIN SCROLL CONTINUO) --- */
+    /* --- PORTADA EN MÓVIL OPTIMIZADA (SIN PORTADA FANTASMA AL CAMBIAR DE SECCIÓN) --- */
     section.hero-section.active {
         display: flex;
         flex-direction: column;
