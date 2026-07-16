@@ -28,6 +28,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 
+    <style>
+        @media screen and (max-width: 768px) {
+            .hero-section {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                /* Usamos 100dvh para que se adapte perfectamente a la barra de direcciones del móvil */
+                min-height: 100dvh; 
+                padding: 15px;
+                box-sizing: border-box;
+                text-align: center;
+                overflow: hidden;
+            }
+            .hero-section h1 {
+                font-size: 28px !important;
+                margin-bottom: 10px;
+                line-height: 1.1;
+            }
+            .hero-section p {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+            .hero-section .cta-button {
+                display: block;
+                width: 100%;
+                padding: 12px 0;
+                margin: 10px 0 15px 0;
+                text-align: center;
+            }
+            .hero-image-wrapper img {
+                max-height: 40vh; /* Limita la imagen a un 40% de la pantalla */
+                width: auto;
+                max-width: 100%;
+                object-fit: contain;
+                border-radius: 8px;
+            }
+            .trust-triggers {
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
+                font-size: 10px;
+                margin-top: 5px;
+            }
+        }
+    </style>
+
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
@@ -85,6 +132,7 @@
                 
             </div>
         </section>
+        
         <section id="firmamento">
             <div class="registry-layout">
                 <canvas id="skyCanvas"></canvas>
@@ -337,23 +385,11 @@
     
     <script>
     function ejecutarRegistro() {
-        // 1. Cambia de sección de manera segura
+        // Al quitar el scroll forzado, simplemente cambia a la vista de "Asignación Estelar",
+        // comportándose como el resto de botones de tu menú de navegación.
         if (typeof showSection === 'function') {
             showSection('firmamento');
         }
-        
-        // 2. Desplaza la pantalla hasta dejar el buscador perfectamente centrado y hace focus
-        setTimeout(() => {
-            const buscador = document.querySelector('.registry-content');
-            if (buscador) {
-                buscador.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-            
-            const input = document.getElementById('inputStarName');
-            if (input) {
-                input.focus();
-            }
-        }, 120); // Retraso de seguridad para asegurar la renderización en móviles
     }
     </script>
 </body>
