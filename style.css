@@ -220,7 +220,7 @@
             box-shadow: 0 20px 50px rgba(212, 175, 55, 0.35) !important;
             border-color: var(--gold-main) !important;
             background: linear-gradient(180deg, rgba(40, 35, 5, 0.95) 0%, rgba(5, 5, 5, 0.9) 100%) !important;
-            transform: translateY(-12px) scale(1.08) !important; /* Mantiene la ventaja de escala */
+            transform: translateY(-12px) scale(1.08) !important; 
         }
         
         .pack-icon {
@@ -262,7 +262,7 @@
         #toast-notificacion {
             position: fixed;
             bottom: 20px;
-            left: -350px; /* Oculto fuera de la pantalla por defecto */
+            left: -350px; 
             background: rgba(13, 15, 20, 0.95);
             border-left: 4px solid var(--accent-blue);
             color: var(--text-main);
@@ -284,7 +284,7 @@
             font-size: 0.95rem;
         }
         #toast-notificacion.mostrar {
-            left: 20px; /* Entra en pantalla con un efecto fluido y de rebote */
+            left: 20px; 
         }
 
         /* ======================================================== */
@@ -480,9 +480,9 @@
         section.hero-section.active {
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Ayuda a que los textos queden arriba y la imagen gane todo el espacio abajo */
+            justify-content: flex-start; 
             align-items: center;
-            height: calc(100dvh - 75px); /* Eliminamos el scroll restando la barra de navegación */
+            height: calc(100dvh - 75px); 
             padding: 5px 15px 15px 15px;
             box-sizing: border-box;
             text-align: center;
@@ -537,7 +537,7 @@
         }
 
         .hero-image-wrapper {
-            flex: 1; /* Permite a la imagen empujar y ocupar tooooodo el espacio vertical sobrante sin que la página pida scroll */
+            flex: 1; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -546,10 +546,18 @@
         }
 
         .hero-image-wrapper img {
-            width: 100%; /* Ahora sí ocupará todo lo ancho posible */
-            height: 100%; /* Y todo lo alto posible dentro del hueco que le queda */
+            width: 100%; 
+            height: 100%; 
             max-height: 100%;
-            object-fit: contain; /* Obliga a que se vea la imagen COMPLETA, sin recortarse por ningún lado */
+            object-fit: contain; 
             border-radius: 8px;
+            /* MODIFICACIÓN: Mayor escala inicial por defecto para que se vea más grande y ancha nada más entrar */
+            transform: scale(1.07); 
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Mantiene la animación ampliándose fluidamente sobre su nuevo tamaño */
+        .hero-image-wrapper img:hover {
+            transform: scale(1.14) translateY(-5px);
         }
     }
