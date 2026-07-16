@@ -464,61 +464,92 @@
 }
 
     @media (max-width: 768px) {
-    .mobile-menu-btn { display: block; }
-    .nav-links { position: absolute; top: 100%; left: 0; width: 100%; background: rgba(2, 4, 10, 0.98); flex-direction: column; padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; border-bottom: 1px solid transparent; }
-    .nav-links.active { max-height: 400px; padding: 20px 0; border-bottom-color: var(--border-glow); }
-    .nav-links li { margin: 15px 0; }
-    main { padding: 30px 5%; }
-    .registry-layout { padding: 20px 10px; border: none; box-shadow: none; }
-    .registry-content { padding: 30px 15px; }
-    .modal-box { padding: 25px 15px; }
-    .footer-links a { display: block; margin: 10px 0; }
-    .cookie-banner { flex-direction: column; text-align: center; }
-    .cookie-text { text-align: center; }
-    
-    /* --- PORTADA EN MÓVIL OPTIMIZADA (SIN PORTADA FANTASMA AL CAMBIAR DE SECCIÓN) --- */
-    section.hero-section.active {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100dvh; /* Adaptación perfecta a pantalla móvil */
-        padding: 15px;
-        box-sizing: border-box;
-        text-align: center;
-        overflow: hidden;
+        .mobile-menu-btn { display: block; }
+        .nav-links { position: absolute; top: 100%; left: 0; width: 100%; background: rgba(2, 4, 10, 0.98); flex-direction: column; padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; border-bottom: 1px solid transparent; }
+        .nav-links.active { max-height: 400px; padding: 20px 0; border-bottom-color: var(--border-glow); }
+        .nav-links li { margin: 15px 0; }
+        main { padding: 30px 5%; }
+        .registry-layout { padding: 20px 10px; border: none; box-shadow: none; }
+        .registry-content { padding: 30px 15px; }
+        .modal-box { padding: 25px 15px; }
+        .footer-links a { display: block; margin: 10px 0; }
+        .cookie-banner { flex-direction: column; text-align: center; }
+        .cookie-text { text-align: center; }
+        
+        /* --- PORTADA EN MÓVIL OPTIMIZADA --- */
+        section.hero-section.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Ayuda a que los textos queden arriba y la imagen gane todo el espacio abajo */
+            align-items: center;
+            height: calc(100dvh - 75px); /* Eliminamos el scroll restando la barra de navegación */
+            padding: 5px 15px 15px 15px;
+            box-sizing: border-box;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .hero-container {
+            gap: 10px !important;
+            padding-top: 0 !important;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+
+        .hero-badge {
+            margin: 0 auto 10px auto !important;
+            padding: 6px 12px !important;
+            font-size: 0.75rem !important;
+        }
+
+        .hero-section h1 {
+            font-size: 26px !important;
+            margin-bottom: 5px;
+            line-height: 1.1;
+        }
+
+        .hero-section p {
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .cta-button {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px 0;
+            margin: 5px 0 10px 0;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .trust-triggers {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            font-size: 10px;
+            margin-top: 0;
+            padding-top: 5px;
+            margin-bottom: 10px;
+            border-top: none;
+        }
+
+        .hero-image-wrapper {
+            flex: 1; /* Permite a la imagen empujar y ocupar tooooodo el espacio vertical sobrante sin que la página pida scroll */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 0; 
+        }
+
+        .hero-image-wrapper img {
+            width: 100%; /* Ahora sí ocupará todo lo ancho posible */
+            height: 100%; /* Y todo lo alto posible dentro del hueco que le queda */
+            max-height: 100%;
+            object-fit: contain; /* Obliga a que se vea la imagen COMPLETA, sin recortarse por ningún lado */
+            border-radius: 8px;
+        }
     }
-    .hero-section h1 {
-        font-size: 28px !important;
-        margin-bottom: 10px;
-        line-height: 1.1;
-    }
-    .hero-section p {
-        font-size: 14px;
-        margin-bottom: 15px;
-    }
-    .cta-button {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 12px 0;
-        margin: 10px 0 15px 0;
-        text-align: center;
-    }
-    .hero-image-wrapper img {
-        max-height: 40vh;
-        width: auto;
-        max-width: 100%;
-        object-fit: contain;
-        border-radius: 8px;
-    }
-    .trust-triggers {
-        display: flex;
-        justify-content: space-around;
-        width: 100%;
-        font-size: 10px;
-        margin-top: 5px;
-        padding-top: 15px;
-        border-top: none;
-    }
-}
