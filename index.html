@@ -35,7 +35,6 @@
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                /* Usamos 100dvh para que se adapte perfectamente a la barra de direcciones del móvil */
                 min-height: 100dvh; 
                 padding: 15px;
                 box-sizing: border-box;
@@ -59,7 +58,7 @@
                 text-align: center;
             }
             .hero-image-wrapper img {
-                max-height: 40vh; /* Limita la imagen a un 40% de la pantalla */
+                max-height: 40vh; 
                 width: auto;
                 max-width: 100%;
                 object-fit: contain;
@@ -78,9 +77,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
 </head>
 <body>
     <nav>
@@ -88,9 +85,7 @@
         <button class="mobile-menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
         <ul class="nav-links">
             <li><a href="#" id="link-home" class="active-link" onclick="showSection('home')">Inicio</a></li>
-            
             <li style="display: none;"><a href="#" id="link-firm" onclick="showSection('firmamento')"></a></li>
-            
             <li><a href="#" id="link-mystar" class="btn-gold-outline" onclick="showSection('mystar')"><i class="fa-solid fa-search"></i> Verificar Título</a></li>
             <li><a href="#" id="link-ia" class="btn-ai-outline" onclick="showSection('ia-locator')"><i class="fa-solid fa-microchip"></i> IA Tracker</a></li>
             <li id="nav-admin" style="display:none;"><a href="#" id="link-admin" class="btn-ai-outline" onclick="loadAdminDashboard()" style="border-color: #ff3366; color: #ff3366 !important;"><i class="fa-solid fa-gear"></i> Admin</a></li>
@@ -100,7 +95,6 @@
     <main>
         <section id="home" class="active hero-section">
             <div class="hero-container">
-                
                 <div class="hero-content">
                     <span class="hero-badge">El regalo perfecto</span>
                     <h1>Inmortaliza un nombre en el cosmos</h1>
@@ -127,7 +121,6 @@
                 <div class="hero-image-wrapper">
                     <img src="hero.jpg" alt="Certificado oficial NovaRegistry enmarcado" class="hero-image">
                 </div>
-                
             </div>
         </section>
         
@@ -154,40 +147,48 @@
                     </div>
 
                     <div class="packages-grid" id="seccion-precios">
+                        <!-- 1. Estrella Digital -->
                         <div class="pack-card">
                             <div class="pack-icon"><i class="fa-solid fa-cloud-moon"></i></div>
                             <div class="pack-title">Estrella Digital</div>
                             <div class="pack-price">20.00 €</div>
                             <ul class="pack-features">
-                                <li><i class="fa-solid fa-star"></i> Soberanía Digital: Inscripción inmediata.</li>
-                                <li><i class="fa-solid fa-eye"></i> Título de Propiedad: Diploma oficial.</li>
-                                <li><i class="fa-solid fa-infinity"></i> IA Tracker: Acceso ilimitado.</li>
+                                <li><i class="fa-solid fa-database"></i> <strong>Soberanía Digital:</strong> Inscripción inmediata en el Archivo Estelar.</li>
+                                <li><i class="fa-solid fa-file-pdf"></i> <strong>Título de Propiedad:</strong> Certificado digital en ultra alta resolución (PDF).</li>
+                                <li><i class="fa-solid fa-satellite-dish"></i> <strong>Rastreador IA:</strong> Acceso ilimitado al radar satelital para localizarla en el cielo.</li>
                             </ul>
                             <button class="btn-solid" onclick="openPayment('Estrella Digital')">Reclamar mi Estrella</button>
                         </div>
                         
+                        <!-- 2. Paquete Físico Premium -->
                         <div class="pack-card premium">
                             <div class="etiqueta-popular">El Más Elegido</div>
-                            
                             <div class="pack-icon"><i class="fa-solid fa-scroll"></i></div>
                             <div class="pack-title">Paquete Físico Premium</div>
                             <div class="pack-price">40.00 €</div>
                             <ul class="pack-features">
-                                <li><i class="fa-solid fa-check"></i> <strong>El Legado en tus Manos:</strong> Todo lo digital.</li>
-                                <li><i class="fa-solid fa-check"></i> Pergamino Ancestral impreso.</li>
-                                <li><i class="fa-solid fa-check"></i> Carpeta de Gala de presentación.</li>
+                                <li style="border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 10px; margin-bottom: 10px;">
+                                    <i class="fa-solid fa-plus" style="color: var(--gold-main);"></i> <strong>Todo lo incluido en Estrella Digital, y además:</strong>
+                                </li>
+                                <li><i class="fa-solid fa-scroll"></i> <strong>El Legado en tus Manos:</strong> Certificado impreso en papel pergamino de alto gramaje.</li>
+                                <li><i class="fa-solid fa-folder-open"></i> <strong>Presentación de Gala:</strong> Carpeta corporativa elegante para regalar.</li>
+                                <li><i class="fa-solid fa-truck-fast"></i> <strong>Logística Premium:</strong> Envío físico asegurado a tu domicilio.</li>
                             </ul>
                             <button class="btn-solid btn-gold" onclick="openPayment('Paquete Físico Premium')">Poseer la Eternidad</button>
                         </div>
                         
+                        <!-- 3. Pack Supernova VIP -->
                         <div class="pack-card">
-                            <div class="pack-icon"><i class="fa-solid fa-crown"></i></div>
+                            <div class="pack-icon"><i class="fa-solid fa-gem"></i></div>
                             <div class="pack-title">Pack Supernova VIP</div>
                             <div class="pack-price">60.00 €</div>
                             <ul class="pack-features">
-                                <li><i class="fa-solid fa-check"></i> <strong>Consagración Total:</strong></li>
-                                <li><i class="fa-solid fa-check"></i> Enmarcado Artesanal de galería.</li>
-                                <li><i class="fa-solid fa-check"></i> Prioridad en Red Satelital.</li>
+                                <li style="border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 10px; margin-bottom: 10px;">
+                                    <i class="fa-solid fa-plus" style="color: var(--accent-blue);"></i> <strong>Todo lo del Paquete Premium, y además:</strong>
+                                </li>
+                                <li><i class="fa-solid fa-cube"></i> <strong>Trofeo Estelar:</strong> Exclusiva estrella de cristal óptico sólido, grabada con tecnología láser 3D.</li>
+                                <li><i class="fa-solid fa-crosshairs"></i> <strong>Coordenadas Inmortales:</strong> Nombre y ubicación astrométrica tallados en el interior del cristal.</li>
+                                <li><i class="fa-solid fa-bolt"></i> <strong>Servicio Prioritario:</strong> Asignación exprés en los servidores y prioridad de envío.</li>
                             </ul>
                             <button class="btn-solid" onclick="openPayment('Pack Supernova VIP')">Consagrar Legado</button>
                         </div>
@@ -291,7 +292,7 @@
             </div>
             <div class="admin-table-container">
                 <table class="admin-table">
-                    <thead><tr><th>Fecha</th><th>Folio NOVA</th><th>Importe Pago</th><th>ID Transacción PayPal</th><th>Cliente</th><th>Estrella Asignada</th><th>Logística / Envío</th></tr></thead>
+                    <thead><tr><th>Fecha</th><th>Folio NOVA</th><th>Importe Pago</th><th>ID Transacción Stripe</th><th>Cliente</th><th>Estrella Asignada</th><th>Logística / Envío</th></tr></thead>
                     <tbody id="adminTableBody"></tbody>
                 </table>
             </div>
@@ -385,8 +386,6 @@
     
     <script>
     function ejecutarRegistro() {
-        // Al quitar el scroll forzado, simplemente cambia a la vista de "Asignación Estelar",
-        // comportándose como el resto de botones de tu menú de navegación.
         if (typeof showSection === 'function') {
             showSection('firmamento');
         }
