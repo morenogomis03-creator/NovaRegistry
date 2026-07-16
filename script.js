@@ -207,11 +207,15 @@ async function downloadPDF() {
 }
 
 function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
+
 function showSection(sectionId) {
     document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
     document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active-link'));
     document.getElementById(sectionId).classList.add('active');
     document.querySelector('.nav-links').classList.remove('active');
+    
+    // CAMBIO EFECTUADO: Llevamos el scroll arriba del todo instantáneamente
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     
     if(sectionId === 'home') document.getElementById('link-home').classList.add('active-link');
     if(sectionId === 'firmamento') {
@@ -308,7 +312,7 @@ function openPayment(packageName) {
                 return;
             }
             if(confirm("¿Confirmar alta directa para '" + starNamePending + "'?")) {
-                guardarRegistroEnBD(null); // LLAMADA CORREGIDA PARA EVITAR COLISIÓN
+                guardarRegistroEnBD(null); 
             }
         };
     }
@@ -335,7 +339,6 @@ function openPayment(packageName) {
                 return actions.resolve();
             },
 
-            // Creamos la orden directamente en el navegador, sin necesidad de backend
             createOrder: function(data, actions) { 
                 const precios = {
                     'Estrella Digital': '20.00',
@@ -356,10 +359,9 @@ function openPayment(packageName) {
                 });
             },
             
-            // Cuando el pago se aprueba, guardamos directo en Firebase
             onApprove: async function(data, actions) {
                 const details = await actions.order.capture();
-                guardarRegistroEnBD(details); // LLAMADA CORREGIDA PARA EVITAR COLISIÓN
+                guardarRegistroEnBD(details); 
             }
         }).render('#paypal-button-container');
         paypalButtonsRendered = true;
@@ -416,7 +418,6 @@ async function guardarRegistroEnBD(paypalDetails) {
             shippingInfo: datosEnvio
         };
 
-        // Si viene de PayPal, añadimos datos de la transacción
         if (paypalDetails) {
             starData.payerName = paypalDetails.payer.name.given_name;
             starData.paypalTransactionId = paypalDetails.id;
@@ -426,19 +427,16 @@ async function guardarRegistroEnBD(paypalDetails) {
             starData.expectedAmount = "0.00";
         }
 
-        // GUARDADO DIRECTO EN FIREBASE DESDE FRONTEND
         await db.collection("estrellas").doc(newId).set(starData);
 
         overlay.style.display = 'none';
         
-        // Limpiar el formulario de envío por si hace otra compra
         document.getElementById('shipName').value = '';
         document.getElementById('shipAddress').value = '';
         document.getElementById('shipCity').value = '';
         document.getElementById('shipZip').value = '';
         document.getElementById('shipPhone').value = '';
 
-        // Cargar el certificado
         document.getElementById('myStarInput').value = newId;
         loadMyStar(); 
 
@@ -587,7 +585,7 @@ async function loadAdminDashboard() {
     } catch (e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error de BD.</td></tr>'; }
 }
 
-// --- FUNCIÓN MATEMÁTICA INTERNA PARA PARSEO DE COORDENADAS (EVITA ERRORES EN RASTREADOR IA) ---
+// --- FUNCIÓN MATEMÁTICA INTERNA PARA PARSEO DE COORDENADAS ---
 function parseCoordToDeg(coordStr, isRA) {
     if (!coordStr) return 0;
     const matches = coordStr.match(/[-+]?\d+(\.\d+)?/g);
@@ -598,10 +596,8 @@ function parseCoordToDeg(coordStr, isRA) {
     const val3 = parseFloat(matches[2]) || 0;
 
     if (isRA) {
-        // Conversión Ascensión Recta (Horas, Minutos, Segundos a Grados decimales)
         return (val1 + val2 / 60 + val3 / 3600) * 15;
     } else {
-        // Conversión Declinación (Grados, Minutos, Segundos a Grados decimales)
         const sign = coordStr.trim().startsWith('-') ? -1 : 1;
         const absoluteDegrees = Math.abs(val1) + val2 / 60 + val3 / 3600;
         return absoluteDegrees * sign;
