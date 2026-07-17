@@ -141,57 +141,36 @@ function loginAdmin() {
 }
 
 // --- GENERADOR DE PDF ---
-async function downloadPDF() {
-    const originalElement = document.getElementById('pdf-content');
-    const btn = document.getElementById('downloadPdfBtn');
-    const starCode = document.getElementById('certId').innerText || "Documento";
+function downloadPDF() {
+    // 1. Seleccionamos el certificado y su contenedor
+    const certificado = document.getElementById('pdf-content');
+    const contenedor = document.querySelector('.cert-scroll-container');
     
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-sync fa-spin"></i> Renderizando...';
-    btn.style.pointerEvents = 'none';
+    // 2. Desactivamos el zoom y el recorte temporalmente para que html2pdf lo vea entero
+    certificado.style.setProperty('zoom', '1', 'important');
+    contenedor.style.setProperty('height', 'auto', 'important');
+    contenedor.style.setProperty('overflow', 'visible', 'important');
 
-    try {
-        const container = document.createElement('div');
-        container.style.position = 'absolute';
-        container.style.left = '-9999px';
-        container.style.top = '0';
-        container.style.width = '794px'; 
-        
-        const clone = originalElement.cloneNode(true);
-        clone.style.width = '794px';
-        clone.style.height = '1123px'; 
-        clone.style.margin = '0';
-        clone.style.padding = '40px'; 
-        clone.style.boxSizing = 'border-box';
-        clone.style.display = 'flex';
-        clone.style.flexDirection = 'column';
-        clone.style.justifyContent = 'space-between';
-        clone.style.backgroundColor = 'white';
+    // 3. Configuramos la calidad y proporciones del PDF
+    const opciones = {
+        margin: 0,
+        filename: 'Certificado_NovaRegistry.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { 
+            scale: 2, // Doble resolución para que el texto salga nítido
+            useCORS: true, 
+            scrollY: 0 // Evita que salga movido si el usuario ha hecho scroll
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
 
-        container.appendChild(clone);
-        document.body.appendChild(container);
-
-        await new Promise(resolve => setTimeout(resolve, 800));
-
-        const options = {
-            margin: 0,
-            filename: `Certificado_NovaRegistry_${starCode}.pdf`,
-            image: { type: 'jpeg', quality: 1.0 },
-            html2canvas: { 
-                scale: 2,           
-                useCORS: true,      
-                logging: false,
-                letterRendering: true,
-                scrollY: 0,         
-                windowWidth: 794    
-            },
-            jsPDF: { 
-                unit: 'px', 
-                format: [794, 1123], 
-                orientation: 'portrait',
-                hotfixes: ['px_scaling'] 
-            }
-        };
+    // 4. Generamos el PDF y, al terminar, restauramos la vista de móvil
+    html2pdf().set(opciones).from(certificado).save().then(() => {
+        certificado.style.removeProperty('zoom');
+        contenedor.style.removeProperty('height');
+        contenedor.style.removeProperty('overflow');
+    });
+}
 
         await html2pdf().set(options).from(clone).save();
         document.body.removeChild(container);
