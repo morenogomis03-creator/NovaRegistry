@@ -147,56 +147,56 @@ async function downloadPDF() {
     const btn = document.getElementById('downloadPdfBtn');
     const starCode = document.getElementById('certId').innerText || "Documento";
 
-    // 1. Efecto de carga en el botón
+    // 1. Efecto en el botón
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-sync fa-spin"></i> Renderizando...';
+    btn.innerHTML = '<i class="fa-solid fa-sync fa-spin"></i> Procesando...';
     btn.style.pointerEvents = 'none';
 
+    // 2. CREAMOS UNA "CORTINA" ELEGANTE PARA OCULTAR EL PARPADEO
+    const cortina = document.createElement('div');
+    cortina.innerHTML = `
+        <div class="spinner" style="margin: 0 auto 20px auto; width: 50px; height: 50px; border-top-color: #d4af37;"></div>
+        <h3 style="color: #d4af37; font-family: 'Cinzel', serif; font-size: 1.2rem; margin-bottom: 10px;">Forjando Documento Oficial</h3>
+        <p style="color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.9rem;">Compilando coordenadas astrométricas en alta resolución...</p>
+    `;
+    cortina.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(2,4,10,0.95); backdrop-filter:blur(10px); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;';
+    document.body.appendChild(cortina);
+
     try {
-        // 2. Desactivamos el zoom temporalmente para que el PDF salga entero
+        // 3. Oculto tras la cortina, estiramos el certificado a tamaño real
         certificado.style.setProperty('zoom', '1', 'important');
         contenedor.style.setProperty('height', 'auto', 'important');
         contenedor.style.setProperty('overflow', 'visible', 'important');
 
-        // 3. Pausa mínima para que el navegador asimile el tamaño real
+        // Pausa de 0.3s para que el navegador aplique el tamaño
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        // 4. Configuración del PDF a máxima resolución
         const options = {
             margin: 0,
             filename: `Certificado_NovaRegistry_${starCode}.pdf`,
             image: { type: 'jpeg', quality: 1.0 },
-            html2canvas: { 
-                scale: 2,            
-                useCORS: true,      
-                logging: false,
-                scrollY: 0          
-            },
-            jsPDF: { 
-                unit: 'mm', 
-                format: 'a4', 
-                orientation: 'portrait' 
-            }
+            html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
-        // 5. Generar y guardar PDF
+        // Generamos el PDF
         await html2pdf().set(options).from(certificado).save();
 
     } catch (error) {
         console.error("Error crítico en PDF:", error);
         alert("Hubo un error al generar el archivo. Por favor, inténtelo de nuevo.");
     } finally {
-        // 6. Volvemos a encoger el certificado para la vista móvil
+        // 4. Volvemos a encoger el certificado a su vista de móvil
         certificado.style.removeProperty('zoom');
         contenedor.style.removeProperty('height');
         contenedor.style.removeProperty('overflow');
 
-        // Restauramos el botón
+        // 5. Retiramos la cortina visual y restauramos el botón
+        document.body.removeChild(cortina);
         btn.innerHTML = originalText;
         btn.style.pointerEvents = 'auto';
     }
 }
-
 function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
 
 function showSection(sectionId) {
