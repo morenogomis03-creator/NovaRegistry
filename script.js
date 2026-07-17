@@ -141,46 +141,58 @@ function loginAdmin() {
 }
 
 // --- GENERADOR DE PDF ---
-function downloadPDF() {
-    // 1. Seleccionamos el certificado y su contenedor
+async function downloadPDF() {
     const certificado = document.getElementById('pdf-content');
     const contenedor = document.querySelector('.cert-scroll-container');
-    
-    // 2. Desactivamos el zoom y el recorte temporalmente para que html2pdf lo vea entero
-    certificado.style.setProperty('zoom', '1', 'important');
-    contenedor.style.setProperty('height', 'auto', 'important');
-    contenedor.style.setProperty('overflow', 'visible', 'important');
+    const btn = document.getElementById('downloadPdfBtn');
+    const starCode = document.getElementById('certId').innerText || "Documento";
 
-    // 3. Configuramos la calidad y proporciones del PDF
-    const opciones = {
-        margin: 0,
-        filename: 'Certificado_NovaRegistry.pdf',
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: { 
-            scale: 2, // Doble resolución para que el texto salga nítido
-            useCORS: true, 
-            scrollY: 0 // Evita que salga movido si el usuario ha hecho scroll
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+    // 1. Efecto de carga en el botón
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-sync fa-spin"></i> Renderizando...';
+    btn.style.pointerEvents = 'none';
 
-    // 4. Generamos el PDF y, al terminar, restauramos la vista de móvil
-    html2pdf().set(opciones).from(certificado).save().then(() => {
-        certificado.style.removeProperty('zoom');
-        contenedor.style.removeProperty('height');
-        contenedor.style.removeProperty('overflow');
-    });
-}
+    try {
+        // 2. Desactivamos el zoom temporalmente para que el PDF salga entero
+        certificado.style.setProperty('zoom', '1', 'important');
+        contenedor.style.setProperty('height', 'auto', 'important');
+        contenedor.style.setProperty('overflow', 'visible', 'important');
 
-        await html2pdf().set(options).from(clone).save();
-        document.body.removeChild(container);
-        btn.innerHTML = originalText;
+        // 3. Pausa mínima para que el navegador asimile el tamaño real
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // 4. Configuración del PDF a máxima resolución
+        const options = {
+            margin: 0,
+            filename: `Certificado_NovaRegistry_${starCode}.pdf`,
+            image: { type: 'jpeg', quality: 1.0 },
+            html2canvas: { 
+                scale: 2,            
+                useCORS: true,      
+                logging: false,
+                scrollY: 0          
+            },
+            jsPDF: { 
+                unit: 'mm', 
+                format: 'a4', 
+                orientation: 'portrait' 
+            }
+        };
+
+        // 5. Generar y guardar PDF
+        await html2pdf().set(options).from(certificado).save();
 
     } catch (error) {
         console.error("Error crítico en PDF:", error);
         alert("Hubo un error al generar el archivo. Por favor, inténtelo de nuevo.");
-        btn.innerHTML = "Reintentar";
     } finally {
+        // 6. Volvemos a encoger el certificado para la vista móvil
+        certificado.style.removeProperty('zoom');
+        contenedor.style.removeProperty('height');
+        contenedor.style.removeProperty('overflow');
+
+        // Restauramos el botón
+        btn.innerHTML = originalText;
         btn.style.pointerEvents = 'auto';
     }
 }
@@ -333,7 +345,7 @@ function procesarPagoStripe(packageName) {
             city: document.getElementById('shipCity').value,
             zip: document.getElementById('shipZip').value,
             phone: document.getElementById('shipPhone').value
-        };
+        }
     }
 
     // Guardamos los datos en localStorage antes de ir a Stripe
