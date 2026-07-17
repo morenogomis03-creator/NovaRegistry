@@ -271,7 +271,7 @@ function renderAmbientSky() {
     requestAnimationFrame(renderAmbientSky);
 }
 
-// === LÓGICA DE STRIPE (Sustituye a PayPal) ===
+// === LÓGICA DE STRIPE ===
 let checkoutPackage = "";
 let starNamePending = "";
 
@@ -295,7 +295,7 @@ function openPayment(packageName) {
     if (legalCheckbox) legalCheckbox.checked = false; 
 
     const formEnvio = document.getElementById('shipping-form');
-    formEnvio.style.display = (packageName.includes("Herencia") || packageName.includes("Soberanía") || packageName.includes("Físico") || packageName.includes("VIP")) ? 'block' : 'none';
+    formEnvio.style.display = (packageName.includes("Premium") || packageName.includes("VIP")) ? 'block' : 'none';
 
     document.getElementById('checkoutDesc').innerText = "Registro: " + packageName;
     document.getElementById('paymentModal').style.display = 'flex';
@@ -685,26 +685,6 @@ window.addEventListener('DOMContentLoaded', async () => {
                 alert("No has introducido el nombre. Tu pago está a salvo, por favor contacta con soporte para que te enviemos el certificado manualmente.");
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
-        }
-    }
-});
-
-    // 2. Lógica de retorno exitoso tras pagar en Stripe
-    if (pagoStatus && pagoStatus.startsWith('ok_')) {
-        const datosGuardados = localStorage.getItem('temp_nova_order');
-        
-        if (datosGuardados) {
-            const pedido = JSON.parse(datosGuardados);
-            
-            // Generamos un ID simulado de transacción para tu panel de administrador
-            const transaccionId = "pi_" + Math.random().toString(36).substr(2, 14);
-
-            // Guardamos todo en Firebase
-            await guardarRegistroEnBD(pedido, transaccionId);
-
-            // Limpiamos los datos temporales y la URL
-            localStorage.removeItem('temp_nova_order');
-            window.history.replaceState({}, document.title, window.location.pathname);
         }
     }
 });
