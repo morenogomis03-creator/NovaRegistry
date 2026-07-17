@@ -562,27 +562,36 @@
         }
     }
 
-/* AJUSTE PARA QUE EL CERTIFICADO QUEPA ENTERO EN MÓVILES SIN SCROLL */
+/* AJUSTE PARA QUE CERTIFICADO Y BOTÓN QUEPAN EN PANTALLA SIN SCROLL */
 @media screen and (max-width: 768px) {
     .cert-scroll-container {
-        height: 78vh; /* Aumentamos la altura para que el sello respire y no se corte */
+        height: 65vh !important; /* Bajamos de 78vh a 65vh para dejar espacio al botón abajo */
         overflow: hidden !important; 
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        padding-top: 10px;
+        padding-top: 5px !important; /* Reducimos el espacio vacío de arriba */
     }
 
     .certificate {
-        zoom: 0.52; /* Un pelín más pequeño para garantizar que entre el sello dorado */
+        zoom: 0.44 !important; /* Reducimos el zoom proporcionalmente para que el sello dorado siga entrando perfecto */
         margin: 0 auto;
+    }
+
+    /* Pegamos el botón más arriba para que salte a la vista */
+    #downloadPdfBtn {
+        margin-top: 10px !important; 
+        margin-bottom: 25px !important;
     }
 }
 
 /* Si es un móvil con pantalla muy bajita o está apaisado */
 @media screen and (max-width: 768px) and (max-height: 700px) {
+    .cert-scroll-container {
+        height: 58vh !important;
+    }
     .certificate {
-        zoom: 0.45;
+        zoom: 0.38 !important;
     }
 }
 
