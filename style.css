@@ -565,8 +565,8 @@
 /* AJUSTE PARA QUE EL CERTIFICADO QUEPA ENTERO EN MÓVILES SIN SCROLL */
 @media screen and (max-width: 768px) {
     .cert-scroll-container {
-        height: 70vh; /* Limita la caja a un 70% del alto de la pantalla */
-        overflow: hidden !important; /* Elimina la barra de scroll */
+        height: 78vh; /* Aumentamos la altura para que el sello respire y no se corte */
+        overflow: hidden !important; 
         display: flex;
         justify-content: center;
         align-items: flex-start;
@@ -574,16 +574,19 @@
     }
 
     .certificate {
-        /* 'zoom' encoge el diseño a la mitad visualmente en la pantalla, 
-           pero internamente sigue siendo gigante para que html2pdf lo descargue en HD */
-        zoom: 0.55; 
+        zoom: 0.52; /* Un pelín más pequeño para garantizar que entre el sello dorado */
         margin: 0 auto;
     }
 }
 
-/* Si es un móvil con pantalla muy bajita o está apaisado, lo encogemos un poco más */
+/* Si es un móvil con pantalla muy bajita o está apaisado */
 @media screen and (max-width: 768px) and (max-height: 700px) {
     .certificate {
         zoom: 0.45;
     }
+}
+
+/* ELIMINAR LA "MANCHA NEGRA" (CÓDIGO DE BARRAS) SIN ROMPER EL CÓDIGO */
+.barcode-box, #certBarcode {
+    display: none !important;
 }
