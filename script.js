@@ -276,7 +276,7 @@ let checkoutPackage = "";
 let starNamePending = "";
 
 const STRIPE_LINKS = {
-    'https://buy.stripe.com/aFa4gz5tR9Ffep95jg14404,
+    'Estrella Digital': "https://buy.stripe.com/aFa4gz5tR9Ffep95jg14404",
     'Paquete Físico Premium': "https://buy.stripe.com/9B6fZhaOb2cN4Oz27414401",
     'Pack Supernova VIP': "https://buy.stripe.com/14AeVd1dB6t33Kv8vs14403"
 };
