@@ -562,25 +562,25 @@
         }
     }
 
-/* AJUSTE PARA QUE CERTIFICADO Y BOTÓN QUEPAN EN PANTALLA SIN SCROLL */
+/* AJUSTE DEFINITIVO PARA SAFARI/IOS - CERTIFICADO COMPLETO Y BOTÓN VISIBLE */
 @media screen and (max-width: 768px) {
     .cert-scroll-container {
-        height: 65vh !important; /* Bajamos de 78vh a 65vh para dejar espacio al botón abajo */
+        height: 68vh !important; /* Le damos un respiro extra a la caja */
         overflow: hidden !important; 
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        padding-top: 5px !important; /* Reducimos el espacio vacío de arriba */
+        padding-top: 10px !important;
     }
 
     .certificate {
-        zoom: 0.44 !important; /* Reducimos el zoom proporcionalmente para que el sello dorado siga entrando perfecto */
+        zoom: 0.36 !important; /* Esta es la clave: encoge el certificado lo justo para que el sello asome entero */
         margin: 0 auto;
     }
 
-    /* Pegamos el botón más arriba para que salte a la vista */
+    /* Subimos el botón para que quede pegado y a la vista siempre */
     #downloadPdfBtn {
-        margin-top: 10px !important; 
+        margin-top: 0px !important; 
         margin-bottom: 25px !important;
     }
 }
@@ -588,10 +588,10 @@
 /* Si es un móvil con pantalla muy bajita o está apaisado */
 @media screen and (max-width: 768px) and (max-height: 700px) {
     .cert-scroll-container {
-        height: 58vh !important;
+        height: 62vh !important;
     }
     .certificate {
-        zoom: 0.38 !important;
+        zoom: 0.32 !important;
     }
 }
 
