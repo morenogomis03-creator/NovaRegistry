@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 setTimeout(() => {
                     loader.innerHTML = '<p style="color: #00ff66; font-weight: bold; font-family: \'Montserrat\', sans-serif;">✨ ¡Sector espacial localizado y reservado temporalmente! Elige tu método de consagración abajo.</p>';
+                    document.getElementById('banner-urgencia').style.display = 'block';
                 }, 2500); 
             }
         });
