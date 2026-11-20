@@ -112,22 +112,28 @@ let lastClickTime = 0;
 
 function handleLogoClick() {
     showSection('home');
-    let currentTime = new Date().getTime();
-    if (currentTime - lastClickTime > 1500) { adminClickCount = 0; }
-    adminClickCount++;
-    lastClickTime = currentTime;
-
-    if (adminClickCount === 5) {
-        adminClickCount = 0;
-        let adminModalHtml = `
-            <div id="adminLogin" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#111; padding:20px; border:1px solid gold; z-index:9999;">
-                <input type="email" id="admE" placeholder="Admin Email"><br><br>
-                <input type="password" id="admP" placeholder="Password"><br><br>
-                <button onclick="loginAdmin()">Entrar</button> <button onclick="document.getElementById('adminLogin').remove()">X</button>
-            </div>`;
-        document.body.insertAdjacentHTML('beforeend', adminModalHtml);
-    }
 }
+
+function openAdminModal() {
+    if (document.getElementById('adminLogin')) return;
+    let adminModalHtml = `
+        <div id="adminLogin" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#111; padding:20px; border:1px solid gold; z-index:9999;">
+            <input type="email" id="admE" placeholder="Admin Email"><br><br>
+            <input type="password" id="admP" placeholder="Password"><br><br>
+            <button onclick="loginAdmin()">Entrar</button> <button onclick="document.getElementById('adminLogin').remove()">X</button>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', adminModalHtml);
+}
+
+// Acceso secreto por URL: https://novaregistry.net/?panel=miclave2026
+window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('panel') === 'Peyche96') { // <-- Cambia 'miclave2026' por la palabra que quieras
+        openAdminModal();
+        // Borra el parámetro de la barra de direcciones al instante para no dejar rastro
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
 
 function loginAdmin() {
     let e = document.getElementById('admE').value;
